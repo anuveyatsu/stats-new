@@ -1,0 +1,52 @@
+{% extends 'page.html' %}
+
+
+{% block breadcrumbs_inner %}
+  <li class="active">Download</li>
+{% endblock breadcrumbs_inner %}
+
+
+{% block content %}
+<section class="row">
+    <div class="col-md-12">
+    {{ page.content }}
+    </div>
+  <div class="col-md-4">
+    <div class="">
+      <h3>CSV</h3>
+      <p>Data in CSV format.</p>
+      <ul>
+        <li>
+          <a href="{{ SITEURL }}/api/entries.csv">
+            Full risk data
+          </a>
+        </li>
+        <li>
+          <a href="{{ SITEURL }}/api/places.csv">
+            Country rank data
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="">
+      <h3>JSON</h3>
+      <p>Data in JSON format.</p>
+      <ul>
+        <li>
+          <a href="{{ SITEURL }}/api/entries.json">
+            Full risk data
+          </a>
+        </li>
+        <li>
+          <a href="{{ SITEURL }}/api/places.json">
+            Country rank data
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

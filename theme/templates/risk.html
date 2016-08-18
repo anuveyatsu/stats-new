@@ -1,0 +1,114 @@
+{% extends 'page.html' %}
+
+{% from 'macros.html' import history, share %}
+{% from '_scope.html' import scope with context %}
+{% do scope.update({
+  'embed_height': '360px',
+  'embed_title': '%s ; %s'|e|format(scope.risk.title, page.year),
+  'panel_tools': 'false',
+  'panel_share': 'false'
+}) %}
+{% set fragment = '%s%s'|format('risk/', page.risk) %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+  <li><a href="{{ SITEURL }}/risk/">Risks</a></li>
+  <li class="active">{{ scope.risk.title }}</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<section id="data-header">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                <a href="{{ SITEURL }}/risk/{{ scope.risk.id }}/">{{ scope.risk.title|truncate(60) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="{{ SITEURL }}/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
+                &ndash;
+                <span class="risk-openness" data-score="{{ scope.risk[scope.score_lookup] or scope.cgr.na }}">{{ scope.risk[scope.score_lookup] }} (avg score)</span>
+            </h1>
+            {% if page.content %}
+            <div class="row content">{{ page.content }}</div>
+            {% endif %}
+            <div class="row navigate">
+              <div class="col-md-12">
+                <section class="risk-about">
+                  {{ scope.risk.description|markdown }}
+                </section>
+                  {{ share(scope, fragment, with_embed=True) }}
+              </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="map-container">
+                {% include 'dataviews/embed_map.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr />
+
+<section id="dataset-slice-table">
+<div class="table-responsive">
+    <table id="slice-table" class="table data-table table-header-stuck">
+        <col style="width:20%">
+        <col style="width:30%">
+        <col style="width:25%">
+        <col style="width:25%">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Place</th>
+                <th>Devices</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in scope.entries|where('year', page.year)|natsort(attribute='score', reverse=True) %}
+
+          {# place can be None - be carefull! #}
+          {% set place = scope.places|where('id', entry.place)|first_or_default(None) %}
+
+          {% if place %}
+
+            {# previous can be None - be carefull! #}
+            {% do entry.update({
+                'place': place,
+                'previous': scope.entries|where('place', entry.place)|where('year', (page.year|int - 1)|string)|first_or_default(None)
+            }) %}
+
+              <tr data-rank="{{ entry.rank or scope.cgr.na }}" data-score="{{ entry.score }}" data-place="{{ entry.place.slug }}">
+                  <td>
+                      {{ entry.rank or scope.cgr.na }}
+                  </td>
+                  <td>
+                    <a href="{{ SITEURL }}/place/{{ entry.place.slug }}/{{ scope.risk.id }}/">{{ entry.place.name }}</a>
+                  </td>
+                  <td data-score="{{ entry.count or scope.cgr.na }}">
+                      <span>{% if entry.count %}{{ entry.count }}{% else %}{{ scope.cgr.na }}{% endif %}</span>
+                  </td>
+                  <td class="score" data-score="{{ entry.score or scope.cgr.na }}">
+                      <span>{% if entry.score %}{{ entry.score }}{% else %}{{ scope.cgr.na }}{% endif %}</span>
+                  </td>
+              </tr>
+              {% if entry.details %}
+              <tr id="detail-{{ entry.place.id }}" class="details collapse">
+                      {% if entry.details %}
+                      <br /><br />
+                      {{ entry.details|markdown }}
+                      {% endif %}
+                      <br />
+                  </td>
+              </tr>
+              {% endif %}
+
+            {% endif %}
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</section>
+
+{% endblock content %}

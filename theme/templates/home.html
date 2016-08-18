@@ -1,0 +1,36 @@
+{% extends 'page.html' %}
+
+{% block main %}
+{% from '_scope.html' import scope with context %}
+{% do scope.update({
+  'embed_title': '%s ; %s'|format(scope.risks[0].title, page.year),
+}) %}
+
+<div id="home-about">
+  <div class="container">
+    <h1>Tracking the state of global cyber health.</h1>
+    <div class="text-center">{{ page.content }}
+      <a class="btn btn-primary-black btn-lg" href="{{ SITEURL }}/place/" title="Compare the cyber health of countries.">
+        Compare countries
+      </a>
+
+      <a class="btn btn-primary-black btn-lg" href="{{ SITEURL }}/risk/" title="An overview of the different risks.">
+        Overview of risks
+      </a>
+
+      <a class="btn btn-primary-black btn-lg" href="{{ SITEURL }}/download/" title="Download the data.">
+        Downloads
+      </a>
+    </div>
+  </div>
+</div>
+
+<section id="home-visualisation" class="container">
+  <div class="row map_visualisation">
+    <div class="col-md-12 map">
+      {% include 'dataviews/embed_map.html' %}
+    </div>
+  </div>
+</section>
+
+{% endblock main %}

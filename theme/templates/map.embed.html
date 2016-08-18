@@ -1,0 +1,132 @@
+{% extends 'embed.html' %}
+
+{% from '_scope.html' import scope with context %}
+
+{% block head_css %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ SITEURL }}/static/css/map.css" />
+{% endblock head_css %}
+
+{% block content %}
+<div class="cgr-vis cgr-vis-choropleth">
+    <div class="cgr-vis-view">
+        <div class="cgr-vis-display">
+            <div id="map"></div>
+            <div class="cgr-vis-title"></div>
+        </div>
+        <div class="cgr-vis-meta">
+            <div class="cgr-vis-meta-left">
+                <div class="cgr-vis-icon">
+                    <a target="_parent" href="{{ scope.cgr.sponsor.domain }}">
+                      <img src="{{ scope.cgr.logosquare }}" />
+                    </a>
+                </div>
+                <a class="cgr-vis-name" target="_parent" href="{{ scope.cgr.sponsor.domain }}">{{ scope.cgr.sponsor.name }}</a>
+            </div>
+            <div class="cgr-vis-meta-right">
+
+                <div class="cgr-vis-nav">
+                    <a class="cgr-vis-nav-zoom-in" href="#" title="Zoom in">+</a>
+                    <a class="cgr-vis-nav-zoom-out" href="#" title="Zoom out">-</a>
+                    <a class="cgr-vis-nav-zoom-min fa fa-share-alt" href="#" title="Zoom min"></a>
+                </div>
+
+                <div class="cgr-vis-tools">
+                    <i class="icon icon-filter" title="Filter the vis data"></i>
+                    <select class="cgr-filter-year"></select>
+                    <select class="cgr-filter-risk">
+                        <!--
+                        <option value="all">All Risks</option>
+                        -->
+                    </select>
+                </div>
+
+                <div class="cgr-vis-legend cgr-vis-show-legend-full" title="How to read this visualisation">
+                    <ul>
+                        <li data-score="0">&nbsp;</li>
+                        <li data-score="30">&nbsp;</li>
+                    </ul>
+                    <ul>
+                        <li data-score="60">&nbsp;</li>
+                        <li data-score="100">&nbsp;</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="cgr-vis-legend-full">
+                <div class="cgr-vis-info-title">How to read the map<span class="cgr-vis-legend-full-close"><i class="fa fa-close"></i></span></div>
+                <div class="cgr-vis-info-text">
+                <span>
+                    Place colouring represents the score for the currently selected item, from <i data-score="0">0</i> to <i data-score="100">100</i>.
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cgr-vis-info"></div>
+    <div class="cgr-vis-place"></div>
+</div>
+
+<!--js templates-->
+<script type="text/template" class="info-box">
+    <div class="cgr-vis-info-title">
+        About and credits
+        <span class="cgr-vis-info-close"><i class="fa fa-close"></i></span>
+    </div>
+    <div class="cgr-vis-info-text">
+        <p>
+          TODO
+        </p>
+    </div>
+    <div class="cgr-vis-info-section">
+        <div class="cgr-vis-info-subtitle">Share</div>
+        <p>
+            Share this visualisation with others on your preferred social network.
+        </p>
+        <div class="cgr-vis-share"
+             title="Share this visualisation with others">
+            <a target="_blank" href="http://twitter.com/share?url={{ SITEURL }}&text={{ scope.social_share_text }}" title="Share this visualisation on Twitter"><i class="fa fa-twitter-square"></i></a>&nbsp;<a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u={{ SITEURL }}" title="Share this visualisation on Facebook"><i class="fa fa-facebook-square"></i></a>&nbsp;<a target="_blank" href="https://plus.google.com/share?url={{ SITEURL }}" title="Share this visualisation on Google+"><i class="fa fa-google-plus-square"></i></a>&nbsp;
+        </div>
+    </div>
+    <div class="cgr-vis-info-section">
+        <div class="cgr-vis-info-subtitle">Embed</div>
+        <p>
+            Use the following code to embed this visualisation into your own website.
+        </p>
+        <div>
+            <xmp contenteditable="true"><iframe width="{{ scope.embed_width }}" height="{{ scope.embed_height }}" src="{{ SITEURL }}/{{ page.slug }}<%= state_params %>" frameBorder="0"></iframe></xmp>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" class="place-box">
+    <div class="cgr-vis-place-title"><%= title %><span class="cgr-vis-place-close"><i class="fa fa-close"></i></span></div>
+    <div class="cgr-vis-place-text">
+        <p>
+        <%= name %> is ranked at <strong>#<%= rank %></strong> with a score of <strong><%= score %></strong> <% if (count) { %> and a total number of incidents of <strong><%= count %></strong> <% } %> <% if (previous_score) { %>, (<%= previous_score %> the previous year)<% } %>.
+        </p>
+        <a class="cgr-vis-place-action" href="{{ SITEURL }}/place/<%= slug %>/" title="More information about <%= name %> in the <%= year %> {{ SITENAME }}">Find out more</a>
+    </div>
+</script>
+
+<script type="text/template" class="place-tooltip">
+  <span><%= title %>: <% if (rank) { %><span>Ranked #<%= rank %></span><% } %> with score of </span><span><%= score %></span> <% if(count) { %><span>(<%= count %> devices)</span> <% } %>
+</script>
+
+<script type="text/template" class="year-options">
+    <option value="<%= year %>" <%= selected %>><%= year %></option>
+</script>
+
+<script type="text/template" class="risk-options">
+    <option value="<%= risk_id %>" <%= selected %>><%= risk %></option>
+</script>
+
+<script type="text/template" class="title-box">
+    <img class="logo" src="{{scope.cgr.logosquare}}" alt="" />
+    <div class="title-box-text"><span class="title-box-text-name"><%= sitename %></span><br /><%= title %></div>
+</script>
+{% endblock content %}
+
+{% block body_scripts %}
+<script data-main="{{ SITEURL }}/static/scripts/map" src="{{ SITEURL }}/static/scripts/require.js"></script>
+{{ super() }}
+{% endblock body_scripts %}

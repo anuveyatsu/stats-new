@@ -1,0 +1,69 @@
+{% macro history(scope, namespace, as_buttons=True, inline=False) -%}
+<h4 class="{% if inline %}inline{% endif %}">See other years</h4>
+<div class="{% if as_buttons %}btn-group{% endif %}{% if inline %} inline{% endif %}">
+    {% for year in scope.cgr.years %}
+
+    {% if year == scope.cgr.current_year %}
+        {% set route = '%s/'|format(namespace) %}
+        {% set anchor = 'Current' %}
+    {% else %}
+        {% set route = '%s/%s/'|format(namespace, year) %}
+        {% set anchor = year %}
+    {% endif %}
+
+    {% if route == scope.page.url %}
+    {% else %}
+        <a class="{% if as_buttons %}btn btn-default{% endif %}" href="{{ scope.siteurl }}/{{ route }}" title="{{ anchor }}">{{ anchor }}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+{%- endmacro %}
+
+
+{% macro share(scope, namespace, with_embed=False, with_text=True) -%}
+<div class="btn-group">
+  {% if with_embed %}
+  <a href="" class="btn btn-default embed" data-toggle="modal" data-target="#embed-instructions">
+    <i class="fa fa-code"></i>Embed
+  </a>
+  {% endif %}
+  <a href="http://twitter.com/share?url={{ scope.siteurl }}/{{ scope.page.url }}&text={{ scope.social_share_text }}" class="btn btn-default twitter" target="_blank">
+    <i class="fa fa-twitter"></i>{% if with_text %} Twitter{% endif %}
+  </a>
+  <a href="http://www.facebook.com/sharer/sharer.php?u={{ scope.siteurl }}/{{ scope.page.url }}" class="btn btn-default facebook" target="_blank">
+    <i class="fa fa-facebook"></i>{% if with_text %} Facebook{% endif %}
+  </a>
+  <a href="https://plus.google.com/share?url={{ scope.siteurl }}/{{ scope.page.url }}" class="btn btn-default google-plus" target="_blank">
+    <i class="fa fa-google-plus"></i>{% if with_text %} Google+{% endif %}
+  </a>
+</div>
+<div class="modal fade" id="embed-instructions" tabindex="-1" role="dialog" aria-labelledby="embedLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="embedLabel">Map embed code</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+            Use the following code to embed the map visualisation into your own website.
+        </p>
+        <xmp contenteditable="true"><iframe width="{{ scope.embed_width }}" height="{{ scope.embed_height }}" src="{{ scope.siteurl }}/vis/map/embed/?embed_width={{ scope.embed_width }}&embed_height={{ scope.embed_height }}&filter_year={{ scope.filter_year }}&filter_dataset={{ scope.filter_dataset }}&panel_tools={{ scope.panel_tools }}&panel_share={{ scope.panel_share }}{% if scope.embed_title %}&embed_title={{ scope.embed_title }}{% endif %}&map_place={{ scope.map_place }}" frameBorder="0"></iframe></xmp>
+     </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+
+{% macro popover_slice_title(question, state) -%}
+<h4>{% filter markdown %}{{ question }}? {% if state == 'Y' %}Yes{% elif state == 'N' %}No{% elif state == '?' %}Unknown{% endif %}{% endfilter %}</h4>
+{%- endmacro %}
+
+
+{% macro popover_slice_content(description) -%}
+{{ description|markdown }}
+{%- endmacro %}

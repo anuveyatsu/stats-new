@@ -1,0 +1,93 @@
+{% extends 'page.html' %}
+
+{% from 'macros.html' import history, share %}
+{% from '_scope.html' import scope with context %}
+{% do scope.update({
+  'embed_height': '360px',
+  'embed_title': '%s ; %s'|e|format(scope.place.name, page.year),
+  'panel_tools': 'true',
+  'panel_share': 'false',
+}) %}
+{% set fragment = '%s/%s'|format('place', scope.place.slug) %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+  <li><a href="{{ SITEURL }}/place">Places</a></li>
+  <li class="active">{{ scope.place.name }}</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<section id="data-header">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                <a href="{{ SITEURL }}/place/{{ scope.place.slug }}/">{{ scope.place.name|truncate(60) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="{{ SITEURL }}/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
+            </h1>
+
+<div class="table-responsive">
+    <table id="place-slice-table" class="table data-table table-header-stuck">
+        <col style="width:15%">
+        <col style="width:40%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Risk</th>
+                <th>Previous</th>
+                <th>Count</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for risk in scope.risks %}
+        {% set entry = scope.entries|where('year', page.year)|where('risk', risk.id)|first_or_default(None) %}
+
+          {# previous can be None - be carefull! #}
+          {% do entry.update({
+              'risk': risk,
+              'previous': scope.entries|where('risk', entry.risk)|where('year', (page.year|int - 1)|string)|first_or_default(None)
+          }) %}
+
+          <tr data-rank="{{ entry.rank or scope.cgr.na }}" data-score="{{ entry.score or scope.cgr.na }}" data-place="{{ entry.place or scope.cgr.na }}">
+              <td class="rank">
+                {% if entry %} {{ entry.rank }} {% else %} {{ scope.cgr.na }} {% endif %}
+              </td>
+              <td>
+                  <a href="{{ SITEURL }}/place/{{ scope.place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
+              </td>
+              <td class="previous-results">
+              {% if entry and entry.previous and entry.previous.score %}
+                  <span class="rank rank-previous">#{{ entry.previous.rank or scope.cgr.na }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ entry.previous.score or scope.cgr.na }}">{{ entry.previous.score or scope.cgr.na }}%</span>
+              {% else %}
+                  {{ scope.cgr.na }}
+              {% endif %}
+              </td>
+              <td>
+                {% if entry and entry.count %}{{ entry.count }}{% else %}{{ scope.cgr.na }}{% endif %}</span>
+              </td>
+              <td class="score" data-score="{{ entry.score or scope.cgr.na }}">
+                <span>{% if entry and entry.score %}{{ entry.score }}{% else %}{{ scope.cgr.na }}{% endif %}</span>
+              </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+            <div class="row navigate">
+                <div class="col-md-12">
+                    {{ share(scope, fragment, with_embed=True) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="map-container">
+                {% include 'dataviews/embed_map.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

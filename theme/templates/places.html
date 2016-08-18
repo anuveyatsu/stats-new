@@ -1,0 +1,76 @@
+{% extends 'page.html' %}
+
+{% from '_scope.html' import scope with context %}
+{% set fragment = 'place' %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+    <li class="active">Places</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<header id="place-intro" class="page-header">
+  <h1>Place overview {% if page.year != scope.cgr.current_year %}{{ page.year }}{% endif %}</h1>
+  <hr />
+  {{ page.content }}
+</header>
+
+<div class="row">
+  <div class="col-md-12">
+    <h4>Search</h4>
+    <form role="form" class="form-inline data-table-tools">
+      <div class="form-group">
+        <input class="form-control filter-table" type="search" name="filter-table" placeholder="Search for a place" />
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table id="places_overview_table" class="table data-table table-header-stuck">
+    <thead>
+      <tr>
+        <th class="sort_place" title="Sort by A-Z">Place</th>
+        {% for risk in scope.risks %}
+          <th>
+            {{ risk.title }}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for place in scope.places %}
+        {#
+          Only show places with max one n/a
+
+          every null dns entry has at least one other null
+          every null ssdp entry has at least one other null *except* mynanmar ...
+          every null ntp entry has at least one other null
+
+          implies we can require all of these are present ...
+        #}
+        {% set dnsentry = scope.entries|search('table_places_entries', risk='opendns', place=place.id, year=page.year)|first_or_default(None) %}
+        {% set ssdpentry = scope.entries|search('table_places_entries', risk='openssdp', place=place.id, year=page.year)|first_or_default(None) %}
+        {% set ntpentry = scope.entries|search('table_places_entries', risk='openntp', place=place.id, year=page.year)|first_or_default(None) %}
+        {% if dnsentry and ssdpentry and ntpentry %}
+          <tr data-rank="{{ place[scope.rank_lookup] or scope.cgr.na }}" data-score="{{ place[scope.score_lookup] or scope.cgr.na }}" data-place="{{ place.slug }}">
+            <td>  
+              <a href="{{ SITEURL }}/place/{{ place.slug }}/" title="{{ place.name }}">
+                {{ place.name|truncate(28) }}
+              </a>
+            </td>
+            {% for risk in scope.risks %}
+              {% set entry = scope.entries|search('table_places_entries', risk=risk.id, place=place.id, year=page.year)|first_or_default(None) %}
+              <td class="score" data-score="{{ entry['score'] or scope.cgr.na }}">
+                 <span>{{ entry['score'] or scope.cgr.na }}</span>
+              </td>
+            {% endfor %}
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

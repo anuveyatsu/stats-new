@@ -1,0 +1,122 @@
+{#
+
+_scope.html exposes the `scope` variable - a dict with common stuff we need throughout the templates. It is used like this:
+
+{% from '_scope.html' import scope with context %}
+
+#}
+
+{% set scope = {
+    'siteurl': SITEURL,
+    'cgr': CGR,
+    'page': page,
+    'metadescription': CGR.metadescription,
+    'metakeywords': CGR.metakeywords
+} %}
+
+{# helpers to lookup scores, ranks and values based on current page #}
+{% if (page.year == scope.cgr.current_year) or not page.year %}
+    {% do scope.update({
+        'rank_lookup': 'rank',
+        'score_lookup': 'score',
+        'value_lookup': 'value'
+    }) %}
+{% else %}
+    {% do scope.update({
+        'rank_lookup': '%s%s'|format('rank_', page.year),
+        'score_lookup': '%s%s'|format('score_', page.year),
+        'value_lookup': '%s%s'|format('value_', page.year)
+    }) %}
+{% endif %}
+{% if (page.year != scope.cgr.years[-1]) %}
+    {% set year = page.year or scope.cgr.current_year %}
+    {% set previous_year = ((year|int)-1)|string %}
+    {% do scope.update({
+        'previous_year': previous_year,
+        'rank_lookup_previous': '%s%s'|format('rank_', previous_year),
+        'score_lookup_previous': '%s%s'|format('score_', previous_year),
+        'value_lookup_previous': '%s%s'|format('value_', previous_year)
+    }) %}
+{% else %}
+    {% do scope.update({
+        'previous_year': '',
+        'rank_lookup_previous': '',
+        'score_lookup_previous': '',
+        'value_lookup_previous': ''
+    }) %}
+{% endif %}
+
+{# setup our core data sets #}
+{% do scope.update({
+    'summary': datastore.summary.dict,
+    'entries': datastore.entries.dict|natsort(attribute='score', reverse=True),
+    'risks': datastore.risks.dict,
+    'places': datastore.places.dict,
+    'place_count': datastore.summary.dict[0],
+    'entry_count': datastore.summary.dict[1]
+}) %}
+
+{# resolve place and entry args to full objects, if page has them #}
+{% if page.place %}
+    {% do scope.update({
+        'place': datastore.places.dict|where('id', page.place)|first,
+        'entries': scope.entries|where('place', page.place)
+    }) %}
+{% endif %}
+
+{% if page.risk %}
+    {% do scope.update({
+        'risk': datastore.risks.dict|where('id', page.risk)|first,
+        'entries': scope.entries|where('risk', page.risk)
+    }) %}
+{% endif %}
+
+{% if page.place and page.risk and page.year %}
+    {% do scope.update({
+        'entry': scope.entries|where('year', page.year)|first_or_default(None)
+    }) %}
+{% endif %}
+
+
+
+{# helpers for text when comparing two scores or ranks #}
+{% do scope.update({
+    'lower': 'Down',
+    'higher': 'Up',
+    'no_change': 'No change'
+})%}
+
+{# pass config into the map vis #}
+{% if page.year %}
+    {% set filter_year = page.year %}
+{% else %}
+    {% set filter_year = scope.cgr.current_year %}
+{% endif %}
+
+{% if page.risk %}
+    {% set filter_risk = page.risk %}
+{% else %}
+    {% set filter_risk = scope.risks[0].id %}
+{% endif %}
+
+{% if page.place %}
+    {% set map_place = page.place %}
+{% else %}
+    {% set map_place = '' %}
+{% endif %}
+
+
+{% do scope.update({
+    'embed_width': '100%',
+    'embed_height': '300px',
+    'filter_year': filter_year,
+    'filter_risk': filter_risk,
+    'panel_tools': 'true',
+    'panel_share': 'true',
+    'map_place': map_place
+}) %}
+
+{# general stuff #}
+{% do scope.update({
+    'social_share_text': 'Check out this data from CyberGreen'
+})%}

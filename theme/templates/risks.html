@@ -1,0 +1,93 @@
+{% extends 'page.html' %}
+
+{% set fragment = 'risk' %}
+
+{% from '_scope.html' import scope with context %}
+
+{% block page_title %} Overview of Risks {% if page.year != CGR.current_year %}{{ page.year }}{% endif %}{% endblock page_title %}
+
+{% block breadcrumbs_inner %}
+  <li class="active">Risks</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<div class="row">
+</div>
+
+<hr />
+
+<div class="table-responsive">
+  <table id="datasets_overview_table" class="table data-table table-header-stuck">
+    <col style="width:10%">
+    <col style="width:52%">
+    <col style="width:20%">
+    <col style="width:10%">
+    <col style="width:8%">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Description</th>
+        <th>Best and Worst</th>
+        <th>Total Devices</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for risk in scope.risks %}
+
+        {% set entries = scope.entries|where('risk', risk.id)|where('year', page.year) %}
+
+        {% if entries %}
+
+          {% set top_places = [] %}
+          {% set top_entry = entries|first%}
+          {% set top_entries = scope.entries|where('risk', risk.id)|where('year', page.year)|where('score', top_entry.score) %}
+          {% for entry in top_entries %}
+            {% do top_places.extend(scope.places|where('id', entry.place)) %}
+          {% endfor %}
+          {% set bottom_places = [] %}
+          {% set bottom_entry = entries|last%}
+          {% set bottom_entries = scope.entries|where('risk', risk.id)|where('year', page.year)|where('score', bottom_entry.score) %}
+          {% for entry in bottom_entries %}
+            {% do bottom_places.extend(scope.places|where('id', entry.place)) %}
+          {% endfor %}
+          <tr data-rank="{{ risk[scope.rank_lookup] or scope.cgr.na }}" data-score="{{ risk[scope.score_lookup] or scope.cgr.na }}" data-risk="{{ risk.slug }}">
+            <td class="risks-risk-col">
+              <a href="{{ SITEURL }}/risk/{{ risk.id }}/" title="{{ risk.title }}">
+                {{ risk.title }}
+              </a>
+            </td>
+            <td>
+              {{ risk.description | truncate(400) | markdown }} <a href="{{ SITEURL }}/risk/{{ risk.id }}">Read more</a>
+            </td>
+            <td>
+              {% if top_entry %}
+                <span class="score score-top" data-score="{{ top_entry.score }}">{{ top_entry.score }}</span>
+                {% for place in top_places %}
+                <a href="{{ SITEURL }}/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+                {% endfor %}
+              {% endif %}
+            <br>
+	      {% if bottom_entry %}
+		<span class="score score-bottom" data-score="{{ bottom_entry.score }}">{{ bottom_entry.score }}</span>
+                {% for place in bottom_places %}
+                <a href="{{ SITEURL }}/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+                {% endfor %}
+	      {% endif %}
+            </td>
+            <td class="total">
+              <span>{{ risk.total }}</span>
+            </td>
+            <td class="score" data-score="{{ risk[scope.score_lookup] or scope.cgr.na }}">
+              <span>{{ risk[scope.score_lookup] or scope.cgr.na }}%</span>
+            </td>
+          </tr>
+
+        {% endif %}
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,57 @@
+{% extends 'page.html' %}
+
+{% from 'macros.html' import history, share, popover_slice_title, popover_slice_content %}
+{% from '_scope.html' import scope with context %}
+{% do scope.update({
+  'embed_height': '360px',
+  'embed_title': '%s ; %s ; %s'|e|format(scope.place.name, scope.risk.title, page.year),
+  'panel_tools': 'false',
+  'panel_share': 'false',
+}) %}
+{% set fragment = '%s/%s/%s'|format('place', scope.place.slug, scope.risk.id) %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+<li><a href="{{ SITEURL }}/place">Places</a></li>
+<li><a href="{{ SITEURL }}/place/{{ scope.place.slug }}/">{{ scope.place.name }}</a></li>
+<li class="active">{{ scope.risk.title }}</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+
+<section id="data-header">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                <a href="{{ SITEURL }}/risk/{{ scope.risk.id }}/">{{ scope.risk.title|truncate(30) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="{{ SITEURL }}/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
+                <p class="place-openness" data-score="{{ scope.entry.score or scope.cgr.na }}">{{ scope.entry.score }}<br /><span style="font-size: 13px">({{scope.entry.count}} devices)</span></p>
+            </h1}>
+            <h3>
+                <a href="{{ SITEURL }}/place/{{ scope.place.slug }}/">{{ scope.place.name|truncate(20) }}</a>
+            </h3>
+            {% if page.content %}
+            <div class="row content">{{ page.content }}</div>
+            {% endif %}
+            <div class="row navigate">
+                <div class="col-md-12">
+                    {{ scope.risk.description|markdown}}
+                </div>
+                <!--
+                <div class="col-md-12">
+                    {{ history(scope, fragment, as_buttons=False, inline=True) }}
+                </div>
+                -->
+                <div class="col-md-12">
+                    {{ share(scope, fragment, with_embed=True) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="map-container">
+                {% include 'dataviews/embed_map.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

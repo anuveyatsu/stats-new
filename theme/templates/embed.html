@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <base target="_parent" />
+        <!--[if lt IE 9]>
+        <script src="{{ SITEURL }}/static/vendor/html5shiv.min.js"></script>
+        <![endif]-->
+        {% block head_css %}{% endblock head_css %}
+        <script>
+            var siteUrl = {{ SITEURL|tojson|safe }},
+                currentYear = {{ scope.cgr.current_year|tojson|safe }},
+                previousYear = {{ scope.cgr.previous_year|tojson|safe }},
+                years = {{ scope.cgr.years|tojson|safe }},
+                sitename = {{ SITENAME|tojson|safe }},
+                sponsor = {{ scope.cgr.sponsor.name|tojson|safe }};
+        </script>
+        {% block head_scripts %}{% endblock head_scripts %}
+    </head>
+    <body>
+        {% block content %}{% endblock content %}
+        {% block body_scripts %}
+        {% include '_analytics.html' %}
+        {% endblock body_scripts %}
+    </body>
+</html>
