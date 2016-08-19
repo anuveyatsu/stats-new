@@ -1,0 +1,23 @@
+id,title,total,max,min,mean,score,rank,places_count,icon,category,description,rank_2014,score_2014,rank_2013,score_2013
+openntp,Open NTP,1574400,329180,10,7461,51,,211,,,"NTP is the [Network Time Protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol), a service on the Internet which keeps computers' clocks in sync to a millisecond precision. For historic reasons, there are many open NTP servers on the Internet.
+
+Since NTP runs over [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol), it is also vulnerable to reflective UDP amplification attacks.
+
+**Details**
+
+[NTP amplification attacks](https://blog.cloudflare.com/understanding-and-mitigating-ntp-based-ddos-attacks/) have a considerable amplification factor: up to 550.  An attacker with 1 MBit/sec connections can find 10 open ntp servers, each with a GBit/sec connection and thus create a DDOS attack of 500 GBit/sec.",,,,
+opendns,Open DNS,3865270,539540,10,18062,49,,214,,,"The Domain Name System (DNS) is pervasive. Collectively, we use it billions of times a day, often without even knowing that it exists. For enterprises, it's their digital identity as well as a critical component of their security architecture. In short: DNS is pervasive and there are many DNS servers on the Internet. Since DNS runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol, it can be used for [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack). 
+
+**Impact of running open recursive DNS servers**
+
+DNS can have an amplification factor of up to 179. In other words: 1 Byte turns into 179 Bytes in DDOS traffic. If only 1000 vulnerable DNS servers in, each with a mere 10 mbit/sec connection participates in a DNS amplification DDOS attack, then the resulting DDOS size will be **1790 GBit/sec**.
+As a side note: the DDOS attack that brought [spamhaus down](https://blog.cloudflare.com/the-ddos-that-knocked-spamhaus-offline-and-ho/) and cloudflare nearly to its knees , was a mere ~ 100 Gbit/sec.",,,,
+spam,Spam,118970,29120,10,868,54,,137,,,"Spam is roughly equivalent to unsolicited telephone marketing calls, except that the user pays for part of the message since everyone shares the cost of maintaining the Internet. Spammers typically send a piece of e-mail to a distribution list in the millions, expecting that only a tiny number of readers will respond to their offer. It has become a major problem for all Internet users.
+
+**Details**
+From a security standpoint, spam is not only a nuissance. It also is a vector for further infections! Spam can be used for [phishing mails](https://en.wikipedia.org/wiki/Phishing), delivering [trojan horses/malware](https://en.wikipedia.org/wiki/Trojan_horse_(computing)) or for general social engineering attacks. Reducing spam not only increases an economy's effectiveness, it also makes the Internet safer by a clear factor. ",,,,
+openssdp,Open SSDP,12790400,2529390,10,61492,49,,208,,,"[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) - the Simple Service Discovery Protocol is used for advertisement and discovery of network services and presence information. It is often enabled in customer end devices (CPEs) such as modems, WLAN modems. Since SSDP runs over UDP, again, it can be used for UDP reflection attacks.
+
+**Details**
+
+SSDP's amplification factor is ~ 30. It is less powerful than NTP.",,,,

@@ -1,0 +1,226 @@
+id,name,slug,region,continent,score,rank
+ad,Andorra,andorra,Europe,Europe,66.63,66
+ae,United Arab Emirates,united-arab-emirates,MENA,Asia,34.97,183
+af,Afghanistan,afghanistan,Asia,Asia,54.58,111
+ag,Antigua and Barbuda,antigua-and-barbuda,Americas,Americas,61.05,92
+ai,Anguilla,anguilla,Americas,Americas,78.6,11
+al,Albania,albania,Europe,Europe,45.78,149
+am,Armenia,armenia,Europe,Europe,47.43,142
+ao,Angola,angola,Sub Saharan Africa,Africa,54.58,111
+ar,Argentina,argentina,Americas,Americas,20.19,214
+as,American Samoa,american-samoa,Oceania,Oceania,77.89,13
+at,Austria,austria,Europe,Europe,41.67,164
+au,Australia,australia,Oceania,Oceania,30.35,194
+aw,Aruba,aruba,Americas,Americas,67.84,62
+ax,Aland Islands,aland-islands,Europe,Europe,69.46,52
+az,Azerbaijan,azerbaijan,Asia,Asia,37.52,175
+ba,Bosnia and Herzegovina,bosnia-and-herzegovina,Europe,Europe,39.74,167
+bb,Barbados,barbados,Americas,Americas,53.27,118
+bd,Bangladesh,bangladesh,Asia,Asia,42.87,161
+be,Belgium,belgium,Europe,Europe,43.86,157
+bf,Burkina Faso,burkina-faso,Sub Saharan Africa,Africa,71.4,36
+bg,Bulgaria,bulgaria,Europe,Europe,29.27,196
+bh,Bahrain,bahrain,MENA,Asia,53.18,120
+bi,Burundi,burundi,Sub Saharan Africa,Africa,82.55,3
+bj,Benin,benin,Sub Saharan Africa,Africa,70.74,41
+bl,Saint Barthelemy,saint-barthelemy,Americas,Americas,84.38,1
+bm,Bermuda,bermuda,Caribbean,Americas,57.05,104
+bn,Brunei Darussalam,brunei,Asia,Asia,63.34,78
+bo,Bolivia,bolivia,Americas,Americas,38.56,172
+bq,"Bonaire, Sint Eustatius and Saba",bes-islands,Americas,Americas,74.94,24
+br,Brazil,brazil,Americas,Americas,13.41,221
+bs,Bahamas,bahamas,Americas,Americas,66.66,65
+bt,Bhutan,bhutan,Asia,Asia,65.5,72
+bw,Botswana,botswana,Sub Saharan Africa,Africa,61.81,86
+by,Belarus,belarus,Europe,Europe,43.24,159
+bz,Belize,belize,Americas,Americas,59.95,97
+ca,Canada,canada,Americas,Americas,25.67,203
+cd,Democratic Republic of Congo,drc,Sub Saharan Africa,Africa,70.44,43
+cg,Congo,congo,Sub Saharan Africa,Africa,74.49,26
+ch,Switzerland,switzerland,Europe,Europe,38.49,173
+ci,Cote d'Ivoire,cote-divoire,Sub Saharan Africa,Africa,59.72,98
+ck,Cook Islands,cook-islands,Oceania,Oceania,77.3,17
+cl,Chile,chile,Americas,Americas,35.86,181
+cm,Cameroon,cameroon,Sub Saharan Africa,Africa,61.37,89
+cn,China,china,Asia,Asia,7.35,223
+co,Colombia,colombia,Americas,Americas,22.28,211
+cr,Costa Rica,costa-rica,Americas,Americas,44.45,154
+cu,Cuba,cuba,Americas,Americas,64.41,76
+cv,Cape Verde,cabo-verde,Sub Saharan Africa,Africa,71.93,33
+cw,Curacao,curacao,Americas,Americas,50.47,133
+cy,Cyprus,cyprus,Europe,Europe,47.02,145
+cz,Czech Republic,czech-republic,Europe,Europe,37.24,177
+de,Germany,germany,Europe,Europe,23.46,210
+dj,Djibouti,djibouti,MENA,Africa,77.67,15
+dk,Denmark,denmark,Europe,Europe,44.43,155
+dm,Dominica,dominica,Caribbean,Americas,63.34,78
+do,Dominican Republic,dominican-republic,Caribbean,Americas,39.32,169
+dz,Algeria,algeria,MENA,Africa,37.48,176
+ec,Ecuador,ecuador,Americas,Americas,34.9,184
+ee,Estonia,estonia,Europe,Europe,53.71,115
+eg,Egypt,egypt,MENA,Africa,32.71,190
+er,Eritrea,eritrea,Sub Saharan Africa,Africa,80.4,7
+es,Spain,spain,Europe,Europe,26.38,202
+et,Ethiopia,ethiopia,Sub Saharan Africa,Africa,61.6,87
+fi,Finland,finland,Europe,Europe,39.07,170
+fj,Fiji,fiji,Oceania,Oceania,62.92,81
+fm,Micronesia,micronesia,Oceania,Oceania,73.33,31
+fo,Faroe Islands,faroe-islands,Europe,Europe,70.2,46
+fr,France,france,Europe,Europe,23.76,209
+ga,Gabon,gabon,Sub Saharan Africa,Africa,69.04,57
+gb,United Kingdom,united-kingdom,Europe,Europe,24.35,207
+gd,Grenada,grenada,Caribbean,Americas,66.02,69
+ge,Georgia,georgia,Asia,Asia,47.14,144
+gf,French Guiana,french-guiana,Americas,Americas,75.71,21
+gg,Guernsey,guernsey,Europe,Europe,70.01,48
+gh,Ghana,ghana,Sub Saharan Africa,Africa,53.32,117
+gi,Gibraltar,gibraltar,Europe,Europe,69.34,53
+gl,Greenland,greenland,Americas,Americas,69.21,55
+gm,Gambia,gambia,Sub Saharan Africa,Africa,70.84,40
+gn,Guinea,guinea,Sub Saharan Africa,Africa,82.22,5
+gp,Guadeloupe,guadeloupe,Americas,Americas,68.23,60
+gq,Equatorial Guinea,equatorial-guinea,Sub Saharan Africa,Africa,71.58,35
+gr,Greece,greece,Europe,Europe,35.17,182
+gt,Guatemala,guatemala,Americas,Americas,49.24,136
+gu,Guam,guam,Oceania,Oceania,58.84,101
+gy,Guyana,guyana,Americas,Americas,70.89,39
+hk,Hong Kong,hong-kong,Asia,Asia,28.11,198
+hn,Honduras,honduras,Americas,Americas,51.09,129
+hr,Croatia,croatia,Europe,Europe,45.19,152
+ht,Haiti,haiti,Caribbean,Americas,68.87,59
+hu,Hungary,hungary,Europe,Europe,21.26,212
+id,Indonesia,indonesia,Asia,Asia,26.64,201
+ie,Ireland,ireland,Europe,Europe,44.96,153
+il,Israel,israel,Europe,Asia,38.45,174
+im,Isle of Man,isle-of-man,Europe,Europe,69.79,49
+in,India,india,Asia,Asia,13.67,219
+iq,Iraq,iraq,MENA,Asia,50.25,134
+ir,Iran,iran,MENA,Asia,20.91,213
+is,Iceland,iceland,Europe,Europe,51.96,122
+it,Italy,italy,Europe,Europe,24.9,206
+je,Jersey,jersey,Europe,Europe,60.45,95
+jm,Jamaica,jamaica,Caribbean,Americas,50.71,130
+jo,Jordan,jordan,MENA,Asia,47.98,139
+jp,Japan,japan,Asia,Asia,19.31,215
+ke,Kenya,kenya,Sub Saharan Africa,Africa,47.24,143
+kg,Kyrgyzstan,kyrgyzstan,Asia,Asia,51.33,126
+kh,Cambodia,cambodia,Asia,Asia,49.38,135
+ki,Kiribati,kiribati,Oceania,Oceania,77.6,16
+km,Comoros,comoros,Sub Saharan Africa,Africa,82.55,3
+kn,Saint Kitts and Nevis,saint-kitts-and-nevis,Caribbean,Americas,62.88,82
+kp,North Korea,north-korea,Asia,Asia,83.47,1
+kr,South Korea,south-korea,Asia,Asia,10.58,222
+kw,Kuwait,kuwait,MENA,Asia,46.9,146
+ky,Cayman Islands,cayman-islands,Americas,Americas,61.26,91
+kz,Kazakhstan,kazakhstan,Asia,Asia,33.13,189
+la,Laos,laos,Asia,Asia,62.76,83
+lb,Lebanon,lebanon,MENA,Asia,43.56,158
+lc,Saint Lucia,saint-lucia,Caribbean,Americas,67.66,63
+li,Liechtenstein,liechtenstein,Europe,Europe,66.13,68
+lk,Sri Lanka,sri-lanka,Asia,Asia,51.85,123
+lr,Liberia,liberia,Sub Saharan Africa,Africa,76.45,19
+ls,Lesotho,lesotho,Sub Saharan Africa,Africa,71.15,38
+lt,Lithuania,lithuania,Europe,Europe,45.28,151
+lu,Luxembourg,luxembourg,Europe,Europe,60.48,94
+lv,Latvia,latvia,Europe,Europe,51.19,128
+ly,Libya,libya,MENA,Africa,56.9,105
+ma,Morocco,morocco,MENA,Africa,42.6,163
+mc,Monaco,monaco,Europe,Europe,74.65,25
+md,Moldova,moldova,Europe,Europe,42.66,162
+me,Montenegro,montenegro,Europe,Europe,53.57,116
+mf,French Saint Martin,saint-martin,Americas,Americas,73.35,30
+mg,Madagascar,madagascar,Sub Saharan Africa,Africa,57.99,102
+mh,Marshall Islands,marshall-islands,Oceania,Oceania,75.16,22
+mk,FYR Macedonia,macedonia,Europe,Europe,47.54,141
+ml,Mali,mali,Sub Saharan Africa,Africa,74.16,29
+mm,Myanmar,myanmar,Asia,Asia,69.24,54
+mn,Mongolia,mongolia,Asia,Asia,55.33,110
+mo,Macao,macao,Asia,Asia,48.55,137
+mp,Northern Mariana Islands,mariana-islands,Oceania,Oceania,70.24,45
+mq,Martinique,martinique,Americas,Americas,70.43,44
+mr,Mauritania,mauritania,MENA,Africa,67.92,61
+ms,Montserrat,montserrat,Americas,Americas,75.0,23
+mt,Malta,malta,Europe,Europe,59.62,99
+mu,Mauritius,mauritius,Sub Saharan Africa,Africa,46.55,147
+mv,Maldives,maldives,Asia,Asia,61.3,90
+mw,Malawi,malawi,Sub Saharan Africa,Africa,69.04,57
+mx,Mexico,mexico,Americas,Americas,15.2,218
+my,Malaysia,malaysia,Asia,Asia,25.24,204
+mz,Mozambique,mozambique,Sub Saharan Africa,Africa,57.48,103
+na,Namibia,namibia,Sub Saharan Africa,Africa,66.19,67
+nc,New Caledonia,new-caledonia,Oceania,Oceania,66.75,64
+ne,Niger,niger,Sub Saharan Africa,Africa,78.89,10
+ng,Nigeria,nigeria,Sub Saharan Africa,Africa,56.11,107
+ni,Nicaragua,nicaragua,Americas,Americas,51.74,125
+nl,Netherlands,netherlands,Europe,Europe,28.69,197
+no,Norway,norway,Europe,Europe,38.62,171
+np,Nepal,nepal,Asia,Asia,50.71,130
+nz,New Zealand,new-zealand,Oceania,Oceania,47.69,140
+om,Oman,oman,MENA,Asia,52.23,121
+pa,Panama,panama,Americas,Americas,41.62,165
+pe,Peru,peru,Americas,Americas,36.24,179
+pf,French Polynesia,french-polynesia,Oceania,Oceania,74.33,27
+pg,Papua New Guinea,papua-new-guinea,Oceania,Oceania,65.64,71
+ph,Philippines,philippines,Asia,Asia,30.23,195
+pk,Pakistan,pakistan,Asia,Asia,31.91,193
+pl,Poland,poland,Europe,Europe,27.76,199
+pm,Saint Pierre and Miquelon,saint-pierre,Americas,Americas,80.78,6
+pr,Puerto Rico,puerto-rico,Americas,Americas,46.16,148
+ps,Palestine,palestine,MENA,Asia,44.36,156
+pt,Portugal,portugal,Europe,Europe,42.9,160
+py,Paraguay,paraguay,Americas,Americas,51.85,123
+qa,Qatar,qatar,MENA,Asia,56.49,106
+re,Reunion,reunion,Sub Saharan Africa,Africa,62.21,85
+ro,Romania,romania,Europe,Europe,32.27,192
+rs,Serbia,serbia,Europe,Europe,36.06,180
+ru,Russian Federation,russia,Europe,Europe,13.55,220
+rw,Rwanda,rwanda,Sub Saharan Africa,Africa,65.77,70
+sa,Saudi Arabia,saudi-arabia,MENA,Asia,40.68,166
+sb,Solomon Islands,solomon-islands,Oceania,Oceania,72.59,32
+sc,Seychelles,seychelles,Sub Saharan Africa,Africa,70.17,47
+sd,Sudan,sudan,MENA,Africa,54.41,113
+se,Sweden,sweden,Europe,Europe,32.64,191
+sg,Singapore,singapore,Asia,Asia,33.84,186
+si,Slovenia,slovenia,Europe,Europe,53.27,118
+sk,Slovakia,slovakia,Europe,Europe,39.71,168
+sl,Sierra Leone,sierra-leone,Sub Saharan Africa,Africa,79.48,8
+sm,San Marino,san-marino,Europe,Europe,64.77,75
+sn,Senegal,senegal,Sub Saharan Africa,Africa,55.51,109
+so,Somalia,somalia,MENA,Africa,77.05,18
+sr,Suriname,suriname,Americas,Americas,61.54,88
+ss,South Sudan,south-sudan,MENA,Africa,83.13,2
+st,Sao Tome and Principe,sao-tome-and-principe,Sub Saharan Africa,Africa,79.31,9
+sv,El Salvador,el-salvador,Americas,Americas,50.57,132
+sx,Dutch Sint Maarten,sint-maarten,Americas,Americas,75.76,20
+sy,Syria,syria,MENA,Asia,54.29,114
+sz,Swaziland,swaziland,Sub Saharan Africa,Africa,69.68,50
+tc,Turks and Caicos Islands,turks-and-caicos-islands,Caribbean,Americas,71.17,37
+td,Chad,chad,MENA,Africa,74.23,28
+tg,Togo,togo,Sub Saharan Africa,Africa,70.53,42
+th,Thailand,thailand,Asia,Asia,27.06,200
+tj,Tajikistan,tajikistan,Asia,Asia,65.04,74
+tl,Timor-Leste,timor-Leste,Asia,Asia,69.5,51
+tm,Turkmenistan,turkmenistan,Asia,Asia,69.21,55
+tn,Tunisia,tunisia,MENA,Africa,34.71,185
+to,Tonga,tonga,Oceania,Oceania,78.49,12
+tr,Turkey,turkey,Asia,Asia,18.3,216
+tt,Trinidad and Tobago,trinidad-and-tobago,Caribbean,Americas,45.38,150
+tw,Taiwan,taiwan,Asia,Asia,25.1,205
+tz,Tanzania,tanzania,Sub Saharan Africa,Africa,59.04,100
+ua,Ukraine,ukraine,Europe,Europe,24.01,208
+ug,Uganda,uganda,Sub Saharan Africa,Africa,65.12,73
+us,United States,united-states,Americas,Americas,4.85,224
+uy,Uruguay,uruguay,Americas,Americas,33.31,188
+uz,Uzbekistan,uzbekistan,Asia,Asia,48.33,138
+vc,St. Vincent & the Grenadines,st.-Vincent-and-the-Grenadines,Caribbean,,55.93,108
+ve,Venezuela,venezuela,Americas,Americas,33.68,187
+vg,"Virgin Islands, British",virgin-islands-british,Caribbean,Americas,62.62,84
+vi,"Virgin Islands, U.S.",virgin-islands-us,Caribbean,Americas,60.28,96
+vn,Viet Nam,vietnam,Asia,Asia,16.02,217
+vu,Vanuatu,vanuatu,Oceania,Oceania,71.93,33
+ws,Samoa,samoa,Oceania,Oceania,77.89,13
+xk,Kosovo,kosovo,Europe,Europe,63.37,77
+ye,Yemen,yemen,MENA,Asia,51.24,127
+za,South Africa,south-africa,Sub Saharan Africa,Africa,36.4,178
+zm,Zambia,zambia,Sub Saharan Africa,Africa,60.86,93
+zw,Zimbabwe,zimbabwe,Sub Saharan Africa,Africa,63.29,80
