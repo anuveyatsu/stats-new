@@ -18,3 +18,5 @@ From the base directory:
 $ node app.js
 
 ```
+
+Visit http://localhost:8000/ form your browser
