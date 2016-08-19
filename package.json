@@ -2,6 +2,7 @@
   "name": "cybergreen-app",
   "version": "0.0.1",
   "dependencies": {
+    "babyparse": "^0.4.6",
     "express": "^4.14.0",
     "nunjucks": "^2.4.2"
   }
