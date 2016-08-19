@@ -4,7 +4,7 @@ var fs = require('fs');
 var app = express();
 var config = require('./config');
 var Papa = require('babyparse');
-var port = 8000;
+var port = process.env.PORT || 8000;
 
 // loads data
 var riskCsv = fs.readFileSync(__dirname + '/content/data/risks.csv', 'utf8');
