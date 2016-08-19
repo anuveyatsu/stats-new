@@ -25,6 +25,7 @@ var env = new nunjucks.configure(__dirname + '/theme/templates', {
 });
 // filters entries 
 env.addFilter('search', function(self, options) {
+
     var result = {};
     var keys = Object.keys(options);
     var test = '';
@@ -41,6 +42,7 @@ env.addFilter('search', function(self, options) {
             result = item;
         }
     });
+    
     return result;
 });
 
@@ -54,6 +56,15 @@ app.get('/place', function(req, res) {
     config.scope.places = places;
     config.scope.entries = entries;
     res.render('places.html', config);
+});
+
+app.get('/place/:id', function(req, res){
+    config.scope = {};
+    config.scope.place = {name: req.params.id};
+    config.scope.risks = risks;
+    config.scope.places = places;
+    config.scope.entries = entries;
+    res.render('place.html', config);
 });
 
 app.listen(port, function() {
