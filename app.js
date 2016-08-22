@@ -10,11 +10,12 @@ var port = process.env.PORT || 8000;
 var riskCsv = fs.readFileSync(__dirname + '/content/data/risks.csv', 'utf8');
 var placeCsv = fs.readFileSync(__dirname + '/content/data/places.csv', 'utf8');
 var entryCsv = fs.readFileSync(__dirname + '/content/data/entries.csv', 'utf8');
+var asnCsv = fs.readFileSync(__dirname + '/content/data/asn.csv', 'utf8');
 // transfoms csv to json
 var risks = Papa.parse(riskCsv, {header: true}).data;
 var places = Papa.parse(placeCsv, {header: true}).data;
 var entries = Papa.parse(entryCsv, {header: true}).data;
-
+var asn = Papa.parse(asnCsv, {header: true}).data;
 
 
 app.use(express.static(__dirname + '/theme'));
@@ -65,6 +66,13 @@ app.get('/place/:id', function(req, res){
     config.scope.places = places;
     config.scope.entries = entries;
     res.render('place.html', config);
+});
+
+app.get('/risk/asn/:month', function(req, res) {
+    config.scope = {};
+    config.scope.month = req.params.month;
+    config.scope.asn = asn;
+    res.render('asn-month.html', config);
 });
 
 app.listen(port, function() {
