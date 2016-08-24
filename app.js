@@ -47,7 +47,6 @@ env.addFilter('search', function(self, options) {
 });
 
 env.addFilter('where', function(self, options) {
-
     var result = [];
     var keys = Object.keys(options);
     var test = '';
@@ -91,6 +90,14 @@ app.get('/risk', function(req, res) {
     config.scope.entries = entries;
     config.scope.places = places;
     res.render('risks.html', config);
+});
+
+app.get('/risk/:id', function(req, res){
+    config.scope.risk = {title: req.params.id};
+    config.scope.risks = risks;
+    config.scope.places = places;
+    config.scope.entries = entries;
+    res.render('risk.html', config);
 });
 
 app.get('/risk/asn/:month', function(req, res) {
