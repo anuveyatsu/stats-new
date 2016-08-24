@@ -34,7 +34,7 @@
       {% for risk in scope.risks %}
 
 				{% if risk.id %}
-        {% set entries = scope.entries|where({'risk': risk.id}) %}s				
+        {% set entries = scope.entries|where({'risk': risk.id}) %}			
         {% if entries %}
 
           {% set top_places = [] %}
