@@ -89,5 +89,6 @@
 		}
 	},
 	"SITEURL": "",
-	"SITELOGO": "/static/images/cybergreen-logo-beta.png"
+	"SITELOGO": "/static/images/cybergreen-logo-beta.png",
+	"scope": {}
 }
