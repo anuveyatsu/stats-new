@@ -7,19 +7,20 @@
         <![endif]-->
         {% block head_css %}{% endblock head_css %}
         <script>
-            var siteUrl = {{ SITEURL|tojson|safe }},
-                currentYear = {{ scope.cgr.current_year|tojson|safe }},
-                previousYear = {{ scope.cgr.previous_year|tojson|safe }},
-                years = {{ scope.cgr.years|tojson|safe }},
-                sitename = {{ SITENAME|tojson|safe }},
-                sponsor = {{ scope.cgr.sponsor.name|tojson|safe }};
+            var siteUrl = '',
+                currentYear = {{ CGR.current_year }},
+                previousYear = {{ CGR.previous_year }},
+                years = [{{ CGR.years }}],
+                sitename = "Cybergreen Statistics",
+                sponsor = "Cybergreen"
+                ;
         </script>
         {% block head_scripts %}{% endblock head_scripts %}
     </head>
     <body>
         {% block content %}{% endblock content %}
         {% block body_scripts %}
-        {% include '_analytics.html' %}
+         {% include '_analytics.html' %}
         {% endblock body_scripts %}
     </body>
 </html>

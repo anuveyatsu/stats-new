@@ -1,10 +1,6 @@
 {% extends 'page.html' %}
 
 {% block main %}
-{% from '_scope.html' import scope with context %}
-{% do scope.update({
-  'embed_title': '%s ; %s'|format(scope.risks[0].title, page.year),
-}) %}
 
 <div id="home-about">
   <div class="container">

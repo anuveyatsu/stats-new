@@ -1,7 +1,5 @@
 {% extends 'embed.html' %}
 
-{% from '_scope.html' import scope with context %}
-
 {% block head_css %}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/static/css/map.css" />
@@ -17,11 +15,11 @@
         <div class="cgr-vis-meta">
             <div class="cgr-vis-meta-left">
                 <div class="cgr-vis-icon">
-                    <a target="_parent" href="{{ scope.cgr.sponsor.domain }}">
-                      <img src="{{ scope.cgr.logosquare }}" />
+                    <a target="_parent" href="{{ CGR.sponsor.domain }}">
+                      <img src="{{ CGR.logosquare }}" />
                     </a>
                 </div>
-                <a class="cgr-vis-name" target="_parent" href="{{ scope.cgr.sponsor.domain }}">{{ scope.cgr.sponsor.name }}</a>
+                <a class="cgr-vis-name" target="_parent" href="{{ CGR.sponsor.domain }}">{{ CGR.sponsor.name }}</a>
             </div>
             <div class="cgr-vis-meta-right">
 
@@ -31,7 +29,7 @@
                     <a class="cgr-vis-nav-zoom-min fa fa-share-alt" href="#" title="Zoom min"></a>
                 </div>
 
-                <div class="cgr-vis-tools">
+                <div class="cgr-vis-tools"
                     <i class="icon icon-filter" title="Filter the vis data"></i>
                     <select class="cgr-filter-year"></select>
                     <select class="cgr-filter-risk">
