@@ -24,7 +24,9 @@
             <div class="row navigate">
               <div class="col-md-12">
                 <section class="risk-about">
-                  {{ risk.description }}
+{% markdown %}
+{{ risk.description }}
+{% endmarkdown %}
                 </section>
                   {{ share(scope, fragment, with_embed=True) }}
               </div>

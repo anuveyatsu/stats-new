@@ -1,13 +1,14 @@
 var express = require('express');
 var nunjucks = require('nunjucks');
+var markdown = require('nunjucks-markdown');
+var marked = require('marked');
 //configurations
-var config = require('./config');
 //routes
 var api = require('./routes/api');
 var places = require('./routes/places');
 var risks = require('./routes/risks');
 var index = require('./routes/index');
-var map = require('./routes/map')
+var map = require('./routes/map');
 
 var app = express();
 var port = process.env.PORT || 8000;
@@ -17,6 +18,8 @@ var env = new nunjucks.configure(__dirname + '/views', {
     autoescape: false,
     express: app
 });
+
+markdown.register(env, marked);
 // filters entries 
 env.addFilter('search', function(self, options) {
 

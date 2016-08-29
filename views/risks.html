@@ -61,8 +61,10 @@
               </a>
             </td>
             <td>
-              {{ risk.description | truncate(400) }} <a href="{{ SITEURL }}/risk/{{ risk.id }}">Read more</a>
-            </td>
+{% markdown %}
+{{ risk.description | truncate(400) }} <a href="{{ SITEURL }}/risk/{{ risk.id }}">Read more</a>
+{% endmarkdown %}
+						</td>
             <td>	
               {% if top_entry %}
                 <span class="score score-top" data-score="{{ top_entry.score }}">{{ top_entry.score }}</span>
