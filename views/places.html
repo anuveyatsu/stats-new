@@ -31,8 +31,8 @@
     <thead>
       <tr>
         <th class="sort_place" title="Sort by A-Z">Place</th>
-        {% for risk in scope.risks %}
-          {% if risk.id %}
+        {% for risk in risks %}
+          {% if risk.title %}
             <th>
               {{ risk.title }}
             </th>
@@ -41,25 +41,20 @@
       </tr>
     </thead>
     <tbody>
-      {% for place in scope.places %}
-        {% if place.id %}
-          <tr data-rank="{{ place[scope.rank_lookup] or scope.cgr.na }}" data-score="{{ place[scope.score_lookup] or scope.cgr.na }}" data-place="{{ place.slug }}">
-            <td>  
-              <a href="{{ SITEURL }}/place/{{ place.slug }}/" title="{{ place.name }}">
-                {{ place.name|truncate(28) }}
-              </a>
-            </td>
-            {% for risk in scope.risks %}
-              {% if risk.id %}
-                {% set entry = scope.entries|search({place: place.id, risk:risk.id}) %}
-                <td class="score" data-score="{{ entry['score'] or scope.cgr.na }}">
-                   <span>{{ entry.score or "N/A"}}</span>
-                </td>
-              {% endif %}
-            {% endfor %}
-          </tr>
-        {% endif %}  
-      {% endfor %}
+		{% for place in entries %}
+	    <tr>
+				<td>  
+					<a href="{{ SITEURL }}/place/{{ place.slug }}/" title="{{ place.place }}">
+						{{ place.title|truncate(28) }}
+					</a>
+				</td>
+				{% for risk in place.risks_scores %}
+					<td class="score" data-score="{{ risk or N/A}}">
+						<span>{{ risk or "N/A"}}</span>
+					</td>
+				{% endfor %}
+       </tr>
+			{% endfor %}
     </tbody>
   </table>
 </div>
