@@ -10,7 +10,6 @@ var risks = Papa.parse(riskCsv, {header: true}).data;
 var places = Papa.parse(placeCsv, {header: true}).data;
 var entries = Papa.parse(entryCsv, {header: true}).data;
 var summary = Papa.parse(summaryCsv, {header: true}).data;
-var geoJson = require('./data/geo.json');
 
 var config = {
 	AUTHOR: "CyberGreen",
@@ -44,7 +43,6 @@ var config = {
         risks: risks,
         places: places,
         entries: entries,
-		geo: geoJson,
 		summary: summary
     }
 };

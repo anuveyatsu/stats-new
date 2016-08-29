@@ -62,5 +62,6 @@ exports.api = function(req, res) {
 };
 
 exports.geo = function(req, res) {
-    res.json(config.scope.geo);
+    var geoJson = require('../data/geo.json');
+    res.json(goeJson);
 };
