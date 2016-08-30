@@ -5,11 +5,13 @@ var riskCsv = fs.readFileSync(__dirname + '/data/risks.csv', 'utf8');
 var placeCsv = fs.readFileSync(__dirname + '/data/places.csv', 'utf8');
 var entryCsv = fs.readFileSync(__dirname + '/data/entries.csv', 'utf8');
 var summaryCsv = fs.readFileSync(__dirname + '/data/summary.csv', 'utf8');
+var asnCsv = fs.readFileSync(__dirname + '/data/asn-entries.csv', 'utf8');
 // transfoms csv to json
 var risks = Papa.parse(riskCsv, {header: true}).data;
 var places = Papa.parse(placeCsv, {header: true}).data;
 var entries = Papa.parse(entryCsv, {header: true}).data;
 var summary = Papa.parse(summaryCsv, {header: true}).data;
+var asn = Papa.parse(asnCsv, {header: true}).data;
 
 var config = {
 	AUTHOR: "CyberGreen",
@@ -43,7 +45,8 @@ var config = {
         risks: risks,
         places: places,
         entries: entries,
-		summary: summary
+		summary: summary,
+		asn: asn
     }
 };
 

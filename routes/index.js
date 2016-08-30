@@ -1,4 +1,5 @@
 var config = require('../config');
+var vg = require('vega');
 
 exports.home = function(req, res) {
     res.render('home.html', config);
@@ -57,6 +58,7 @@ exports.api = function(req, res) {
     if (config.scope[req.params.id]) {
         res.json(config.scope[req.params.id]);
     } else {
+        
         res.send('Request not found');
     }
 };
@@ -64,4 +66,31 @@ exports.api = function(req, res) {
 exports.geo = function(req, res) {
     var geoJson = require('../data/geo.json');
     res.json(geoJson);
+};
+
+exports.asn = function(req, res) {
+    var entries = config.scope.asn;
+    var places = config.scope.places;
+    var risks = config.scope.risks;
+    var place = req.params.id;
+    var result = [];
+
+    entries.forEach(function(entry) {
+        if (place === entry.place) {
+            obj = {time: entry.time, count: entry.count, asn: entry.asn};
+            places.forEach(function(country) {
+                if(place === country.id) {
+                    obj.place = country.name;
+                }
+            });
+            risks.forEach(function(risk) {
+                if(entry.risk === risk.id) {
+                    obj.risk = risk.title;
+                }
+            });
+            result.push(obj);	
+        }
+    });
+    
+    res.render('asn.html', {entries: result});
 };
