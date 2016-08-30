@@ -63,5 +63,5 @@ exports.api = function(req, res) {
 
 exports.geo = function(req, res) {
     var geoJson = require('../data/geo.json');
-    res.json(goeJson);
+    res.json(geoJson);
 };
