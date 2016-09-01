@@ -1,69 +1,61 @@
 {% extends 'page.html' %}
 
-{% from 'macros.html' import history, share %}
 {% set fragment = 'place' %}
 
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
   <li><a href="/place">Places</a></li>
-  <li class="active">{{ place.name }}</li>
+  <li class="active">{{ options[0].name }}</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
 <section id="data-header">
-    <div class="row">
-        <div class="col-md-6">
-            <h1>
-                <a href="/place/{{ place.slug }}/">{{ place.name|truncate(60) }}</a>{% if page.year != cgr.current_year %} / <a href="/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
-            </h1>
+  <div class="row">
+    <div class="col-md-6">
+      <h1>
+        <a href="/place/{{ options[0].slug }}/">{{ options[0].name }}</a>
+      </h1>
 
-<div class="table-responsive">
-    <table id="place-slice-table" class="table data-table table-header-stuck">
-        <col style="width:15%">
-        <col style="width:40%">
-        <col style="width:15%">
-        <col style="width:15%">
-        <col style="width:15%">
-        <thead>
-            <tr>
+      <div class="table-responsive">
+        <table id="place-slice-table" class="table data-table table-header-stuck">
+          <col style="width:15%">
+          <col style="width:40%">
+          <col style="width:15%">
+          <col style="width:15%">
+          <col style="width:15%">
+            <thead>
+              <tr>
                 <th>Rank</th>
                 <th>Risk</th>
                 <th>Previous</th>
                 <th>Count</th>
                 <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% set place = data.places|search({'slug': place.name})%}
-        
-        {% for risk in data.risks %}
-            {% if risk.id %}
-            
-            {% set entry = data.entries|search({'risk': risk.id, 'place': place.id}) %}
-
-              <tr data-rank="{{ entry.rank or cgr.na }}" data-score="{{ entry.score or cgr.na }}" data-place="{{ entry.place or cgr.na }}">
+              </tr>
+            </thead>
+            <tbody>
+            {% for option in options %}         
+              <tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-place="{{ option.place }}">
                 <td class="rank">
-                  {% if entry %} {{ entry.rank or "N/A" }} {% else %} {{ cgr.na }} {% endif %}
+                  {{ option.rank or "N/A" }}
                 </td>
                 <td>
-                    <a href="/place/{{ place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
+                    <a href="/place/{{ option.slug }}/{{ option.riskId }}/">{{ option.riskTitle }}</a>
                 </td>
                 <td class="previous-results">
-                {% if entry and entry.previous and entry.previous.score %}
-                    <span class="rank rank-previous">#{{ entry.previous.rank or "N/A" }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ entry.previous.score or cgr.na }}">{{ entry.previous.score or cgr.na }}%</span>
+                {% if option.previous and option.previous.score %}
+                    <span class="rank rank-previous">#{{ option.previous.rank }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ option.previous.score }}">{{ option.previous.score }}%</span>
                 {% else %}
                     N/A
                 {% endif %}
                 </td>
                 <td>
-                  {% if entry and entry.count %}{{ entry.count or "N/A"}}{% else %}N/A{% endif %}</span>
+                  {{ option.count or "N/A"}} </span>
                 </td>
-                <td class="score" data-score="{{ entry.score or cgr.na }}">
-                  <span>{% if entry and entry.score %}{{ entry.score }}{% else %}N/A{% endif %}</span>
+                <td class="score" data-score="{{ option.score }}">
+                  <span>{{ option.score or "N/A"}}</span>
                 </td>
               </tr>
-            {% endif %}  
         {% endfor %}
         </tbody>
     </table>

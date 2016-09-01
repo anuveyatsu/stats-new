@@ -1,19 +1,19 @@
 var config = require('../config');
 
+var entries = config.data.entries;
+var places = config.data.places;
+var risks = config.data.risks;
+
 exports.home = function(req, res) {
   res.render('home.html', config);
 };
 
 // places
 exports.place = function(req, res) {
-    
-  var entries = config.data.entries;
-  var places = config.data.places;
-  var risks = config.data.risks;
+  
   var result = [];
-    
   places.forEach(function(place) {
-    var row = {title: place.name, slug: place.slug, risks_scores: []};
+    var options = {title: place.name, slug: place.slug, risks_scores: []};
     risks.forEach(function(risk) {
       var risk_score = '';
       entries.forEach(function(entry) {
@@ -21,26 +21,43 @@ exports.place = function(req, res) {
         risk_score = entry.score;	
         }
       });
-      row.risks_scores.push(risk_score);
+      options.risks_scores.push(risk_score);
     });
-    result.push(row);
+    result.push(options);
   });
   res.render('places.html', {entries: result, risks: risks});
 };
 
 exports.placeID = function(req, res) {
-  config.place = {name: req.params.id};
-  res.render('place.html', config);
+  
+  place = findPace(places, req.params.id);
+  result = [];
+
+  risks.forEach( function(risk) {
+    options = {
+      name: place.name,
+      slug: place.slug,
+      riskTitle: risk.title,
+      riskId: risk.id
+    };
+    entries.forEach(function(entry) {
+      if(place.id === entry.place && risk.id === entry.risk){
+        options.rank  = entry.rank;
+        options.score = entry.score;
+        options.place = entry.place;
+        options.previous = entry.previous;
+        options.count = entry.count;
+      }
+    });
+    result.push(options);
+  });
+  res.render('place.html', {options: result});
 };
 
 // risks
 exports.risk = function(req, res) {
   
-  var entries = config.data.entries;
-  var places = config.data.places;
-  var risks = config.data.risks;
   var result = [];
-  
   risks.forEach(function(risk) {
     var top_score = -1;
     var worst_score = 100;
@@ -89,6 +106,9 @@ function findPace(data, place){
   var result = {};
   data.forEach(function(entry){
     if(entry.id === place ){
+      result = entry;
+    }
+    else if (entry.slug === place ) {
       result = entry;
     }
   });
