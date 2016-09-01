@@ -42,9 +42,9 @@ var config = {
 	SITEURL: "",
 	SITELOGO: "/static/images/cybergreen-logo-beta.png",
 	scope: {
-        risks: risks,
-        places: places,
-        entries: entries,
+    risks: risks,
+    places: places,
+    entries: entries,
 		summary: summary,
 		asn: asn
     }
