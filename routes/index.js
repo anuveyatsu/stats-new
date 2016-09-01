@@ -1,5 +1,4 @@
 var config = require('../config');
-var vg = require('vega');
 
 exports.home = function(req, res) {
     res.render('home.html', config);
@@ -92,5 +91,5 @@ exports.asn = function(req, res) {
         }
     });
     
-    res.render('asn.html', {entries: result});
+    res.render('asn.html', {entries: result, graphData: JSON.stringify(result)});
 };

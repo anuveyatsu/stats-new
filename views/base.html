@@ -18,6 +18,9 @@
     <!--[if lt IE 9]>
     <script src="{{ SITEURL }}/static/vendor/html5shiv.min.js"></script>
     <![endif]-->
+    <script src="http://vega.github.io/vega-editor/vendor/d3.min.js" charset="utf-8"></script>
+    <script src="http://vega.github.io/vega-editor/vendor/vega.js" charset="utf-8"></script>
+    <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script> 
     {% block head_css %}
     <link rel="stylesheet" href="{{ SITEURL }}/static/css/site.css">
     {% endblock head_css %}
@@ -108,7 +111,6 @@
                     <h1>{% block page_title %}{{ SITENAME }}{% endblock page_title %}</h1>
                 </header>
                 {% endblock heading %}
-
                 {% block content %}
                 {% endblock content %}
             </div>
@@ -146,6 +148,7 @@
 {% endblock footer %}
 {% block body_scripts %}
 <script data-main="{{ SITEURL }}/static/scripts/site" src="{{ SITEURL }}/static/scripts/require.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/static/scripts/site/graphs.js"></script>
 {% include '_analytics.html' %}
 {% endblock body_scripts %}
 </body>

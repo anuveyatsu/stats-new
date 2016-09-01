@@ -1,0 +1,51 @@
+{% extends 'page.html' %}
+
+{% set fragment = 'ASN' %}
+
+{% block heading %}{% endblock heading %}
+
+{% block content %}
+<header id="place-intro" class="page-header">
+  <h1>ASN</h1>
+</header>
+<div id="vis"></div>
+<script>var graphData = {{ graphData }}</script>
+<div class="table-responsive">
+  <table id="places_overview_table" class="table data-table table-header-stuck">
+    <thead>
+      <tr>
+        <th class="sort_place" title="Sort by A-Z">Risk</th>
+        <th class="sort_place" title="Sort by A-Z">Place</th>
+        <th class="sort_place" title="Sort by A-Z">Time</th>
+        <th class="sort_place" title="Sort by A-Z">Count</th>
+        <th class="sort_place" title="Sort by A-Z">ASN</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+          {% if entry.asn %}        
+            <tr data-rank="{{ entry.count }}" data-score="{{ entry.count }}" data-place="{{ entry.count }}">
+              <td>  
+                <a href="{{ SITEURL }}/risk/{{ entry.risk }}/" title="{{ entry.risk }}">
+                  {{ entry.risk|truncate(28) or N/A}}
+                </a>
+              </td>
+              <td class="score" >  
+                <span>{{ entry.place or N/A}}</span>
+              </td>
+              <td class="score">  
+                <span>{{ entry.time or N/A}}</span>
+              </td>
+              <td class="score">  
+                <span>{{ entry.count or N/A}}</span>
+              </td>
+              <td class="score">  
+                <span>{{ entry.asn or N/A}}</span>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+    </tbody>
+  </table>
+</div
+{% endblock content %}
