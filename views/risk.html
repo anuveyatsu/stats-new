@@ -7,7 +7,7 @@
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
-  <li><a href="{{ SITEURL }}/risk/">Risks</a></li>
+  <li><a href="/risk/">Risks</a></li>
   <li class="active">{{ scope.risk.title }}</li>
 {% endblock breadcrumbs_inner %}
 
@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-md-6">
             <h1>
-                <a href="{{ SITEURL }}/risk/{{ scope.risk.title }}/">{{ scope.risk.title|truncate(60) }}</a>
+                <a href="/risk/{{ scope.risk.title }}/">{{ scope.risk.title|truncate(60) }}</a>
             </h1>
             {% set risk = scope.risks|search({'id': scope.risk.title})%}
             <div class="row navigate">
@@ -64,7 +64,7 @@
                       {{ entry.rank}}
                   </td>
                   <td>
-                    <a href="{{ SITEURL }}/place/{{ entry.place.slug }}/{{ scope.risk.id }}/">{{ entry.place }}</a>
+                    <a href="/place/{{ entry.place.slug }}/{{ scope.risk.id }}/">{{ entry.place }}</a>
                   </td>
                   <td data-score="{{ entry.count or scope.cgr.na }}">
                       <span>{% if entry.count %}{{ entry.count }}{% else %}{{ scope.cgr.na }}{% endif %}</span>

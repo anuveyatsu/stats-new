@@ -6,7 +6,7 @@
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
-  <li><a href="{{ SITEURL }}/place">Places</a></li>
+  <li><a href="/place">Places</a></li>
   <li class="active">{{ scope.place.name }}</li>
 {% endblock breadcrumbs_inner %}
 
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-6">
             <h1>
-                <a href="{{ SITEURL }}/place/{{ scope.place.slug }}/">{{ scope.place.name|truncate(60) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="{{ SITEURL }}/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
+                <a href="/place/{{ scope.place.slug }}/">{{ scope.place.name|truncate(60) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
             </h1>
 
 <div class="table-responsive">
@@ -48,7 +48,7 @@
                   {% if entry %} {{ entry.rank or "N/A" }} {% else %} {{ scope.cgr.na }} {% endif %}
                 </td>
                 <td>
-                    <a href="{{ SITEURL }}/place/{{ scope.place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
+                    <a href="/place/{{ scope.place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
                 </td>
                 <td class="previous-results">
                 {% if entry and entry.previous and entry.previous.score %}

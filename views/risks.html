@@ -56,27 +56,27 @@
 					
           <tr data-rank="{{ risk.rank }}" data-score="{{ risk.score }}" data-risk="{{ risk.slug }}">
             <td class="risks-risk-col">
-              <a href="{{ SITEURL }}/risk/{{ risk.id }}/" title="{{ risk.title }}">
+              <a href="/risk/{{ risk.id }}/" title="{{ risk.title }}">
                 {{ risk.title }}
               </a>
             </td>
             <td>
 {% markdown %}
-{{ risk.description | truncate(400) }} <a href="{{ SITEURL }}/risk/{{ risk.id }}">Read more</a>
+{{ risk.description | truncate(400) }} <a href="/risk/{{ risk.id }}">Read more</a>
 {% endmarkdown %}
 						</td>
             <td>	
               {% if top_entry %}
                 <span class="score score-top" data-score="{{ top_entry.score }}">{{ top_entry.score }}</span>
                 {% for place in top_places %}
-									<a href="{{ SITEURL }}/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+									<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
                 {% endfor %}
               {% endif %}
             <br>
 							{% if bottom_entry %}
 								<span class="score score-bottom" data-score="{{ bottom_entry.score }}">{{ bottom_entry.score }}</span>
 								{% for place in bottom_places %}
-									<a href="{{ SITEURL }}/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+									<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
                 {% endfor %}
 							{% endif %}
             </td>
