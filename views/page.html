@@ -5,19 +5,11 @@
 {%- endblock meta_title %}
 
 {% block meta_description -%}
-{% if scope and scope.metadescription %}
-{{ scope.metadescription }}
-{% else %}
 {{ CGR.description }}
-{% endif %}
 {%- endblock meta_description %}
 
 {% block meta_keywords -%}
-{% if scope and scope.metakeywords %}
-{{ scope.metakeywords }}, {{ CGR.keywords }}
-{% else %}
 {{ CGR.keywords }}
-{% endif %}
 {%- endblock meta_keywords %}
 
 {% block body_classes -%}{{ page.type }}{%- endblock body_classes %}

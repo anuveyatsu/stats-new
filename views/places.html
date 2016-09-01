@@ -10,7 +10,7 @@
 
 {% block content %}
 <header id="place-intro" class="page-header">
-  <h1>Place overview {% if page.year != scope.cgr.current_year %}{{ page.year }}{% endif %}</h1>
+  <h1>Place overview {{ page.year }}</h1>
   <hr />
   {{ page.content }}
 </header>

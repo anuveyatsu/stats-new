@@ -7,9 +7,9 @@ exports.home = function(req, res) {
 // places
 exports.place = function(req, res) {
     
-  var entries = config.scope.entries;
-  var places = config.scope.places;
-  var risks = config.scope.risks;
+  var entries = config.data.entries;
+  var places = config.data.places;
+  var risks = config.data.risks;
   var result = [];
     
   places.forEach(function(place) {
@@ -33,7 +33,7 @@ exports.place = function(req, res) {
 };
 
 exports.placeID = function(req, res) {
-  config.scope.place = {name: req.params.id};
+  config.place = {name: req.params.id};
   res.render('place.html', config);
 };
 
@@ -43,7 +43,7 @@ exports.risk = function(req, res) {
 };
 
 exports.riskID = function(req, res) {
-  config.scope.risk = {title: req.params.id};
+  config.risk = {title: req.params.id};
   res.render('risk.html', config);
 };
 
@@ -54,10 +54,9 @@ exports.map = function(req, res) {
 
 // api
 exports.api = function(req, res) {
-  if (config.scope[req.params.id]) {
-    res.json(config.scope[req.params.id]);
+  if (config.data[req.params.id]) {
+    res.json(config.data[req.params.id]);
   } else {
-      
     res.send('Request not found');
   }
 };
@@ -68,9 +67,9 @@ exports.geo = function(req, res) {
 };
 
 exports.asn = function(req, res) {
-  var entries = config.scope.asn;
-  var places = config.scope.places;
-  var risks = config.scope.risks;
+  var entries = config.data.asn;
+  var places = config.data.places;
+  var risks = config.data.risks;
   var place = req.params.id;
   var result = [];
 

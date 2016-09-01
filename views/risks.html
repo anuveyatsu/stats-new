@@ -31,27 +31,27 @@
       </tr>
     </thead>
     <tbody>
-      {% for risk in scope.risks %}
+      {% for risk in data.risks %}
 
 				{% if risk.id %}
-        {% set entries = scope.entries|where({'risk': risk.id}) %}			
+        {% set entries = data.entries|where({'risk': risk.id}) %}			
         {% if entries %}
 
           {% set top_places = [] %}
           {% set top_entry = entries|first%}
           
-					{% set top_entries = scope.entries|where({'risk': risk.id, 'score': top_entry.score}) %}
+					{% set top_entries = data.entries|where({'risk': risk.id, 'score': top_entry.score}) %}
           
 					{% for entry in top_entries %}
-						{% set top_places = top_places + scope.places|where({'id': entry.place}) %}
+						{% set top_places = top_places + data.places|where({'id': entry.place}) %}
           {% endfor %}
 					
           {% set bottom_places = [] %}
           {% set bottom_entry = entries|last%}
-          {% set bottom_entries = scope.entries|where({'risk': risk.id, 'score': bottom_entry.score} )%}
+          {% set bottom_entries = data.entries|where({'risk': risk.id, 'score': bottom_entry.score} )%}
           {% for entry in bottom_entries %}
             
-						{% set bottom_places = bottom_places + scope.places|where({'id': entry.place}) %}
+						{% set bottom_places = bottom_places + data.places|where({'id': entry.place}) %}
           {% endfor %}
 					
           <tr data-rank="{{ risk.rank }}" data-score="{{ risk.score }}" data-risk="{{ risk.slug }}">

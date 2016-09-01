@@ -82,7 +82,7 @@
         </p>
         <div class="cgr-vis-share"
              title="Share this visualisation with others">
-            <a target="_blank" href="http://twitter.com/share?url=''&text={{ scope.social_share_text }}" title="Share this visualisation on Twitter"><i class="fa fa-twitter-square"></i></a>&nbsp;<a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=''" title="Share this visualisation on Facebook"><i class="fa fa-facebook-square"></i></a>&nbsp;<a target="_blank" href="https://plus.google.com/share?url=''" title="Share this visualisation on Google+"><i class="fa fa-google-plus-square"></i></a>&nbsp;
+            <a target="_blank" href="http://twitter.com/share?url=''&text={{ social_share_text }}" title="Share this visualisation on Twitter"><i class="fa fa-twitter-square"></i></a>&nbsp;<a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=''" title="Share this visualisation on Facebook"><i class="fa fa-facebook-square"></i></a>&nbsp;<a target="_blank" href="https://plus.google.com/share?url=''" title="Share this visualisation on Google+"><i class="fa fa-google-plus-square"></i></a>&nbsp;
         </div>
     </div>
     <div class="cgr-vis-info-section">
@@ -91,7 +91,7 @@
             Use the following code to embed this visualisation into your own website.
         </p>
         <div>
-            <xmp contenteditable="true"><iframe width="{{ scope.embed_width }}" height="{{ scope.embed_height }}" src="/{{ page.slug }}<%= state_params %>" frameBorder="0"></iframe></xmp>
+            <xmp contenteditable="true"><iframe width="{{ embed_width }}" height="{{ embed_height }}" src="/{{ page.slug }}<%= state_params %>" frameBorder="0"></iframe></xmp>
         </div>
     </div>
 </script>
@@ -119,7 +119,7 @@
 </script>
 
 <script type="text/template" class="title-box">
-    <img class="logo" src="{{scope.cgr.logosquare}}" alt="" />
+    <img class="logo" src="{{cgr.logosquare}}" alt="" />
     <div class="title-box-text"><span class="title-box-text-name"><%= sitename %></span><br /><%= title %></div>
 </script>
 {% endblock content %}

@@ -39,9 +39,8 @@ var config = {
 			"name": "AUTHOR"
 		}
 	},
-	SITEURL: "",
 	SITELOGO: "/static/images/cybergreen-logo-beta.png",
-	scope: {
+	data: {
     risks: risks,
     places: places,
     entries: entries,

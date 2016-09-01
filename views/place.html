@@ -7,7 +7,7 @@
 
 {% block breadcrumbs_inner %}
   <li><a href="/place">Places</a></li>
-  <li class="active">{{ scope.place.name }}</li>
+  <li class="active">{{ place.name }}</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-6">
             <h1>
-                <a href="/place/{{ scope.place.slug }}/">{{ scope.place.name|truncate(60) }}</a>{% if page.year != scope.cgr.current_year %} / <a href="/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
+                <a href="/place/{{ place.slug }}/">{{ place.name|truncate(60) }}</a>{% if page.year != cgr.current_year %} / <a href="/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
             </h1>
 
 <div class="table-responsive">
@@ -35,24 +35,23 @@
             </tr>
         </thead>
         <tbody>
-        {% set place = scope.places|search({'slug': scope.place.name})%}
-        {% for risk in scope.risks %}
+        {% set place = data.places|search({'slug': place.name})%}
+        
+        {% for risk in data.risks %}
             {% if risk.id %}
             
-            {% set entry = scope.entries|search({'risk': risk.id, 'place': place.id}) %}
+            {% set entry = data.entries|search({'risk': risk.id, 'place': place.id}) %}
 
-            {# previous can be None - be carefull! #}
-
-              <tr data-rank="{{ entry.rank or scope.cgr.na }}" data-score="{{ entry.score or scope.cgr.na }}" data-place="{{ entry.place or scope.cgr.na }}">
+              <tr data-rank="{{ entry.rank or cgr.na }}" data-score="{{ entry.score or cgr.na }}" data-place="{{ entry.place or cgr.na }}">
                 <td class="rank">
-                  {% if entry %} {{ entry.rank or "N/A" }} {% else %} {{ scope.cgr.na }} {% endif %}
+                  {% if entry %} {{ entry.rank or "N/A" }} {% else %} {{ cgr.na }} {% endif %}
                 </td>
                 <td>
-                    <a href="/place/{{ scope.place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
+                    <a href="/place/{{ place.slug }}/{{ entry.risk.id }}/">{{ risk.title }}</a>
                 </td>
                 <td class="previous-results">
                 {% if entry and entry.previous and entry.previous.score %}
-                    <span class="rank rank-previous">#{{ entry.previous.rank or "N/A" }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ entry.previous.score or scope.cgr.na }}">{{ entry.previous.score or scope.cgr.na }}%</span>
+                    <span class="rank rank-previous">#{{ entry.previous.rank or "N/A" }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ entry.previous.score or cgr.na }}">{{ entry.previous.score or cgr.na }}%</span>
                 {% else %}
                     N/A
                 {% endif %}
@@ -60,7 +59,7 @@
                 <td>
                   {% if entry and entry.count %}{{ entry.count or "N/A"}}{% else %}N/A{% endif %}</span>
                 </td>
-                <td class="score" data-score="{{ entry.score or scope.cgr.na }}">
+                <td class="score" data-score="{{ entry.score or cgr.na }}">
                   <span>{% if entry and entry.score %}{{ entry.score }}{% else %}N/A{% endif %}</span>
                 </td>
               </tr>
