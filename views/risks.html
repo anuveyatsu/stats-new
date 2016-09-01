@@ -9,10 +9,7 @@
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
-<div class="row">
-</div>
 
-<hr />
 
 <div class="table-responsive">
   <table id="datasets_overview_table" class="table data-table table-header-stuck">
@@ -31,65 +28,37 @@
       </tr>
     </thead>
     <tbody>
-      {% for risk in data.risks %}
-
-				{% if risk.id %}
-        {% set entries = data.entries|where({'risk': risk.id}) %}			
-        {% if entries %}
-
-          {% set top_places = [] %}
-          {% set top_entry = entries|first%}
-          
-					{% set top_entries = data.entries|where({'risk': risk.id, 'score': top_entry.score}) %}
-          
-					{% for entry in top_entries %}
-						{% set top_places = top_places + data.places|where({'id': entry.place}) %}
-          {% endfor %}
+      {% for risk in risks %}
 					
-          {% set bottom_places = [] %}
-          {% set bottom_entry = entries|last%}
-          {% set bottom_entries = data.entries|where({'risk': risk.id, 'score': bottom_entry.score} )%}
-          {% for entry in bottom_entries %}
-            
-						{% set bottom_places = bottom_places + data.places|where({'id': entry.place}) %}
-          {% endfor %}
-					
-          <tr data-rank="{{ risk.rank }}" data-score="{{ risk.score }}" data-risk="{{ risk.slug }}">
-            <td class="risks-risk-col">
-              <a href="/risk/{{ risk.id }}/" title="{{ risk.title }}">
-                {{ risk.title }}
-              </a>
-            </td>
-            <td>
+				<tr data-rank="{{ risk.rank }}" data-score="{{ risk.score }}" data-risk="{{ risk.id }}">
+					<td class="risks-risk-col">
+						<a href="/risk/{{ risk.id }}/" title="{{ risk.title }}">
+							{{ risk.title }}
+						</a>
+					</td>
+          <td>
 {% markdown %}
 {{ risk.description | truncate(400) }} <a href="/risk/{{ risk.id }}">Read more</a>
 {% endmarkdown %}
-						</td>
-            <td>	
-              {% if top_entry %}
-                <span class="score score-top" data-score="{{ top_entry.score }}">{{ top_entry.score }}</span>
-                {% for place in top_places %}
-									<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
-                {% endfor %}
-              {% endif %}
-            <br>
-							{% if bottom_entry %}
-								<span class="score score-bottom" data-score="{{ bottom_entry.score }}">{{ bottom_entry.score }}</span>
-								{% for place in bottom_places %}
-									<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
-                {% endfor %}
-							{% endif %}
-            </td>
-            <td class="total">
-              <span>{{ risk.total }}</span>
-            </td>
-            <td class="score" data-score="{{ risk.score }}">
-              <span>{{ risk.score }}%</span>
-            </td>
-          </tr>
-
-        {% endif %}
-			{% endif %}
+					</td>
+					<td>	
+						<span class="score score-top" data-score="{{ risk.topPlaces[0].score }}">{{ risk.topPlaces[0].score }}</span>
+						{% for place in risk.topPlaces %}
+							<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+						{% endfor %}
+					<br>
+						<span class="score score-bottom" data-score="{{ risk.worstPlaces[0].score }}">{{ risk.worstPlaces[0].score }}</span>
+						{% for place in risk.worstPlaces %}
+							<a href="/place/{{ place.slug }}/{{ risk.id }}/">{{ place.name }}</a>&nbsp;
+						{% endfor %}
+					</td>
+					<td class="total">
+						<span>{{ risk.total }}</span>
+					</td>
+					<td class="score" data-score="{{ risk.score }}">
+						<span>{{ risk.score }}%</span>
+					</td>
+        </tr>
       {% endfor %}
     </tbody>
   </table>

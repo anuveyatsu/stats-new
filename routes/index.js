@@ -13,21 +13,17 @@ exports.place = function(req, res) {
   var result = [];
     
   places.forEach(function(place) {
-    if (place.id) {
-      var row = {title: place.name, slug: place.slug, risks_scores: []};
-      risks.forEach(function(risk) {
-        if (risk.id){
-          var risk_score = '';
-          entries.forEach(function(entry) {
-            if(place.id === entry.place && risk.id === entry.risk){
-            risk_score = entry.score;	
-            }
-          });
-          row.risks_scores.push(risk_score);
+    var row = {title: place.name, slug: place.slug, risks_scores: []};
+    risks.forEach(function(risk) {
+      var risk_score = '';
+      entries.forEach(function(entry) {
+        if(place.id === entry.place && risk.id === entry.risk){
+        risk_score = entry.score;	
         }
       });
-      result.push(row);
-    }
+      row.risks_scores.push(risk_score);
+    });
+    result.push(row);
   });
   res.render('places.html', {entries: result, risks: risks});
 };
@@ -39,8 +35,65 @@ exports.placeID = function(req, res) {
 
 // risks
 exports.risk = function(req, res) {
-  res.render('risks.html', config);
+  
+  var entries = config.data.entries;
+  var places = config.data.places;
+  var risks = config.data.risks;
+  var result = [];
+  
+  risks.forEach(function(risk) {
+    var top_score = -1;
+    var worst_score = 100;
+    var options = {
+      rank: risk.rank,
+      score: risk.score,
+      id: risk.id,
+      title: risk.title,
+      description: risk.description,
+      topPlaces: [],
+      worstPlaces: []
+    };
+    
+    entries.forEach(function(entry) {
+      if (entry.risk === risk.id){
+        // collecting places best scores
+        if (Number(entry.score) > top_score){
+          top_score = entry.score;
+          options.topPlaces = [];
+          place = findPace(places, entry.place);
+          options.topPlaces.push(place);
+        } else if (Number(entry.score) === top_score) {
+          top_score = entry.score;
+          place = findPace(places, entry.place);
+          options.topPlaces.push(place);
+        }
+        // colecting places with worst scores
+        if (Number(entry.score) < worst_score){
+          worst_score = entry.score;
+          options.worstPlaces = [];
+          place = findPace(places, entry.place);
+          options.worstPlaces.push(place);
+        } else if (Number(entry.score) === worst_score) {
+          worst_score = entry.score;
+          place = findPace(places, entry.place);
+          options.worstPlaces.push(place);
+        }
+      }
+    });
+    result.push(options);
+  });
+  res.render('risks.html', {risks: result});
 };
+  
+function findPace(data, place){
+  var result = {};
+  data.forEach(function(entry){
+    if(entry.id === place ){
+      result = entry;
+    }
+  });
+  return result;
+}
 
 exports.riskID = function(req, res) {
   config.risk = {title: req.params.id};
