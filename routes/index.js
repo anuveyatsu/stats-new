@@ -4,8 +4,17 @@ var entries = config.data.entries;
 var places = config.data.places;
 var risks = config.data.risks;
 
+// home page
 exports.home = function(req, res) {
-  res.render('home.html', config);
+  var updates = {
+    embed_width: '100%',
+    embed_height: '300px',
+    current_year: 2016,
+    filter_risk: config.data.risks[0].id,
+    embed_title: config.data.risks[0].id + ' / ' + 2016
+  };
+  config.updates = updates;
+  res.render('home.html', {config: config});
 };
 
 // places
@@ -30,8 +39,8 @@ exports.place = function(req, res) {
 
 exports.placeID = function(req, res) {
   
-  place = getMatchedEntry(places, 'slug', req.params.id);
-  result = [];
+  var place = getMatchedEntry(places, 'slug', req.params.id);
+  var result = [];
 
   risks.forEach( function(risk) {
     options = {
@@ -51,7 +60,18 @@ exports.placeID = function(req, res) {
     });
     result.push(options);
   });
-  res.render('place.html', {options: result});
+  var updates = {
+    embed_width: '100%',
+    embed_height: '360px',
+    current_year: 2016,
+    filter_risk: config.data.risks[0].id,
+    embed_title: config.data.risks[0].id + ' / ' + 2016,
+    panel_tools: true,
+    panel_share: false,
+    map_place: place.id
+  };
+  config.updates = updates;
+  res.render('place.html', {options: result, config: config});
 };
 
 // risks
@@ -99,7 +119,7 @@ exports.risk = function(req, res) {
     });
     result.push(options);
   });
-  res.render('risks.html', {options: result});
+  res.render('risks.html', {options: result, config: config});
 };
 
 exports.riskID = function(req, res) {
@@ -121,7 +141,18 @@ exports.riskID = function(req, res) {
       result.push(options);
     }
   });
-  res.render('risk.html', {options: result, riskOpt: riskOptions});
+
+  var updates = {
+    embed_width: '100%',
+    embed_height: '360px',
+    current_year: 2016,
+    filter_risk: req.params.id,
+    embed_title: req.params.id + ' / ' + 2016,
+    panel_tools: false,
+    panel_share: false,
+  };
+  config.updates = updates;
+  res.render('risk.html', {options: result, riskOpt: riskOptions, config: config});
 };
 
 // map

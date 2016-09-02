@@ -1,6 +1,6 @@
 {% extends 'page.html' %}
 
-{% set fragment = 'place' %}
+{% set fragment = 'place / {{ options[0].slug }}' %}
 
 {% block heading %}{% endblock heading %}
 
@@ -24,43 +24,49 @@
           <col style="width:15%">
           <col style="width:15%">
           <col style="width:15%">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Risk</th>
-                <th>Previous</th>
-                <th>Count</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for option in options %}         
-              <tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-place="{{ option.place }}">
-                <td class="rank">
-                  {{ option.rank or "N/A" }}
-                </td>
-                <td>
-                    <a href="/place/{{ option.slug }}/{{ option.riskId }}/">{{ option.riskTitle }}</a>
-                </td>
-                <td class="previous-results">
-                {% if option.previous and option.previous.score %}
-                    <span class="rank rank-previous">#{{ option.previous.rank }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ option.previous.score }}">{{ option.previous.score }}%</span>
-                {% else %}
-                    N/A
-                {% endif %}
-                </td>
-                <td>
-                  {{ option.count or "N/A"}} </span>
-                </td>
-                <td class="score" data-score="{{ option.score }}">
-                  <span>{{ option.score or "N/A"}}</span>
-                </td>
-              </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-            
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Risk</th>
+              <th>Previous</th>
+              <th>Count</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for option in options %}         
+            <tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-place="{{ option.place }}">
+              <td class="rank">
+                {{ option.rank or "N/A" }}
+              </td>
+              <td>
+                  <a href="/place/{{ option.slug }}/{{ option.riskId }}/">{{ option.riskTitle }}</a>
+              </td>
+              <td class="previous-results">
+              {% if option.previous and option.previous.score %}
+                  <span class="rank rank-previous">#{{ option.previous.rank }}</span>&nbsp;&nbsp;<span class="score score-previous" data-score="{{ option.previous.score }}">{{ option.previous.score }}%</span>
+              {% else %}
+                  N/A
+              {% endif %}
+              </td>
+              <td>
+                {{ option.count or "N/A"}} </span>
+              </td>
+              <td class="score" data-score="{{ option.score }}">
+                <span>{{ option.score or "N/A"}}</span>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="map-container">
+        {% include 'dataviews/embed_map.html' %}
+      </div>
+    </div>
+  </div>
 </section>
+
 {% endblock content %}
