@@ -16,47 +16,6 @@ var env = new nunjucks.configure(__dirname + '/views', {
 });
 // registering markdown 
 markdown.register(env, marked);
-// filters entries 
-env.addFilter('search', function(self, options) {
-
-  var result = {};
-  var keys = Object.keys(options);
-  var test = '';
-  // constructs condition to test, depending on options' values
-  keys.forEach(function(item, index){
-    if (index < 1) {
-      test = test + 'item.' + item + '===options.' + item;
-    } else {    
-      test = test + '&&'+'item.' + item + '===options.' + item;
-    }
-  });
-  self.forEach(function(item){
-    if (eval(test)){
-      result = item;
-    }
-  });
-  return result;
-});
-
-env.addFilter('where', function(self, options) {
-  var result = [];
-  var keys = Object.keys(options);
-  var test = '';
-  // constructs condition to test, depending on options' values
-  keys.forEach(function(item, index){
-    if (index < 1) {
-        test = test + 'item.' + item + '===options.' + item;
-    } else {    
-        test = test + '&&'+'item.' + item + '===options.' + item;
-    }
-  });
-  self.forEach(function(item){
-    if (eval(test)){
-      result.push(item);
-    }
-  });
-  return result;
-});
 
 app.get('/', routes.home);
 app.get('/place', routes.place);
