@@ -115,9 +115,37 @@ function findPace(data, place){
   return result;
 }
 
+
+function findRisk(data, risk){
+  var result = {};
+  data.forEach(function(entry){
+    if(entry.id === risk ){
+      result = entry;
+    }
+  });
+  return result;
+}
+
 exports.riskID = function(req, res) {
-  config.risk = {title: req.params.id};
-  res.render('risk.html', config);
+  var result = [];
+  var riskOptions = findRisk(risks, req.params.id);
+  
+  entries.forEach(function(entry) {
+    if (entry.risk === req.params.id){
+      var placeOptions = findPace(places, entry.place);
+      var options = {
+        rank: entry.rank,
+        score: entry.score,
+        slug: placeOptions.slug,
+        riskId: riskOptions.id,
+        placeName: placeOptions.name,
+        count: entry.count,
+        placeID: placeOptions.id
+      };
+      result.push(options);
+    }
+  });
+  res.render('risk.html', {options: result, riskOpt: riskOptions});
 };
 
 // map
