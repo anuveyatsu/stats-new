@@ -31,7 +31,7 @@
     <thead>
       <tr>
         <th class="sort_place" title="Sort by A-Z">Place</th>
-        {% for risk in risks %}
+        {% for risk in riskOpt %}
           {% if risk.title %}
             <th>
               {{ risk.title }}
@@ -41,14 +41,14 @@
       </tr>
     </thead>
     <tbody>
-		{% for place in entries %}
+		{% for option in options %}
 	    <tr>
 				<td>  
-					<a href="/place/{{ place.slug }}/" title="{{ place.place }}">
-						{{ place.title|truncate(28) }}
+					<a href="/place/{{ option.slug }}/" title="{{ option.place }}">
+						{{ option.title|truncate(28) }}
 					</a>
 				</td>
-				{% for risk in place.risks_scores %}
+				{% for risk in option.risks_scores %}
 					<td class="score" data-score="{{ risk or N/A}}">
 						<span>{{ risk or "N/A"}}</span>
 					</td>

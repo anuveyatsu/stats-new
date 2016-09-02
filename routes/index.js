@@ -25,12 +25,12 @@ exports.place = function(req, res) {
     });
     result.push(options);
   });
-  res.render('places.html', {entries: result, risks: risks});
+  res.render('places.html', {options: result, riskOpt: risks});
 };
 
 exports.placeID = function(req, res) {
   
-  place = findPace(places, req.params.id);
+  place = getMatchedEntry(places, 'slug', req.params.id);
   result = [];
 
   risks.forEach( function(risk) {
@@ -77,62 +77,38 @@ exports.risk = function(req, res) {
         if (Number(entry.score) > top_score){
           top_score = entry.score;
           options.topPlaces = [];
-          place = findPace(places, entry.place);
+          place = getMatchedEntry(places, 'id',entry.place);
           options.topPlaces.push(place);
         } else if (Number(entry.score) === top_score) {
           top_score = entry.score;
-          place = findPace(places, entry.place);
+          place = getMatchedEntry(places, 'id',entry.place);
           options.topPlaces.push(place);
         }
         // colecting places with worst scores
         if (Number(entry.score) < worst_score){
           worst_score = entry.score;
           options.worstPlaces = [];
-          place = findPace(places, entry.place);
+          place = getMatchedEntry(places, 'id',entry.place);
           options.worstPlaces.push(place);
         } else if (Number(entry.score) === worst_score) {
           worst_score = entry.score;
-          place = findPace(places, entry.place);
+          place = getMatchedEntry(places, 'id',entry.place);
           options.worstPlaces.push(place);
         }
       }
     });
     result.push(options);
   });
-  res.render('risks.html', {risks: result});
+  res.render('risks.html', {options: result});
 };
-  
-function findPace(data, place){
-  var result = {};
-  data.forEach(function(entry){
-    if(entry.id === place ){
-      result = entry;
-    }
-    else if (entry.slug === place ) {
-      result = entry;
-    }
-  });
-  return result;
-}
-
-
-function findRisk(data, risk){
-  var result = {};
-  data.forEach(function(entry){
-    if(entry.id === risk ){
-      result = entry;
-    }
-  });
-  return result;
-}
 
 exports.riskID = function(req, res) {
   var result = [];
-  var riskOptions = findRisk(risks, req.params.id);
+  var riskOptions = getMatchedEntry(risks, 'id', req.params.id);
   
   entries.forEach(function(entry) {
     if (entry.risk === req.params.id){
-      var placeOptions = findPace(places, entry.place);
+      var placeOptions = getMatchedEntry(places, 'id',entry.place);
       var options = {
         rank: entry.rank,
         score: entry.score,
@@ -168,9 +144,7 @@ exports.geo = function(req, res) {
 };
 
 exports.asn = function(req, res) {
-  var entries = config.data.asn;
-  var places = config.data.places;
-  var risks = config.data.risks;
+
   var place = req.params.id;
   var result = [];
 
@@ -193,3 +167,13 @@ exports.asn = function(req, res) {
   
   res.render('asn.html', {entries: result, graphData: JSON.stringify(result)});
 };
+
+function getMatchedEntry(data, matchWith, matchTo){
+  var result = {};
+  data.forEach(function(entry){
+    if(entry[matchWith] === matchTo ){
+      result = entry;
+    }
+  });
+  return result;
+}
