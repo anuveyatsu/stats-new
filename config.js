@@ -45,7 +45,8 @@ var config = {
     places: places,
     entries: entries,
 		summary: summary,
-		asn: asn
+		asn: asn,
+		test: {"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}
     }
 };
 

@@ -10,7 +10,7 @@ describe('Content', function(){
       .get('/')
       .expect(200)
       .end(function(err, res) {
-        checkContent(res, 'Home');
+        checkContent(res, 'Tracking the state of global cyber health.');
         done();
       });
   });
@@ -27,15 +27,54 @@ describe('Content', function(){
   
   it('place/{id} page', function(done){
     request(app)
-      .get('/place/test-place')
+      .get('/place/united-kingdom')
       .expect(200)
       .end(function(err, res) {
-        checkContent(res, 'test-place');
+        checkContent(res, 'united-kingdom');
         checkContent(res, 'Places');
         done();
       });
   });
+  
+  it('risk page', function(done){
+    request(app)
+      .get('/risk')
+      .expect(200)
+      .end(function(err, res) {
+        checkContent(res, 'Overview of Risks');
+        checkContent(res, 'Spam'); 
+        done();
+      });
+  });
+  
+  it('risk/{id} page', function(done){
+    request(app)
+      .get('/risk/openntp/')
+      .expect(200)
+      .end(function(err, res) {
+        checkContent(res, 'Open NTP');
+        checkContent(res, 'Devices'); 
+        done();
+      });
+  });
+  
+  
 });
+
+describe('GET /api', function(){
+  this.timeout(5000);
+  it('responds with correct json', function(done){
+    var url = '/api/test.json';
+    request(app)
+      .get(url)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        checkContent(res, '{"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}'); 
+        done();
+      });
+  });
+});
+
 
 function checkContent(res, expected) {
   var found = res.text.match(expected);
