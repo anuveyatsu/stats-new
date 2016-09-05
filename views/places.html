@@ -41,20 +41,20 @@
       </tr>
     </thead>
     <tbody>
-		{% for option in options %}
-	    <tr>
-				<td>  
-					<a href="/place/{{ option.slug }}/" title="{{ option.place }}">
-						{{ option.title|truncate(28) }}
-					</a>
-				</td>
-				{% for risk in option.risks_scores %}
-					<td class="score" data-score="{{ risk or N/A}}">
-						<span>{{ risk or "N/A"}}</span>
-					</td>
-				{% endfor %}
-       </tr>
-			{% endfor %}
+	{% for option in options %}
+	  <tr>
+		<td>  
+		  <a href="/place/{{ option.slug }}/" title="{{ option.place }}">
+		    {{ option.title|truncate(28) }}
+		  </a>
+		</td>
+		{% for risk in option.risks_scores %}
+		  <td class="score" data-score="{{ risk or N/A}}">
+			<span>{{ risk or "N/A"}}</span>
+		  </td>
+		{% endfor %}
+      </tr>
+	{% endfor %}
     </tbody>
   </table>
 </div>
