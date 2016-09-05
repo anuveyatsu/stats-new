@@ -1,7 +1,7 @@
 {% extends 'page.html' %}
 
 {% from 'macros.html' import history, share, popover_slice_title, popover_slice_content %}
-{% set fragment = 'place'
+{% set fragment = 'place' %}
 
 {% block heading %}{% endblock heading %}
 
@@ -14,32 +14,34 @@
 {% block content %}
 
 <section id="data-header">
-    <div class="row">
-        <div class="col-md-6">
-            <h1>
-                <a href="/risk/{{ risk.id }}/">{{ risk.title|truncate(30) }}</a>{% if page.year != cgr.current_year %} / <a href="/place/{{ page.year }}/">{{ page.year }}</a>{% endif %}
-                <p class="place-openness" data-score="{{ entry.score or cgr.na }}">{{ entry.score }}<br /><span style="font-size: 13px">({{entry.count}} devices)</span></p>
-            </h1}>
-            <h3>
-                <a href="/place/{{ place.slug }}/">{{ place.name|truncate(20) }}</a>
-            </h3>
-            {% if page.content %}
-            <div class="row content">{{ page.content }}</div>
-            {% endif %}
-            <div class="row navigate">
-                <div class="col-md-12">
-                    {{ risk.description|markdown}}
-                </div>
-                <div class="col-md-12">
-                    {{ share(fragment, with_embed=True) }}
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h1>
+        <a href="/risk/{{ risk.id }}/">{{ risk.title|truncate(30) }}</a>
+        <p class="place-openness" data-score="{{ entry.score }}">{{ entry.score }}<br /><span style="font-size: 13px">({{entry.count}} devices)</span></p>
+      </h1}>
+      <h3>
+        <a href="/place/{{ place.slug }}/">{{ place.name|truncate(20) }}</a>
+      </h3>
+      {% if page.content %}
+      <div class="row content">{{ page.content }}</div>
+      {% endif %}
+      <div class="row navigate">
+        <div class="col-md-12">
+{% markdown %}
+{{ risk.description }}
+{% endmarkdown %}                    
         </div>
-        <div class="col-md-6">
-            <div id="map-container">
-                {% include 'dataviews/embed_map.html' %}
-            </div>
+        <div class="col-md-12">
+           {{ share(fragment, with_embed=True) }}
         </div>
+      </div>
     </div>
+    <div class="col-md-6">
+      <div id="map-container">
+        {% include 'dataviews/embed_map.html' %}
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock content %}

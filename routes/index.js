@@ -155,6 +155,31 @@ exports.riskID = function(req, res) {
   res.render('risk.html', {options: result, riskOpt: riskOptions, config: config});
 };
 
+// place-id/risk-id
+exports.placeRisk = function(req, res) {
+  var place = getMatchedEntry(places, 'slug', req.params.place);
+  var risk = getMatchedEntry(risks, 'id', req.params.risk);
+  var entry;
+  entries.forEach(function(line){
+    if(line.place === place.id && line.risk === risk.id ){
+      entry = line;
+    }
+  });
+  
+  var updates = {
+    embed_width: '100%',
+    embed_height: '360px',
+    current_year: 2016,
+    filter_risk: req.params.risk,
+    embed_title: req.params.risk + ' / ' + 2016,
+    map_place: place.id,
+    panel_tools: false,
+    panel_share: false,
+  };
+  config.updates = updates;
+  res.render('place_risk.html', {place: place, risk: risk, entry: entry, config: config});
+};
+
 // map
 exports.map = function(req, res) {
   res.render('map.embed.html', config);

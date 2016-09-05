@@ -21,6 +21,7 @@ app.get('/', routes.home);
 app.get('/place', routes.place);
 app.get('/place/:id', routes.placeID);
 app.get('/place/:id/asn', routes.asn);
+app.get('/place/:place/:risk', routes.placeRisk);
 app.get('/risk', routes.risk);
 app.get('/risk/:id', routes.riskID);
 app.get('/vis/map/embed', routes.map);
