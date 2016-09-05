@@ -200,7 +200,7 @@ exports.geo = function(req, res) {
 };
 
 exports.asn = function(req, res) {
-
+  var entries = config.data.asn;
   var place = req.params.id;
   var result = [];
 
@@ -221,7 +221,7 @@ exports.asn = function(req, res) {
     }
   });
   
-  res.render('asn.html', {entries: result, graphData: JSON.stringify(result)});
+  res.render('asn.html', {entries: result, graphData: JSON.stringify(result), config: config});
 };
 
 function getMatchedEntry(data, matchWith, matchTo){
