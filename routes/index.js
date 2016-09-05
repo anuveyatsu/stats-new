@@ -34,7 +34,7 @@ exports.place = function(req, res) {
     });
     result.push(options);
   });
-  res.render('places.html', {options: result, riskOpt: risks});
+  res.render('places.html', {options: result, riskOpt: risks, config: config});
 };
 
 exports.placeID = function(req, res) {
@@ -182,7 +182,7 @@ exports.placeRisk = function(req, res) {
 
 // map
 exports.map = function(req, res) {
-  res.render('map.embed.html', config);
+  res.render('map.embed.html', {config: config});
 };
 
 // api
