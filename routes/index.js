@@ -60,6 +60,22 @@ exports.placeID = function(req, res) {
     });
     result.push(options);
   });
+  
+  var asnEntries = config.data.asn;
+  var graphResult = [];
+  
+  asnEntries.forEach(function(entry) {
+    if (place.id === entry.place) {
+      obj = {time: entry.time, count: entry.count};
+      risks.forEach(function(risk) {
+        if(entry.risk === risk.id) {
+          obj.risk = risk.title;
+        }
+      });
+      graphResult.push(obj);	
+    }
+  });
+  
   var updates = {
     embed_width: '100%',
     embed_height: '360px',
@@ -71,7 +87,7 @@ exports.placeID = function(req, res) {
     map_place: place.id
   };
   config.updates = updates;
-  res.render('place.html', {options: result, config: config});
+  res.render('place.html', {options: result, config: config, graphData: JSON.stringify(graphResult)});
 };
 
 // risks
