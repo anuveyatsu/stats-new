@@ -8,9 +8,9 @@
         {% block head_css %}{% endblock head_css %}
         <script>
             var siteUrl = '',
-                currentYear = {{ CGR.current_year }},
-                previousYear = {{ CGR.previous_year }},
-                years = [{{ CGR.years }}],
+                currentYear = {{ config.CGR.current_year }},
+                previousYear = {{ config.CGR.previous_year }},
+                years = [{{ config.CGR.years }}],
                 sitename = "Cybergreen Statistics",
                 sponsor = "Cybergreen"
                 ;
