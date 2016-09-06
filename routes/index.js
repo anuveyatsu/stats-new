@@ -90,6 +90,33 @@ exports.placeID = function(req, res) {
   res.render('place.html', {options: result, config: config, graphData: JSON.stringify(graphResult)});
 };
 
+exports.placeASN = function(req, res) {
+  var asnEntries = config.data.asn;
+  var place = getMatchedEntry(places, 'slug', req.params.place);
+  var asn = req.params.asn;
+  var result = [];
+  
+  asnEntries.forEach(function(entry) {
+    if (place.id === entry.place && asn === entry.asn) {
+      obj = {time: entry.time, count: entry.count, asn: entry.asn};
+      places.forEach(function(country) {
+        if(place.id === country.id) {
+          obj.place = country.name;
+          obj.slug = country.slug;
+        }
+      });
+      risks.forEach(function(risk) {
+        if(entry.risk === risk.id) {
+          obj.risk = risk.title;
+        }
+      });
+      result.push(obj);	
+    }
+  });
+  console.log(result);
+  res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), config: config});
+};
+
 // risks
 exports.risk = function(req, res) {
   
@@ -213,31 +240,6 @@ exports.api = function(req, res) {
 exports.geo = function(req, res) {
   var geoJson = require('../data/geo.json');
   res.json(geoJson);
-};
-
-exports.asn = function(req, res) {
-  var entries = config.data.asn;
-  var place = req.params.id;
-  var result = [];
-
-  entries.forEach(function(entry) {
-    if (place === entry.place) {
-      obj = {time: entry.time, count: entry.count, asn: entry.asn};
-      places.forEach(function(country) {
-        if(place === country.id) {
-          obj.place = country.name;
-        }
-      });
-      risks.forEach(function(risk) {
-        if(entry.risk === risk.id) {
-          obj.risk = risk.title;
-        }
-      });
-      result.push(obj);	
-    }
-  });
-  
-  res.render('asn.html', {entries: result, graphData: JSON.stringify(result), config: config});
 };
 
 function getMatchedEntry(data, matchWith, matchTo){
