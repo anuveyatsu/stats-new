@@ -229,6 +229,13 @@ exports.download = function(req, res) {
   res.render('download.html', {config: config});
 };
 
+// about
+
+exports.about = function(req, res) {
+  res.render('about.html', {config: config});
+};
+
+
 // map
 exports.map = function(req, res) {
   res.render('map.embed.html', {config: config});
