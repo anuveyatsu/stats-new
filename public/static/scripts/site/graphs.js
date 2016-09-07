@@ -14,6 +14,7 @@ var spec = {
         "options": risks
     }
   ],
+  "actions": {source: false, editor: false},
   "spec":{
     "width": 1000,
     "height": 400,
