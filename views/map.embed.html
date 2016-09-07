@@ -16,7 +16,7 @@
             <div class="cgr-vis-meta-left">
                 <div class="cgr-vis-icon">
                     <a target="_parent" href="{{ CGR.sponsor.domain }}">
-                      <img src="{{ CGR.logosquare }}" />
+                      <img src="{{ config.CGR.logosquare }}" />
                     </a>
                 </div>
                 <a class="cgr-vis-name" target="_parent" href="{{ CGR.sponsor.domain }}">{{ CGR.sponsor.name }}</a>
@@ -119,7 +119,7 @@
 </script>
 
 <script type="text/template" class="title-box">
-    <img class="logo" src="{{cgr.logosquare}}" alt="" />
+    <img class="logo" src="{{config.CGR.logosquare}}" alt="" />
     <div class="title-box-text"><span class="title-box-text-name"><%= sitename %></span><br /><%= title %></div>
 </script>
 {% endblock content %}
