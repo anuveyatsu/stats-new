@@ -24,6 +24,7 @@ app.get('/place/:place/asn/:asn', routes.placeASN);
 app.get('/place/:place/:risk', routes.placeRisk);
 app.get('/risk', routes.risk);
 app.get('/risk/:id', routes.riskID);
+app.get('/download', routes.download);
 app.get('/vis/map/embed', routes.map);
 app.get('/api/:id'+'.json', routes.api);
 app.get('/data/geo.json', routes.geo);

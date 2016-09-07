@@ -223,6 +223,12 @@ exports.placeRisk = function(req, res) {
   res.render('place_risk.html', {place: place, risk: risk, entry: entry, config: config});
 };
 
+// download
+
+exports.download = function(req, res) {
+  res.render('download.html', {config: config});
+};
+
 // map
 exports.map = function(req, res) {
   res.render('map.embed.html', {config: config});
