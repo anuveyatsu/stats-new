@@ -10,7 +10,7 @@ risks.push('all');
 var spec = {
   "parameters": [
     {
-        "signal": "Risks", "type": "radio", "value": "all",
+        "signal": "Risks", "type": "select", "value": "all",
         "options": risks
     }
   ],
