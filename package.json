@@ -6,7 +6,10 @@
     "express": "^4.14.0",
     "marked": "^0.3.6",
     "nunjucks": "^2.4.2",
-    "nunjucks-markdown": "^2.0.0"
+    "nunjucks-markdown": "^2.0.0",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.24.2"
   },
   "devDependencies": {
     "supertest": "",
