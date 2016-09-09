@@ -23,21 +23,17 @@ exports.getSingleEntry= function(data, matchWith, matchTo){
   return result;
 };
 
-exports.getMultipleEntries = function(data, place, risk, asn){
-  var result = [];
-  var placeKey;
-  var riskKey;
-  var asnKey;
-  
-  if (place) placeKey = 'country';
-  if (risk) riskKey = 'risk';
-  if (asn) asnKey = 'asn';
-  
-  data.forEach(function(entry) {
-    if(entry[placeKey] === place && entry[riskKey] === risk && entry[asnKey] === asn){
-      result.push(entry);
-    }
-  });
-  return result;
+exports.getEntriesFromDatabase = function(options){
+  var placeLogic = "1=1";
+  var riskLogic = "1=1";
+  var asnLogic = "1=1";
+  var timeLogic = "1=1";
+  if (options){
+    if (options.place) placeLogic = "country = '" + options.place + "'";
+    if (options.risk) riskLogic = "risk = '" + options.risk + "'";
+    if (options.asn) asnLogic = "asn = '" + options.asn + "'";
+    if (options.date) timeLogic = "month = '" + options.date + "'";
+  }
+  var logic = "SELECT * FROM entries WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic;
+  return sequelize.query(logic);
 };
-  
