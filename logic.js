@@ -14,7 +14,7 @@ exports.getMultipleEntries = function(data, place, risk, asn){
   var riskKey;
   var asnKey;
   
-  if (place) placeKey = 'place';
+  if (place) placeKey = 'country';
   if (risk) riskKey = 'risk';
   if (asn) asnKey = 'asn';
   

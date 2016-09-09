@@ -1,7 +1,7 @@
 import random
 import csv
 
-PLACESFILE = 'data/places.csv'
+PLACESFILE = 'fixtures/places.csv'
 ENTRIES = 'tests/fixtures/entries.csv'
 
 fo = open(PLACESFILE)

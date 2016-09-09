@@ -4,13 +4,14 @@ var assert = require('assert');
 
 var app = require('../app.js').app;
 var logic = require('../logic');
+var database = require('./database.js');
 
 var fs = require('fs');
 var Papa = require('babyparse'); 
 
-var riskCsv = fs.readFileSync(__dirname + '/data/risks.csv', 'utf8');
-var placeCsv = fs.readFileSync(__dirname + '/data/places.csv', 'utf8');
-var entryCsv = fs.readFileSync(__dirname + '/data/entries.csv', 'utf8');
+var riskCsv = fs.readFileSync(__dirname + '/fixtures/risks.csv', 'utf8');
+var placeCsv = fs.readFileSync(__dirname + '/fixtures/places.csv', 'utf8');
+var entryCsv = fs.readFileSync(__dirname + '/fixtures/entries.csv', 'utf8');
 // transfoms csv to json
 var risks = Papa.parse(riskCsv, {header: true}).data;
 var places = Papa.parse(placeCsv, {header: true}).data;
@@ -101,11 +102,11 @@ describe('Logic functions', function(){
   it('Works with getting multiple entries', function() {
     entrySingle = logic.getMultipleEntries(entries, place='gb');
     entryMultiple = logic.getMultipleEntries(entries, place='gb', risk='opendns');
-    assert.equal(entrySingle.length, 3);
-    assert.equal(entrySingle[0].place, 'gb');
-    assert.equal(entryMultiple.length, 1);
+    assert.equal(entrySingle.length, 200);
+    assert.equal(entrySingle[0].country, 'gb');
+    assert.equal(entryMultiple.length, 50);
     assert.equal(entryMultiple[0].risk, 'opendns');
-    assert.equal(entryMultiple[0].place, 'gb');
+    assert.equal(entryMultiple[0].country, 'gb');
   });
 });
 
