@@ -9,7 +9,7 @@ places = [ place for place in csv.DictReader(fo) ]
 
 risks = ['openntp', 'opendns', 'openssdp', 'spam']
 
-months = ['04-2016', '05-2016', '06-2016', '07-2016', '08-2016']
+months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-01']
 
 def agregate_data():
     result = [['country', 'asn', 'month', 'risk', 'count']]
