@@ -33,24 +33,34 @@ Switch to postgres user
 ```
 sudo su postgres
 ```
-Log in to database
+Log in 
 ```
 psql -d postgres -U postgres
 ```
-Create and connect to database
+Create test role and give superuser privileges
 ```
-CREATE DATABASE databasename;
-\c databasename
+CREATE USER test_user WITH PASSWORD 'secret';
+ALTER USER test_user WITH SUPERUSER;
 ```
+Create test database
+```
+CREATE DATABASE testdb;
+```
+Quit and connect as test user
+```
+\q
+$ psql -h localhost -U test_user testdb  \\ enter the passwer 'secret'
+```
+
 Create table and copy data into
 ```
-CREATE TABLE tablename(country varchar(40), asn int, month varchar(40), risk varchar(40), count int);
-COPY tablename(country, asn, month, risk, count)
+CREATE TABLE entries(country varchar(40), asn int, month varchar(40), risk varchar(40), count int);
+COPY entries(country, asn, month, risk, count)
 FROM '/path/to/entries.csv' 
 WITH DELIMITER ','
 CSV HEADER;
 ```
 Check the contents
 ```
-select * from tablename
+select * from tablename;
 ```
