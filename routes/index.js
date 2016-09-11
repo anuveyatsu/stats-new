@@ -1,8 +1,29 @@
 var config = require('../config');
+var logic = require('../logic');
+
+var Sequelize = require('sequelize');
+var dbConfig = require('../dbconfig');
 
 var entries = config.data.entries;
 var places = config.data.places;
 var risks = config.data.risks;
+
+
+if (process.env.DATABASE_URL) {
+  // Use DATABASE_URL if it exists, for Heroku.
+  sequelize = new Sequelize(
+    process.env.DATABASE,
+    process.env.USERNAME,
+    process.env.PASSWORD,
+    {hostname: process.env.HOSTNAME, dialect: process.env.DIALECT});
+} else {
+  // Fallback to normal config, for local development and test environments.
+  sequelize = new Sequelize(
+    dbConfig.database,
+    dbConfig.username,
+    dbConfig.password,
+    dbConfig);
+}
 
 // home page
 exports.home = function(req, res) {
@@ -91,30 +112,25 @@ exports.placeID = function(req, res) {
 };
 
 exports.placeASN = function(req, res) {
-  var asnEntries = config.data.asn;
   var place = getMatchedEntry(places, 'slug', req.params.place);
-  var asn = req.params.asn;
-  var result = [];
-  
-  asnEntries.forEach(function(entry) {
-    if (place.id === entry.place && asn === entry.asn) {
-      obj = {time: entry.time, count: entry.count, asn: entry.asn};
-      places.forEach(function(country) {
-        if(place.id === country.id) {
-          obj.place = country.name;
-          obj.slug = country.slug;
-        }
-      });
-      risks.forEach(function(risk) {
-        if(entry.risk === risk.id) {
-          obj.risk = risk.title;
-        }
-      });
-      result.push(obj);	
+  place.asn = req.params.asn;  
+  logic.getEntriesFromDatabase(sequelize, {place: place.id, asn: place.asn}).then(function(results){
+    dates = {};
+    results[0].forEach(function (entry){
+      if (dates[entry.month]){
+        dates[entry.month][entry.risk] = entry.count || 'N/A';
+      } else {
+        dates[entry.month] = {};
+        dates[entry.month][entry.risk] = entry.count || 'N/A';
+      }
+    });
+    var result = [];
+    for (var date in dates){
+      var obj = Object.assign({month: date}, dates[date]);
+      result.push(obj);
     }
+    res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), config: config, page: place, risks: risks});
   });
-  console.log(result);
-  res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), config: config});
 };
 
 // risks
