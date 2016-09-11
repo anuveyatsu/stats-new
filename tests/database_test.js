@@ -3,17 +3,12 @@ var dbConfig = require('../dbconfig');
 var logic = require('../logic');
 var assert = require('assert');
 
-if (process.env.DATABASE_URL) {
-  // Use DATABASE_URL if it exists, for Heroku.
-  sequelize = new Sequelize(process.env.DATABASE_URL, dbConfig);
-} else {
-  // Fallback to normal config, for local development and test environments.
-  sequelize = new Sequelize(
-    dbConfig.database,
-    dbConfig.username,
-    dbConfig.password,
-    dbConfig);
-}
+
+sequelize = new Sequelize(
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  dbConfig);
 
 describe('Database connection', function() {
   it('successfully connected', function(done) {   
