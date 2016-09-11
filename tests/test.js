@@ -69,22 +69,6 @@ describe('Content', function(){
         done();
       });
   });
-  
-  
-});
-
-describe('GET /api', function(){
-  this.timeout(5000);
-  it('responds with correct json', function(done){
-    var url = '/api/test.json';
-    request(app)
-      .get(url)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        checkContent(res, '{"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}'); 
-        done();
-      });
-  });
 });
 
 describe('Logic functions', function(){
@@ -99,72 +83,7 @@ describe('Logic functions', function(){
   });
 });
 
-describe('Database Functions', function(){
-  it('Works with single no oprions', function(done) {
-    logic.getEntriesFromDatabase().then(function(result){
-      assert.equal(result[0].length, 45000);
-      done();
-    });
-  });
-  it('Works with single filter', function(done) {
-    options = {
-      risk: 'spam'
-    };
-    logic.getEntriesFromDatabase(options).then(function(results){
-      var rand = results[0][Math.floor(Math.random() * results[0].length)];
-      assert.equal(results[0].length, 11250);
-      assert.equal(rand.risk, 'spam');
-      done();
-    });
-  });
-  it('Works with double filter', function(done) {
-    options = {
-      risk: 'openntp',
-      place: 'gb'
-    };
-    logic.getEntriesFromDatabase(options).then(function(results){
-      var rand = results[0][Math.floor(Math.random() * results[0].length)];
-      assert.equal(results[0].length, 50);
-      assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
-      done();
-    });
-  });
-  it('Works with triple filter', function(done) {
-    options = {
-      risk: 'openntp',
-      place: 'gb',
-      asn: 4547028
-    };
-    logic.getEntriesFromDatabase(options).then(function(results){
-      var rand = results[0][Math.floor(Math.random() * results[0].length)];
-      assert.equal(results[0].length, 5);
-      assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
-      assert.equal(rand.asn, 4547028);
-      done();
-    });
-  });
-  it('Works with all filters', function(done) {
-    options = {
-      risk: 'openntp',
-      place: 'gb',
-      asn: 4547028,
-      date: '2016-05-01'
-    };
-    logic.getEntriesFromDatabase(options).then(function(results){
-      var rand = results[0][Math.floor(Math.random() * results[0].length)];
-      //var time = new Date('2016-05-01');
-      assert.equal(results[0].length, 1);
-      assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
-      assert.equal(rand.asn, 4547028);
-      // todo: fix timezone problem
-      //assert.equal(rand.month, time);
-      done();
-    });
-  });
-});
+
 
 function checkContent(res, expected) {
   var found = res.text.match(expected);
