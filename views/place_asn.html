@@ -13,7 +13,7 @@
 {% block content %}
 
 <header id="place-intro" class="page-header">
-  <h1>{{ page.name  }} {{ page.asn  }}</h1>
+  <h1>ASN: {{ page.name  }} {{ page.asn  }}</h1>
 </header>
 {% for risk in risks %}
 {{ risk.title }}<div id="vis{{risk.id}}"></div>
