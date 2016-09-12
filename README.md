@@ -43,7 +43,7 @@ Log in
 psql -d postgres -U postgres
 ```
 
-Create test role and give superuser privileges
+Create test role and give it superuser privileges
 
 ```
 CREATE USER test_user WITH PASSWORD 'secret';
@@ -61,10 +61,10 @@ Quit and connect as test user
 
 ```
 \q
-$ psql -h localhost -U test_user testdb  \\ enter the passwer 'secret'
+$ psql -h localhost -U test_user testdb  \\ enter the password 'secret'
 ```
 
-Create table and copy in data from entries
+Create a table "entries" and copy in data from entries.csv
 
 ```
 CREATE TABLE entries(country varchar(40), asn int, month varchar(40), risk varchar(40), count int);
@@ -74,9 +74,9 @@ WITH DELIMITER ','
 CSV HEADER;
 ```
 
-Check the contents
+Check the contents of the table
 
 ```
-select count(*) from tablename;
+SELECT * FROM entries;
 ```
 
