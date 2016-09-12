@@ -47,7 +47,7 @@ risks.forEach(function(risk){
               "x": {"scale": "x", "field": "month"},
               "y": {"scale": "y", "field": risk.risk},
               "stroke": {"value": risk.color},
-              "strokeWidth": {"value": 4}
+              "strokeWidth": {"value": 2}
             }
           }
         }
