@@ -11,7 +11,7 @@ To build and view the app:
     [sudo] npm install
     ```
 
-3. Create a database and set configuration TODO
+3. Create a database and set configuration [see below]
 
 4. Run the app. From the base directory:
 
@@ -22,7 +22,7 @@ To build and view the app:
 5. Visit the running app in your browser at http://localhost:8000/
 
 
-## Load entries to local database
+## Instructions for creating a local database
 
 Install postgresql
 
@@ -64,7 +64,7 @@ Quit and connect as test user
 $ psql -h localhost -U test_user testdb  \\ enter the passwer 'secret'
 ```
 
-Create table and copy data into
+Create table and copy in data from entries
 
 ```
 CREATE TABLE entries(country varchar(40), asn int, month varchar(40), risk varchar(40), count int);
