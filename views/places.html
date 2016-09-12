@@ -1,0 +1,62 @@
+{% extends 'page.html' %}
+
+{% set fragment = 'place' %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+    <li class="active">Places</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<header id="place-intro" class="page-header">
+  <h1>Place overview {{ page.year }}</h1>
+  <hr />
+  {{ page.content }}
+</header>
+
+<div class="row">
+  <div class="col-md-12">
+    <h4>Search</h4>
+    <form role="form" class="form-inline data-table-tools">
+      <div class="form-group">
+        <input class="form-control filter-table" type="search" name="filter-table" placeholder="Search for a place" />
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table id="places_overview_table" class="table data-table table-header-stuck">
+    <thead>
+      <tr>
+        <th class="sort_place" title="Sort by A-Z">Place</th>
+        {% for risk in riskOpt %}
+          {% if risk.title %}
+            <th>
+              {{ risk.title }}
+            </th>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for option in options %}
+      <tr>
+        <td>  
+          <a href="/place/{{ option.slug }}/" title="{{ option.place }}">
+            {{ option.title|truncate(28) }}
+          </a>
+        </td>
+        {% for risk in option.risks_scores %}
+          <td class="score" data-score="{{ risk or N/A}}">
+            <span>{{ risk or "N/A"}}</span>
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

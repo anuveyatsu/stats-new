@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block meta_title -%}
+{{ page.title }} | {{ super() }}
+{%- endblock meta_title %}
+
+{% block meta_description -%}
+{{ CGR.description }}
+{%- endblock meta_description %}
+
+{% block meta_keywords -%}
+{{ CGR.keywords }}
+{%- endblock meta_keywords %}
+
+{% block body_classes -%}{{ page.type }}{%- endblock body_classes %}
+{% block page_title -%}{{ page.title }}{%- endblock page_title %}
+
+{% block breadcrumbs_inner %}
+  <li class="active">{% if page.slug == 'about' %}About{% else %}{{ page.title }}{% endif %}</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content -%}
+{{ page.content }}
+{%- endblock content %}

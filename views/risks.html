@@ -1,0 +1,67 @@
+{% extends 'page.html' %}
+
+{% set fragment = 'risk' %}
+
+{% block page_title %} Overview of Risks {{ config.CGR.current_year }} {% endblock page_title %}
+
+{% block breadcrumbs_inner %}
+  <li class="active">Risks</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+
+
+<div class="table-responsive">
+  <table id="datasets_overview_table" class="table data-table table-header-stuck">
+    <col style="width:10%">
+    <col style="width:52%">
+    <col style="width:20%">
+    <col style="width:10%">
+    <col style="width:8%">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Description</th>
+        <th>Best and Worst</th>
+        <th>Total Devices</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for option in options %}
+					
+				<tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-risk="{{ option.id }}">
+					<td class="risks-risk-col">
+						<a href="/risk/{{ option.id }}/" title="{{ option.title }}">
+							{{ option.title }}
+						</a>
+					</td>
+          <td>
+{% markdown %}
+{{ option.description | truncate(400) }} <a href="/risk/{{ option.id }}">Read more</a>
+{% endmarkdown %}
+					</td>
+					<td>	
+						<span class="score score-top" data-score="{{ option.topPlaces[0].score }}">{{ option.topPlaces[0].score }}</span>
+						{% for place in option.topPlaces %}
+							<a href="/place/{{ place.slug }}/{{ option.id }}/">{{ place.name }}</a>&nbsp;
+						{% endfor %}
+					<br>
+						<span class="score score-bottom" data-score="{{ option.worstPlaces[0].score }}">{{ option.worstPlaces[0].score }}</span>
+						{% for place in option.worstPlaces %}
+							<a href="/place/{{ place.slug }}/{{ option.id }}/">{{ place.name }}</a>&nbsp;
+						{% endfor %}
+					</td>
+					<td class="total">
+						<span>{{ option.total }}</span>
+					</td>
+					<td class="score" data-score="{{ option.score }}">
+						<span>{{ option.score }}%</span>
+					</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

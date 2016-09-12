@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <base target="_parent" />
+        <!--[if lt IE 9]>
+        <script src="/static/vendor/html5shiv.min.js"></script>
+        <![endif]-->
+        {% block head_css %}{% endblock head_css %}
+        <script>
+            var siteUrl = '',
+                currentYear = {{ config.CGR.current_year }},
+                previousYear = {{ config.CGR.previous_year }},
+                years = [{{ config.CGR.years }}],
+                sitename = "Cybergreen Statistics",
+                sponsor = "Cybergreen"
+                ;
+        </script>
+        {% block head_scripts %}{% endblock head_scripts %}
+    </head>
+    <body>
+        {% block content %}{% endblock content %}
+        {% block body_scripts %}
+         {% include '_analytics.html' %}
+        {% endblock body_scripts %}
+    </body>
+</html>

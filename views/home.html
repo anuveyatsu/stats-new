@@ -1,0 +1,34 @@
+{% extends 'page.html' %}
+
+{% block main %}
+
+<div id="home-about">
+  <div class="container">
+    <h1>Tracking the state of global cyber health.</h1>
+    <div class="text-center">We help CSIRTs focus their remediation efforts on the most important risks; to help understand where improvements can be made and how, together, we can achieve a more sustainable, secure, and resilient cyber ecosystem.
+      <br>
+      <br>
+      <a class="btn btn-primary-black btn-lg" href="/place/" title="Compare the cyber health of countries.">
+        Compare countries
+      </a>
+
+      <a class="btn btn-primary-black btn-lg" href="/risk/" title="An overview of the different risks.">
+        Overview of risks
+      </a>
+
+      <a class="btn btn-primary-black btn-lg" href="/download/" title="Download the data.">
+        Downloads
+      </a>
+    </div>
+  </div>
+</div>
+
+<section id="home-visualisation" class="container">
+  <div class="row map_visualisation">
+    <div class="col-md-12 map">
+      {% include 'dataviews/embed_map.html' %}
+    </div>
+  </div>
+</section>
+
+{% endblock main %}
