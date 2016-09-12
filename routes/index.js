@@ -9,13 +9,9 @@ var places = config.data.places;
 var risks = config.data.risks;
 
 
-if (process.env.DATABASE_URL) {
+if (process.env.DATABASE_URI) {
   // Use DATABASE_URL if it exists, for Heroku.
-  sequelize = new Sequelize(
-    process.env.DATABASE,
-    process.env.USERNAME,
-    process.env.PASSWORD,
-    {hostname: process.env.HOSTNAME, dialect: process.env.DIALECT});
+  sequelize = new Sequelize(process.env.DATABASE_URI, {})
 } else {
   // Fallback to normal config, for local development and test environments.
   sequelize = new Sequelize(
