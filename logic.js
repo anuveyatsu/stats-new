@@ -19,6 +19,6 @@ exports.getEntriesFromDatabase = function(sequelize, options){
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
     if (options.date) timeLogic = "month = '" + options.date + "'";
   }
-  var logic = "SELECT * FROM entries WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic;
+  var logic = "SELECT * FROM fixtures WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic;
   return sequelize.query(logic);
 };
