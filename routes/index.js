@@ -96,13 +96,14 @@ exports.placeASN = function(req, res) {
   var place = getMatchedEntry(places, 'slug', req.params.place);
   place.asn = req.params.asn;  
   logic.getEntriesFromDatabase(sequelize, {place: place.id, asn: place.asn}).then(function(results){
-    dates = {};
+    var dates = {};
+    var mapRisks = {'1': 'openntp', '2': 'opendns'};
     results[0].forEach(function (entry){
-      if (dates[entry.month]){
-        dates[entry.month][entry.risk] = entry.count || 'N/A';
+      if (dates[entry.date]){
+        dates[entry.date][mapRisks[ntry.risk]] = entry.count || 'N/A';
       } else {
-        dates[entry.month] = {};
-        dates[entry.month][entry.risk] = entry.count || 'N/A';
+        dates[entry.date] = {};
+        dates[entry.date][mapRisks[entry.risk]] = entry.count || 'N/A';
       }
     });
     var result = [];

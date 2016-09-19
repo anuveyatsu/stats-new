@@ -38,16 +38,16 @@
               <span>{{ entry.month }}</span>               
             </td>
             <td class="score" >  
-              <span>{{ entry.openntp }}</span>
+              <span>{{ entry.openntp or 'N/A' }}</span>
             </td>
             <td class="score">  
-              <span>{{ entry.opendns }}</span>
+              <span>{{ entry.opendns or 'N/A' }}</span>
             </td>
             <td class="score">  
-              <span>{{ entry.openssdp }}</span>
+              <span>{{ entry.openssdp or 'N/A' }}</span>
             </td>
             <td class="score">  
-              <span>{{ entry.spam }}</span>
+              <span>{{ entry.spam or 'N/A' }}</span>
             </td>
           </tr>
         {% endfor %}
