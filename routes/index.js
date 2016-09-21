@@ -2,7 +2,6 @@ var config = require('../config');
 var logic = require('../logic');
 
 var Sequelize = require('sequelize');
-var dbConfig = require('../dbconfig');
 
 var entries = config.data.entries;
 var places = config.data.places;
@@ -15,10 +14,10 @@ if (process.env.DATABASE_URI) {
 } else {
   // Fallback to normal config, for local development and test environments.
   sequelize = new Sequelize(
-    dbConfig.database,
-    dbConfig.username,
-    dbConfig.password,
-    dbConfig);
+    config.db.database,
+    config.db.username,
+    config.db.password,
+    config.db);
 }
 
 // home page

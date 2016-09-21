@@ -41,13 +41,20 @@ var config = {
 	},
 	SITELOGO: "/static/images/cybergreen-logo-beta.png",
 	data: {
-    risks: risks,
-    places: places,
-    entries: entries,
-		summary: summary,
-		asn: asn,
-		test: {"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}
+		risks: risks,
+		places: places,
+		entries: entries,
+			summary: summary,
+			asn: asn,
+			test: {"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}
     },
+    db: {
+		database: 'testdb',
+		username: 'test_user',
+		password: 'secret',
+		host: 'localhost',
+		dialect: 'postgres'
+	},
 	updates: {}
 };
 

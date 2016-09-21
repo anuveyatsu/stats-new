@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var dbConfig = require('../dbconfig');
+var dbConfig = require('../config').db;
 var logic = require('../logic');
 var assert = require('assert');
 
