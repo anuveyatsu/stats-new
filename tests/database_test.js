@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 var dbConfig = require('../config').db;
 var logic = require('../logic');
 var assert = require('assert');
-
+var table = 'fixtures'
 
 sequelize = new Sequelize(
   dbConfig.database,
@@ -23,64 +23,64 @@ describe('Database connection', function() {
 
 describe('Database Functions', function(){
   it('Works with single no options', function(done) {
-    logic.getEntriesFromDatabase(sequelize).then(function(results){
+    logic.getEntriesFromDatabase(sequelize, table).then(function(results){
       assert.equal(results[0].length, 45000);
       done();
     });
   });
   it('Works with single filter', function(done) {
     options = {
-      risk: 'spam'
+      risk: 1
     };
-    logic.getEntriesFromDatabase(sequelize, options).then(function(results){
+    logic.getEntriesFromDatabase(sequelize, table, options ).then(function(results){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       assert.equal(results[0].length, 11250);
-      assert.equal(rand.risk, 'spam');
+      assert.equal(rand.risk, 1);
       done();
     });
   });
   it('Works with double filter', function(done) {
     options = {
-      risk: 'openntp',
+      risk: 2,
       place: 'gb'
     };
-    logic.getEntriesFromDatabase(sequelize, options).then(function(results){
+    logic.getEntriesFromDatabase(sequelize, table, options).then(function(results){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       assert.equal(results[0].length, 50);
-      assert.equal(rand.risk, 'openntp');
+      assert.equal(rand.risk, 2);
       assert.equal(rand.country, 'GB');
       done();
     });
   });
   it('Works with triple filter', function(done) {
     options = {
-      risk: 'openntp',
+      risk: 2,
       place: 'gb',
-      asn: 1332518
+      asn: 3214410
     };
-    logic.getEntriesFromDatabase(sequelize, options).then(function(results){
+    logic.getEntriesFromDatabase(sequelize, table, options).then(function(results){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       assert.equal(results[0].length, 5);
-      assert.equal(rand.risk, 'openntp');
+      assert.equal(rand.risk, 2);
       assert.equal(rand.country, 'GB');
-      assert.equal(rand.asn, 1332518);
+      assert.equal(rand.asn, 3214410);
       done();
     });
   });
   it('Works with all filters', function(done) {
     options = {
-      risk: 'openntp',
+      risk: 4,
       place: 'gb',
-      asn: 1332518,
+      asn: 3214410,
       date: '2016-05-01'
     };
-    logic.getEntriesFromDatabase(sequelize, options).then(function(results){
+    logic.getEntriesFromDatabase(sequelize, table, options).then(function(results){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       //var time = new Date('2016-05-01');
       assert.equal(results[0].length, 1);
-      assert.equal(rand.risk, 'openntp');
+      assert.equal(rand.risk, 4);
       assert.equal(rand.country, 'GB');
-      assert.equal(rand.asn, 1332518);
+      assert.equal(rand.asn, 3214410);
       // todo: fix timezone problem
       //assert.equal(rand.month, time);
       done();
