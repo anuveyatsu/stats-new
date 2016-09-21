@@ -48,7 +48,7 @@ describe('Database Functions', function(){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       assert.equal(results[0].length, 50);
       assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
+      assert.equal(rand.country, 'GB');
       done();
     });
   });
@@ -56,14 +56,14 @@ describe('Database Functions', function(){
     options = {
       risk: 'openntp',
       place: 'gb',
-      asn: 4547028
+      asn: 1332518
     };
     logic.getEntriesFromDatabase(sequelize, options).then(function(results){
       var rand = results[0][Math.floor(Math.random() * results[0].length)];
       assert.equal(results[0].length, 5);
       assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
-      assert.equal(rand.asn, 4547028);
+      assert.equal(rand.country, 'GB');
+      assert.equal(rand.asn, 1332518);
       done();
     });
   });
@@ -71,7 +71,7 @@ describe('Database Functions', function(){
     options = {
       risk: 'openntp',
       place: 'gb',
-      asn: 4547028,
+      asn: 1332518,
       date: '2016-05-01'
     };
     logic.getEntriesFromDatabase(sequelize, options).then(function(results){
@@ -79,8 +79,8 @@ describe('Database Functions', function(){
       //var time = new Date('2016-05-01');
       assert.equal(results[0].length, 1);
       assert.equal(rand.risk, 'openntp');
-      assert.equal(rand.country, 'gb');
-      assert.equal(rand.asn, 4547028);
+      assert.equal(rand.country, 'GB');
+      assert.equal(rand.asn, 1332518);
       // todo: fix timezone problem
       //assert.equal(rand.month, time);
       done();

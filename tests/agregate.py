@@ -2,7 +2,7 @@ import random
 import csv
 
 PLACESFILE = 'fixtures/places.csv'
-ENTRIES = 'tests/fixtures/entries.csv'
+ENTRIES = 'fixtures/entries.csv'
 
 fo = open(PLACESFILE)
 places = [ place for place in csv.DictReader(fo) ]
@@ -12,7 +12,7 @@ risks = ['openntp', 'opendns', 'openssdp', 'spam']
 months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-01']
 
 def agregate_data():
-    result = [['country', 'asn', 'month', 'risk', 'count']]
+    result = [['country', 'asn', 'date', 'risk', 'count']]
     for place in places:
         two_digit = random.randrange(10, 100) 
         digit_traker = {}
@@ -25,7 +25,7 @@ def agregate_data():
             for risk in risks:
                 for month in months:        
                     count = random.randrange(200, 300)
-                    country = place['id']
+                    country = place['id'].upper()
                     result.append([country, asn, month, risk, count])
     return result        
 
@@ -34,4 +34,5 @@ def write_csv(data):
         writer = csv.writer(csv_file)
         writer.writerows(data)
 data = agregate_data()
+print len(data)
 write_csv(data)
