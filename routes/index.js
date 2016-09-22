@@ -102,50 +102,12 @@ exports.placeASN = function(req, res) {
 
 // risks
 exports.risk = function(req, res) {
-  
-  var result = [];
-  risks.forEach(function(risk) {
-    var top_score = -1;
-    var worst_score = 100;
-    var options = {
-      rank: risk.rank,
-      score: risk.score,
-      id: risk.id,
-      title: risk.title,
-      description: risk.description,
-      topPlaces: [],
-      worstPlaces: []
-    };
-    
-    entries.forEach(function(entry) {
-      if (entry.risk === risk.id){
-        // collecting places best scores
-        if (Number(entry.score) > top_score){
-          top_score = entry.score;
-          options.topPlaces = [];
-          place = getMatchedEntry(places, 'id',entry.place);
-          options.topPlaces.push(place);
-        } else if (Number(entry.score) === top_score) {
-          top_score = entry.score;
-          place = getMatchedEntry(places, 'id',entry.place);
-          options.topPlaces.push(place);
-        }
-        // colecting places with worst scores
-        if (Number(entry.score) < worst_score){
-          worst_score = entry.score;
-          options.worstPlaces = [];
-          place = getMatchedEntry(places, 'id',entry.place);
-          options.worstPlaces.push(place);
-        } else if (Number(entry.score) === worst_score) {
-          worst_score = entry.score;
-          place = getMatchedEntry(places, 'id',entry.place);
-          options.worstPlaces.push(place);
-        }
-      }
-    });
-    result.push(options);
-  });
-  res.render('risks.html', {options: result, config: config});
+	// TODO: risks table needs primary key for risks
+	// TODO: needs to be computed: min, score
+  sequelize.query('SELECT * FROM risks;').then(function(results){
+  	var result = results[0]
+  	res.render('risks.html', {options: result, config: config});
+  })
 };
 
 exports.riskID = function(req, res) {
