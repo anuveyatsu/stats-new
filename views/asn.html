@@ -1,0 +1,35 @@
+{% extends 'page.html' %}
+
+{% set fragment = 'place' %}
+
+{% block heading %}{% endblock heading %}
+
+{% block breadcrumbs_inner %}
+    <li class="active">ASNs</li>
+{% endblock breadcrumbs_inner %}
+
+{% block content %}
+<header id="asn-intro" class="page-header">
+  <h1>ASN overview {{ page.year }}</h1>
+  <hr />
+  <p> some text goes here... to view the ASNs for a country, select that country on the map</p>
+  {{ page.content }}
+</header>
+
+<!--
+<div class="col-md-6">
+  <div id="map-container">
+    {% include 'dataviews/embed_map.html' %}
+  </div>
+</div>
+!-->
+
+<section id="home-visualisation" class="container">
+  <div class="row map_visualisation">
+    <div class="col-md-12 map">
+      {% include 'dataviews/embed_map.html' %}
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
