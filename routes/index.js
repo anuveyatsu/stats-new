@@ -62,7 +62,6 @@ exports.placeID = function(req, res) {
   
   logic.getPlaceScore(sequelize, req.params.id).then(function(results){
   	var result = results[0]
-  	console.log(result)
 		var updates = {
 		  embed_width: '100%',
 		  embed_height: '360px',
