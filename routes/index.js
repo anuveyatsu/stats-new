@@ -3,10 +3,6 @@ var logic = require('../logic');
 
 var Sequelize = require('sequelize');
 
-var entries = config.data.entries;
-var places = config.data.places;
-var risks = config.data.risks;
-
 var mapRisks = [{id: '1', title: 'Open DNS'}, {id: '2', title: 'Open NTP'}, {id: '4', title : 'Open SNMP'}]
 
 if (process.env.DATABASE_URI) {
@@ -27,8 +23,9 @@ exports.home = function(req, res) {
     embed_width: '100%',
     embed_height: '300px',
     current_year: 2016,
-    filter_risk: config.data.risks[0].id,
-    embed_title: config.data.risks[0].id + ' / ' + 2016
+    filter_risk: 'openntp',
+    embed_title: 'openntp' + ' / ' + 2016,
+    panel_tools: true
   };
   config.updates = updates;
   res.render('home.html', {config: config});
@@ -66,8 +63,8 @@ exports.placeID = function(req, res) {
 		  embed_width: '100%',
 		  embed_height: '360px',
 		  current_year: 2016,
-		  filter_risk: config.data.risks[0].id,
-		  embed_title: config.data.risks[0].id + ' / ' + 2016,
+		  filter_risk: 'openntp',
+		  embed_title: 'openntp' + ' / ' + 2016,
 		  panel_tools: true,
 		  panel_share: false,
 		  map_place: result[0].place_id.toLowerCase()
