@@ -26,7 +26,7 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
 
 exports.getPlaceScores = function(sequelize){
 
-  var logic = "SELECT entries_by_place.risk, entries_by_place.score, places.name, places.slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id));"
+  var logic = "SELECT entries_by_place.risk as risk, sum(entries_by_place.score)/count(entries_by_place.score) as score, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) GROUP BY risk, name, slug;"
   
   return sequelize.query(logic);
 };

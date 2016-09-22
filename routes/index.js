@@ -45,6 +45,8 @@ exports.place = function(req, res) {
   			places[result.name]['slug'] = result.slug
   		}else{
   			places[result.name] = {}
+  			places[result.name][result.risk] = result.score
+  			places[result.name]['slug'] = result.slug
   		}
   	});
   	var result = [];
