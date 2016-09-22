@@ -29,7 +29,7 @@ exports.getPlaceScore = function(sequelize, place){
   
   var where = "1=1"
   if (place) where = "slug='" + place + "'"
-  var logic = "SELECT entries_by_place.country as place_id, entries_by_place.risk as risk, sum(entries_by_place.score)/count(entries_by_place.score) as score, sum(count) as count, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) WHERE "+where+" GROUP BY place_id, risk, name, slug;"
+  var logic = "SELECT entries_by_place.country as place_id, entries_by_place.risk as risk, ROUND(SUM(entries_by_place.score)/COUNT(entries_by_place.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) WHERE "+where+" GROUP BY place_id, risk, name, slug;"
   
   return sequelize.query(logic);
 };	
