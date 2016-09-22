@@ -7,6 +7,7 @@ var entries = config.data.entries;
 var places = config.data.places;
 var risks = config.data.risks;
 
+var mapRisks = [{id: '1', title: 'Open DNS'}, {id: '2', title: 'Open NTP'}, {id: '4', title : 'Open SNMP'}]
 
 if (process.env.DATABASE_URI) {
   // Use DATABASE_URL if it exists, for Heroku.
@@ -36,21 +37,23 @@ exports.home = function(req, res) {
 // places
 exports.place = function(req, res) {
   
-  var result = [];
-  places.forEach(function(place) {
-    var options = {title: place.name, slug: place.slug, risks_scores: []};
-    risks.forEach(function(risk) {
-      var risk_score = '';
-      entries.forEach(function(entry) {
-        if(place.id === entry.place && risk.id === entry.risk){
-        risk_score = entry.score;	
-        }
-      });
-      options.risks_scores.push(risk_score);
-    });
-    result.push(options);
+  logic.getPlaceScores(sequelize).then(function(results){
+  	var places = {};
+  	results[0].forEach(function(result){
+  		if (places[result.name]){
+  			places[result.name][result.risk] = result.score
+  			places[result.name]['slug'] = result.slug
+  		}else{
+  			places[result.name] = {}
+  		}
+  	});
+  	var result = [];
+    for (var place in places){
+      var obj = Object.assign({name: place}, places[place]);
+      result.push(obj);
+    };
+    res.render('places.html', {options: result, riskOpt: mapRisks, config: config});
   });
-  res.render('places.html', {options: result, riskOpt: risks, config: config});
 };
 
 exports.placeID = function(req, res) {

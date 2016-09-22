@@ -12,7 +12,6 @@
 <header id="place-intro" class="page-header">
   <h1>Place overview {{ page.year }}</h1>
   <hr />
-  {{ page.content }}
 </header>
 
 <div class="row">
@@ -45,12 +44,12 @@
       <tr>
         <td>  
           <a href="/place/{{ option.slug }}/" title="{{ option.place }}">
-            {{ option.title|truncate(28) }}
+            {{ option.name |truncate(28) }}
           </a>
         </td>
-        {% for risk in option.risks_scores %}
-          <td class="score" data-score="{{ risk or N/A}}">
-            <span>{{ risk or "N/A"}}</span>
+        {% for risk in riskOpt %}
+          <td class="score" data-score="{{ option[risk.id] or N/A}}">
+            <span>{{ option[risk.id] }}</span>
           </td>
         {% endfor %}
       </tr>

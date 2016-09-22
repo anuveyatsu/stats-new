@@ -23,3 +23,10 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
   var logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic;
   return sequelize.query(logic);
 };
+
+exports.getPlaceScores = function(sequelize){
+
+  var logic = "SELECT entries_by_place.risk, entries_by_place.score, places.name, places.slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id));"
+  
+  return sequelize.query(logic);
+};
