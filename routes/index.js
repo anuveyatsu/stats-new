@@ -238,6 +238,17 @@ exports.map = function(req, res) {
   res.render('map.embed.html', {config: config});
 };
 
+// asn
+
+exports.asn = function(req, res) {
+  var updates = {
+    embed_width: '100%',
+    embed_height: '400px',
+  };
+  config.updates = updates;
+  res.render('asn.html', {config: config});
+};
+
 // api
 exports.api = function(req, res) {
   if (config.data[req.params.id]) {
