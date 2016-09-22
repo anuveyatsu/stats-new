@@ -37,7 +37,7 @@ exports.home = function(req, res) {
 // places
 exports.place = function(req, res) {
   
-  logic.getPlaceScores(sequelize).then(function(results){
+  logic.getPlaceScore(sequelize).then(function(results){
   	var places = {};
   	results[0].forEach(function(result){
   		if (places[result.name]){
@@ -60,40 +60,22 @@ exports.place = function(req, res) {
 
 exports.placeID = function(req, res) {
   
-  var place = getMatchedEntry(places, 'slug', req.params.id);
-  var result = [];
-
-  risks.forEach( function(risk) {
-    options = {
-      name: place.name,
-      slug: place.slug,
-      riskTitle: risk.title,
-      riskId: risk.id
-    };
-    entries.forEach(function(entry) {
-      if(place.id === entry.place && risk.id === entry.risk){
-        options.rank  = entry.rank;
-        options.score = entry.score;
-        options.place = entry.place;
-        options.previous = entry.previous;
-        options.count = entry.count;
-      }
-    });
-    result.push(options);
+  logic.getPlaceScore(sequelize, req.params.id).then(function(results){
+  	var result = results[0]
+  	console.log(result)
+		var updates = {
+		  embed_width: '100%',
+		  embed_height: '360px',
+		  current_year: 2016,
+		  filter_risk: config.data.risks[0].id,
+		  embed_title: config.data.risks[0].id + ' / ' + 2016,
+		  panel_tools: true,
+		  panel_share: false,
+		  map_place: result[0].place_id.toLowerCase()
+		};
+		config.updates = updates;
+		res.render('place.html', {options: result, config: config});
   });
-  
-  var updates = {
-    embed_width: '100%',
-    embed_height: '360px',
-    current_year: 2016,
-    filter_risk: config.data.risks[0].id,
-    embed_title: config.data.risks[0].id + ' / ' + 2016,
-    panel_tools: true,
-    panel_share: false,
-    map_place: place.id
-  };
-  config.updates = updates;
-  res.render('place.html', {options: result, config: config});
 };
 
 exports.placeASN = function(req, res) {
