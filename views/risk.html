@@ -8,7 +8,7 @@
 
 {% block breadcrumbs_inner %}
   <li><a href="/risk/">Risks</a></li>
-  <li class="active">{{ riskOpt.title }}</li>
+  <li class="active">{{ riskOpt[0].title }}</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
@@ -18,13 +18,13 @@
   <div class="row">
     <div class="col-md-6">
       <h1>
-        <a href="/risk/{{ riskOpt.id }}/">{{ riskOpt.title|truncate(60) }}</a>
+        <a href="/risk/{{ riskOpt.id }}/">{{ riskOpt[0].title|truncate(60) }}</a>
       </h1>
       <div class="row navigate">
         <div class="col-md-12">
           <section class="risk-about">
 {% markdown %}
-{{ riskOpt.description }}
+{{ riskOpt[0].description }}
 {% endmarkdown %}
           </section>
             {{ share(fragment, with_embed=True) }}
@@ -61,16 +61,16 @@
                 
               <tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-place="{{ option.place.slug }}">
                   <td>
-                      {{ option.rank}}
+                      {{ option.rank or 'N/A'}}
                   </td>
                   <td>
-                    <a href="/place/{{ option.slug }}/{{ riskOpt.id }}/">{{ option.placeName }}</a>
+                    <a href="/place/{{ option.slug }}/{{ riskOpt.id }}/">{{ option.name }}</a>
                   </td>
                   <td data-score="{{ option.count }}">
                       <span>{{ option.count or N/A}}</span>
                   </td>
                   <td class="score" data-score="{{ option.score or cgr.na }}">
-                      <span>{{ option.score or N/A}}</span>
+                      <span>{{ option.score }}</span>
                   </td>
               </tr>
 

@@ -60,7 +60,7 @@ exports.place = function(req, res) {
 
 exports.placeID = function(req, res) {
   
-  logic.getPlaceScore(sequelize, req.params.id).then(function(results){
+  logic.getPlaceScore(sequelize, {place: req.params.id}).then(function(results){
   	var result = results[0]
 		var updates = {
 		  embed_width: '100%',
@@ -105,42 +105,28 @@ exports.risk = function(req, res) {
 	// TODO: risks table needs primary key for risks
 	// TODO: needs to be computed: min, score
   sequelize.query('SELECT * FROM risks;').then(function(results){
-  	var result = results[0]
+  	var result = results[0];
   	res.render('risks.html', {options: result, config: config});
   })
 };
 
 exports.riskID = function(req, res) {
-  var result = [];
-  var riskOptions = getMatchedEntry(risks, 'id', req.params.id);
-  
-  entries.forEach(function(entry) {
-    if (entry.risk === req.params.id){
-      var placeOptions = getMatchedEntry(places, 'id',entry.place);
-      var options = {
-        rank: entry.rank,
-        score: entry.score,
-        slug: placeOptions.slug,
-        riskId: riskOptions.id,
-        placeName: placeOptions.name,
-        count: entry.count,
-        placeID: placeOptions.id
-      };
-      result.push(options);
-    }
-  });
-
-  var updates = {
-    embed_width: '100%',
-    embed_height: '360px',
-    current_year: 2016,
-    filter_risk: req.params.id,
-    embed_title: req.params.id + ' / ' + 2016,
-    panel_tools: false,
-    panel_share: false,
-  };
-  config.updates = updates;
-  res.render('risk.html', {options: result, riskOpt: riskOptions, config: config});
+  map = {opendns: 1, openntp: 2} 
+  logic.getPlaceScore(sequelize, {risk: map[req.params.id]}).then(function(results){
+  	
+  	var result = results[0];
+  	var updates = {
+		  embed_width: '100%',
+		  embed_height: '360px',
+		  current_year: 2016,
+		  filter_risk: req.params.id,
+		  embed_title: req.params.id + ' / ' + 2016,
+		  panel_tools: false,
+		  panel_share: false,
+		};
+		config.updates = updates;
+  	res.render('risk.html', {options: result, riskOpt: mapRisks, config: config});
+  })
 };
 
 // place-id/risk-id
