@@ -64,7 +64,7 @@ describe('Content', function(){
       .get('/risk/openntp/')
       .expect(200)
       .end(function(err, res) {
-        checkContent(res, 'Open NTP');
+        checkContent(res, 1);
         checkContent(res, 'Devices'); 
         done();
       });
