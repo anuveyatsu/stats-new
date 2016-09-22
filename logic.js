@@ -44,4 +44,14 @@ exports.getPlaceScore = function(sequelize, options){
   return sequelize.query(logic);
 };
 
+exports.getAsnCount = function(sequelize, options) {
+	
+	var placeLogic = "1=1";
+	
+	if (options){
+    if (options.place) placeLogic = "country= '" + options.place + "'";
+  }
 
+	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM entries WHERE "+placeLogic+" GROUP BY asn, risk;"
+	return sequelize.query(logic)
+};

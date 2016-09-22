@@ -1,6 +1,5 @@
 var config = require('../config');
 var logic = require('../logic');
-
 var Sequelize = require('sequelize');
 
 var mapRisks = [{id: '1', title: 'Open DNS'}, {id: '2', title: 'Open NTP'}, {id: '4', title : 'Open SNMP'}]
@@ -58,20 +57,39 @@ exports.place = function(req, res) {
 exports.placeID = function(req, res) {
   
   logic.getPlaceScore(sequelize, {place: req.params.id}).then(function(results){
-  	var result = results[0]
-		var updates = {
-		  embed_width: '100%',
-		  embed_height: '360px',
-		  current_year: 2016,
-		  filter_risk: 'openntp',
-		  embed_title: 'openntp' + ' / ' + 2016,
-		  panel_tools: true,
-		  panel_share: false,
-		  map_place: result[0].place_id.toLowerCase()
-		};
-		config.updates = updates;
-		res.render('place.html', {options: result, config: config});
-  });
+  	return results[0]	
+		
+  }).then(function(result) {
+  	var id = result[0].place_id
+  	logic.getAsnCount(sequelize, {place: id }).then(function(results) {
+  		var asns = {};
+			results[0].forEach(function(result){
+				if (asns[result.asn]){
+					asns[result.asn][result.risk] = result.count
+				}else{
+					asns[result.asn] = {}
+					asns[result.asn][result.risk] = result.count
+				}
+			});
+			var asnList = [];
+			for (var asn in asns){
+			  var obj = Object.assign({asn: asn}, asns[asn]);
+			  asnList.push(obj);
+			}
+			var updates = {
+				embed_width: '100%',
+				embed_height: '360px',
+				current_year: 2016,
+				filter_risk: 'openntp',
+				embed_title: 'openntp' + ' / ' + 2016,
+				panel_tools: true,
+				panel_share: false,
+				map_place: result[0].place_id.toLowerCase()
+			};
+			config.updates = updates;
+			res.render('place.html', {options: result, asns: asnList, riskOpt: mapRisks, config: config});
+  	})
+ 	});
 };
 
 exports.placeASN = function(req, res) {
