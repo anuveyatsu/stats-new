@@ -62,7 +62,6 @@ exports.placeID = function(req, res) {
   
   logic.getPlaceScore(sequelize, {place: req.params.id}).then(function(results){
   	return results[0]	
-		
   }).then(function(result) {
   	var id = result[0].place_id
   	logic.getAsnCount(sequelize, {place: id }).then(function(results) {
@@ -80,19 +79,24 @@ exports.placeID = function(req, res) {
 			  var obj = Object.assign({asn: asn}, asns[asn]);
 			  asnList.push(obj);
 			}
-			var updates = {
-				embed_width: '100%',
-				embed_height: '360px',
-				current_year: 2016,
-				filter_risk: 'openntp',
-				embed_title: 'openntp' + ' / ' + 2016,
-				panel_tools: true,
-				panel_share: false,
-				map_place: result[0].place_id.toLowerCase()
-			};
-			config.updates = updates;
-			res.render('place.html', {options: result, asns: asnList, riskOpt: mapRisks, config: config});
-  	})
+			return asnList
+  	}).then(function(asnList){
+  		logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
+				risks = risks[0]
+				var updates = {
+					embed_width: '100%',
+					embed_height: '360px',
+					current_year: 2016,
+					filter_risk: 'openntp',
+					embed_title: 'openntp' + ' / ' + 2016,
+					panel_tools: true,
+					panel_share: false,
+					map_place: result[0].place_id.toLowerCase()
+				};
+				config.updates = updates;
+				res.render('place.html', {options: result, asns: asnList, riskOpt: risks, config: config});
+			});
+  	});
  	});
 };
 
