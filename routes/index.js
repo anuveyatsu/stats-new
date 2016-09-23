@@ -105,7 +105,7 @@ exports.placeASN = function(req, res) {
   var place = getMatchedEntry(config.data.places, 'slug', req.params.place);
   
   place.asn = req.params.asn;
-  logic.getEntriesFromDatabase(sequelize, 'fixtures', {place: place.id, asn: place.asn}).then(function(results){
+  logic.getEntriesFromDatabase(sequelize, 'entries	', {place: place.id, asn: place.asn}).then(function(results){
     var dates = {};
     var mapRisks = {'1': 'openntp', '2': 'opendns'};
     
