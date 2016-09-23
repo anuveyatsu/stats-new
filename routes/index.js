@@ -2,8 +2,6 @@ var config = require('../config');
 var logic = require('../logic');
 var Sequelize = require('sequelize');
 
-var mapRisks = [{id: '1', title: 'Open DNS'}, {id: '2', title: 'Open NTP'}, {id: '4', title : 'Open SNMP'}]
-
 if (process.env.DATABASE_URI) {
   // Use DATABASE_URL if it exists, for Heroku.
   sequelize = new Sequelize(process.env.DATABASE_URI, {})
@@ -50,7 +48,13 @@ exports.place = function(req, res) {
       var obj = Object.assign({name: place}, places[place]);
       result.push(obj);
     };
-    res.render('places.html', {options: result, riskOpt: mapRisks, config: config});
+    return result
+  }).then(function (result) {
+  	logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
+  		risks = risks[0]
+  		res.render('places.html', {options: result, riskOpt: risks, config: config});
+  	})
+		 
   });
 };
 
