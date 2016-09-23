@@ -162,7 +162,7 @@ exports.placeRisk = function(req, res) {
   logic.getPlaceScore(sequelize, {risk: map[req.params.risk], place: req.params.place}).then(function(results){
 
   	var result = results[0][0];
-  	
+  	console.log(result)
   	var updates = {
 		  embed_width: '100%',
 		  embed_height: '360px',

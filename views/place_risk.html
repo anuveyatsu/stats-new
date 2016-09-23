@@ -8,7 +8,7 @@
 {% block breadcrumbs_inner %}
 <li><a href="/place">Places</a></li>
 <li><a href="/place/{{ options.slug }}/">{{ options.name }}</a></li>
-<li class="active">{{ options.risk }}</li>
+<li class="active">{{ options.risk_title }}</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
@@ -17,7 +17,7 @@
   <div class="row">
     <div class="col-md-6">
       <h1>
-        <a href="/risk/{{ options.risk }}/">{{ options.risk }}</a>
+        <a href="/risk/{{ options.risk }}/">{{ options.risk_title }}</a>
         <p class="place-openness" data-score="{{ options.score }}">{{ options.score }}<br /><span style="font-size: 13px">({{options.count}} devices)</span></p>
       </h1}>
       <h3>
@@ -29,7 +29,7 @@
       <div class="row navigate">
         <div class="col-md-12">
 {% markdown %}
-{{ options.description }}
+{{ options.risk_description }}
 {% endmarkdown %}                    
         </div>
         <div class="col-md-12">
