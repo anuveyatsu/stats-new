@@ -93,14 +93,17 @@ exports.placeID = function(req, res) {
 };
 
 exports.placeASN = function(req, res) {
-  var place = getMatchedEntry(places, 'slug', req.params.place);
-  place.asn = req.params.asn;  
-  logic.getEntriesFromDatabase(sequelize, {place: place.id, asn: place.asn}).then(function(results){
+
+  var place = getMatchedEntry(config.data.places, 'slug', req.params.place);
+  
+  place.asn = req.params.asn;
+  logic.getEntriesFromDatabase(sequelize, 'fixtures', {place: place.id, asn: place.asn}).then(function(results){
     var dates = {};
     var mapRisks = {'1': 'openntp', '2': 'opendns'};
+    
     results[0].forEach(function (entry){
       if (dates[entry.date]){
-        dates[entry.date][mapRisks[ntry.risk]] = entry.count || 'N/A';
+        dates[entry.date][mapRisks[entry.risk]] = entry.count || 'N/A';
       } else {
         dates[entry.date] = {};
         dates[entry.date][mapRisks[entry.risk]] = entry.count || 'N/A';
@@ -111,7 +114,8 @@ exports.placeASN = function(req, res) {
       var obj = Object.assign({month: date}, dates[date]);
       result.push(obj);
     }
-    res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), config: config, page: place, risks: risks});
+    
+    res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), config: config, page: place});
   });
 };
 
