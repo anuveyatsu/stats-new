@@ -138,8 +138,8 @@ exports.risk = function(req, res) {
 };
 
 exports.riskID = function(req, res) {
-  map = {opendns: 1, openntp: 2} 
-  logic.getPlaceScore(sequelize, {risk: map[req.params.id]}).then(function(results){
+  
+  logic.getPlaceScore(sequelize, {risk: req.params.id}).then(function(results){
   	
   	var result = results[0];
   	var updates = {
@@ -152,17 +152,16 @@ exports.riskID = function(req, res) {
 		  panel_share: false,
 		};
 		config.updates = updates;
-  	res.render('risk.html', {options: result, riskOpt: mapRisks, config: config});
+  	res.render('risk.html', {options: result,  config: config});
   })
 };
 
 // place-id/risk-id
 exports.placeRisk = function(req, res) {
-  map = {opendns: 1, openntp: 2}
-  logic.getPlaceScore(sequelize, {risk: map[req.params.risk], place: req.params.place}).then(function(results){
+
+  logic.getPlaceScore(sequelize, {risk: req.params.risk, place: req.params.place}).then(function(results){
 
   	var result = results[0][0];
-  	console.log(result)
   	var updates = {
 		  embed_width: '100%',
 		  embed_height: '360px',

@@ -34,7 +34,7 @@ exports.getPlaceScore = function(sequelize, options){
 	
 	if (options){
     if (options.place) placeLogic = "slug = '" + options.place + "'";
-    if (options.risk) riskLogic = "risk = '" + options.risk + "'";
+    if (options.risk) riskLogic = "risks.id = '" + options.risk + "'";
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
