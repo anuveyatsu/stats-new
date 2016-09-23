@@ -18,7 +18,10 @@
 {% for risk in risks %}
 {{ risk.title }}<div id="vis{{risk.id}}"></div>
 {% endfor %}
-<script>var graphData = {{ graphData }}</script>
+<script>
+	var graphData = {{ graphData }}
+	var graphRisks = {{ graphRisks }}
+</script>
 <script type="text/javascript" src="/static/scripts/site/graphs.js"></script>
 <div class="table-responsive">
   <table id="places_overview_table" class="table data-table table-header-stuck">

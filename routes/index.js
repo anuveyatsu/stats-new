@@ -124,8 +124,15 @@ exports.placeASN = function(req, res) {
   }).then(function(result){
   	logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
 			risks = risks[0]
-			page = {name: req.params.place, asn: req.params.asn}
-			res.render('place_asn.html', {entries: result, graphData: JSON.stringify(result), page: page, config: config, risks: risks, });
+			options = {
+				entries: result, 
+				graphData: JSON.stringify(result), 
+				page: {name: req.params.place, asn: req.params.asn}, 
+				config: config, 
+				risks: risks,
+				graphRisks: JSON.stringify(risks)
+			}
+			res.render('place_asn.html', options);
 		});
   });
 };

@@ -1,13 +1,8 @@
 var data = graphData
+var risks = graphRisks
 
-var risks = [
-  {risk: 'spam', color: 'blue'},
-  {risk:'opendns', color: 'black'},
-  {risk:'openntp', color:'red'},
-  {risk: 'openssdp', color: 'green'}
-  ];
 risks.forEach(function(risk){
-  var spec = {
+	var spec = {
     "actions": false,
     "spec":{
       "width": 1080,
@@ -31,7 +26,7 @@ risks.forEach(function(risk){
           "type": "linear",
           "range": "height",
           "nice": true,
-          "domain": {"data": "risks", "field": risk.risk}
+          "domain": {"data": "risks", "field": String(risk.risk_id)}
         }
       ],
       "axes": [
@@ -45,8 +40,8 @@ risks.forEach(function(risk){
           "properties": {
             "enter": {
               "x": {"scale": "x", "field": "month"},
-              "y": {"scale": "y", "field": risk.risk},
-              "stroke": {"value": risk.color},
+              "y": {"scale": "y", "field": String(risk.risk_id)},
+              "stroke": {"value": "green"},
               "strokeWidth": {"value": 2}
             }
           }
@@ -54,5 +49,5 @@ risks.forEach(function(risk){
       ]
     }
   };
-  vg.embed('#vis' + risk.risk, spec, function(error, result) {});
+  vg.embed('#vis' + risk.id, spec, function(error, result) {});
 });
