@@ -24,11 +24,10 @@
   <table id="places_overview_table" class="table data-table table-header-stuck">
     <thead>
       <tr>
-        <th class="sort_place" title="Sort by A-Z">Date</th>
-        <th class="sort_place" title="Sort by A-Z">Open NTP</th>
-        <th class="sort_place" title="Sort by A-Z">Open DNS</th>
-        <th class="sort_place" title="Sort by A-Z">Open SSDP</th>
-        <th class="sort_place" title="Sort by A-Z">Spam</th>
+      	<th class="sort_place" title="Sort by A-Z">Date</th>
+      	{% for risk in risks %}
+		      <th class="sort_place" title="Sort by A-Z">{{ risk.title or 'N/A' }}</th>
+        {% endfor %}
       </tr>
     </thead>
     <tbody>
@@ -37,18 +36,11 @@
             <td>  
               <span>{{ entry.month }}</span>               
             </td>
+            {% for risk in risks %}
             <td class="score" >  
-              <span>{{ entry.openntp or 'N/A' }}</span>
+              <span>{{ entry[risk.risk_id] or 'N/A' }}</span>
             </td>
-            <td class="score">  
-              <span>{{ entry.opendns or 'N/A' }}</span>
-            </td>
-            <td class="score">  
-              <span>{{ entry.openssdp or 'N/A' }}</span>
-            </td>
-            <td class="score">  
-              <span>{{ entry.spam or 'N/A' }}</span>
-            </td>
+            {% endfor %}
           </tr>
         {% endfor %}
     </tbody>
