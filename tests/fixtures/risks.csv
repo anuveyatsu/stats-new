@@ -1,4 +1,4 @@
-risk_id,id,title,total,max,min,mean,score,rank,places_count,icon,category,description,rank_2014,score_2014,rank_2013,score_2013
+risk_id,id,title,total,max,min,mean,score,rank,places_count,icon,category,description
 1,opendns,Open DNS,3865270,539540,10,18062,49,,214,,,"The Domain Name System (DNS) is pervasive. Collectively, we use it billions of times a day, often without even knowing that it exists. For enterprises, it's their digital identity as well as a critical component of their security architecture. In short: DNS is pervasive and there are many DNS servers on the Internet. Since DNS runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol, it can be used for [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack). 
 
 **Impact of running open recursive DNS servers**
