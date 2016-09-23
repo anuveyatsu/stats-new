@@ -88,9 +88,9 @@
 		  {% for asn in asns %}
 		    <tr>
 		      <td>  
-		        <span>
+		        <a href="/place/{{ options[0].slug }}/asn/{{ asn.asn }}/" title="{{ asn.asn }}">
 		          {{ asn.asn or 'N/A'}}
-		        </span>
+		        </a>
 		      </td>
 		      {% for risk in riskOpt %}
 		        <td class="score">
