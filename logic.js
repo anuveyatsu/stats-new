@@ -39,7 +39,7 @@ exports.getPlaceScore = function(sequelize, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT entries_by_place.country as place_id, entries_by_place.risk as risk, ROUND(SUM(entries_by_place.score)/COUNT(entries_by_place.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risk, name, slug;"
+  var logic = "SELECT entries_by_place.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(entries_by_place.score)/COUNT(entries_by_place.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) JOIN risks on (entries_by_place.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
   
   return sequelize.query(logic);
 };
