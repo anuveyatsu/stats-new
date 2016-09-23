@@ -55,28 +55,7 @@ Create test database
 ```
 CREATE DATABASE testdb;
 ```
-
-Quit and connect as test user
-
-
+Run aggregation script
 ```
-\q
-$ psql -h localhost -U test_user testdb  \\ enter the password 'secret'
+$ pyton tests/aggregate.py
 ```
-
-Create a table "entries" and copy in data from entries.csv
-
-```
-CREATE TABLE entries(country varchar(40), asn int, month varchar(40), risk varchar(40), count int);
-COPY entries(country, asn, month, risk, count)
-FROM '/path/to/entries.csv' 
-WITH DELIMITER ','
-CSV HEADER;
-```
-
-Check the contents of the table
-
-```
-SELECT * FROM entries;
-```
-
