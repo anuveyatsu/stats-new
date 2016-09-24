@@ -39,7 +39,7 @@
                 {{ option.rank or "N/A" }}
               </td>
               <td>
-                  <a href="/place/{{ option.slug }}/{{ option.riskId }}/">{{ option.riskTitle }}</a>
+                  <a href="/place/{{ option.slug }}/{{ option.risk }}/">{{ option.risk_title }}</a>
               </td>
               <td class="previous-results">
               {% if option.previous and option.previous.score %}
@@ -68,6 +68,39 @@
     <div id="vis"></div>
     <script>var graphData = {{ graphData }}</script>
     <script type="text/javascript" src="/static/scripts/site/graphs.js"></script>
+  </div>
+  <br>
+  <div>
+  	<table id="place-slice-table" class="table data-table table-header-stuck">
+      <thead>
+		    <tr>
+		      <th class="sort_place" title="Sort by A-Z">Place</th>
+		      {% for risk in riskOpt %}
+		        {% if risk.title %}
+		          <th>
+		            {{ risk.title }}
+		          </th>
+		        {% endif %}
+		      {% endfor %}
+		    </tr>
+		  </thead>
+		  <tbody>
+		  {% for asn in asns %}
+		    <tr>
+		      <td>  
+		        <a href="/place/{{ options[0].slug }}/asn/{{ asn.asn }}/" title="{{ asn.asn }}">
+		          {{ asn.asn or 'N/A'}}
+		        </a>
+		      </td>
+		      {% for risk in riskOpt %}
+		        <td class="score">
+		          <span>{{ asn[risk.risk_id] or 'N/A'}}</span>
+		        </td>
+		      {% endfor %}
+		    </tr>
+		  {% endfor %}
+		  </tbody>
+		</table>
   </div>
 </section>
 

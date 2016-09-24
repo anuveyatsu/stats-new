@@ -29,6 +29,7 @@ app.get('/about', routes.about);
 app.get('/vis/map/embed', routes.map);
 app.get('/api/:id'+'.json', routes.api);
 app.get('/data/geo.json', routes.geo);
+app.get('/asn', routes.asn);
 
 app.listen(app.get('port'), function() {
   console.log('Listening on: ' + app.get('port'));
