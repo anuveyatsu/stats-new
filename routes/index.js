@@ -217,14 +217,6 @@ exports.asn = function(req, res) {
 };
 
 // api
-exports.api = function(req, res) {
-  if (config.data[req.params.id]) {
-    res.json(config.data[req.params.id]);
-  } else {
-    res.send('Request not found');
-  }
-};
-
 exports.apiCountByCountry = function(req, res) {
 
 	logic.getCountByCountry(sequelize, req.query).then(function(results){
