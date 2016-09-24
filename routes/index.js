@@ -217,13 +217,40 @@ exports.asn = function(req, res) {
 };
 
 // api
-exports.api = function(req, res) {
-  if (config.data[req.params.id]) {
-    res.json(config.data[req.params.id]);
-  } else {
-    res.send('Request not found');
-  }
-};
+exports.apiCountByCountry = function(req, res) {
+
+	logic.getCountByCountry(sequelize, req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
+
+exports.apiCountByCountry = function(req, res) {
+
+	logic.getCountByCountry(sequelize, req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
+
+exports.apiRisk = function(req, res) {
+
+	logic.getEntriesFromDatabase(sequelize, 'risks', req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
+
+exports.apiCountry = function(req, res) {
+
+	logic.getEntriesFromDatabase(sequelize, 'places', req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
+
+exports.apiAsn = function(req, res) {
+
+	logic.getEntriesFromDatabase(sequelize, 'country_asn', req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
 
 exports.geo = function(req, res) {
   var geoJson = require('../data/geo.json');

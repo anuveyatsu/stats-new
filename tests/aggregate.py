@@ -5,6 +5,7 @@ import os
 
 PLACESFILE = 'tests/fixtures/places.csv'
 ENTRIES = 'tests/fixtures/entries.csv'
+COUNTRY_ASN = 'tests/fixtures/country_asn.csv'
 
 fo = open(PLACESFILE)
 places = [ place for place in csv.DictReader(fo) ]
@@ -14,29 +15,34 @@ risks = [1, 2, 3, 4, 5]
 months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-01']
 
 def agregate_data():
-    result = [[ 'id', 'risk','country', 'asn', 'date', 'period_tpe','count']]
-    rowid = 0
-    for place in places:
-        two_digit = random.randrange(10, 100) 
-        digit_traker = {}
-        while two_digit not in digit_traker:
-            two_digit = random.randrange(10, 100)
-            digit_traker[two_digit] = place['id']
-        for i in range(10):            
-            five_digit = random.randrange(10000, 100000)
-            asn = int(str(two_digit) + str(five_digit))
-            for risk in risks:
-                for month in months:        
-                    count = random.randrange(200, 300)
-                    country = place['id'].upper()
-                    result.append([rowid, risk, country, asn, month, 'weekly', count])
-                    rowid += 1
-    return result        
+	result = [[ 'id', 'risk','country', 'asn', 'date', 'period_tpe','count']]
+	country_asn = [['country', 'asn', 'date']]
+	rowid = 0
+	for place in places:
+		two_digit = random.randrange(10, 100) 
+		digit_traker = {}
+		while two_digit not in digit_traker:
+			two_digit = random.randrange(10, 100)
+			digit_traker[two_digit] = place['id']
+		for i in range(10):            
+			five_digit = random.randrange(10000, 100000)
+			asn = int(str(two_digit) + str(five_digit))
+			country_asn.append([place['id'].upper(), asn, '2016-01-01'])
+			for risk in risks:
+				for month in months:        
+					count = random.randrange(200, 300)
+					country = place['id'].upper()
+					result.append([rowid, risk, country, asn, month, 'weekly', count])
+					rowid += 1
+	return result, country_asn
 
 def write_csv(data):
     with open(ENTRIES, 'w') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerows(data)
+        writer.writerows(data[0])
+    with open(COUNTRY_ASN, 'w') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerows(data[1])
 
 connection = psycopg2.connect(
 	database='testdb',
@@ -48,7 +54,7 @@ connection = psycopg2.connect(
 
 def delete_tables():	
 	cursor = connection.cursor();
-	tablenames = ['entries', 'risks', 'places', 'entries_by_place', 'entries_by_risk']
+	tablenames = ['entries', 'risks', 'places', 'entries_by_place', 'entries_by_risk', 'country_asn']
 	for tablename in tablenames:
 		cursor.execute("select exists(SELECT * FROM information_schema.tables WHERE table_name='%s')"%tablename)	
 		if cursor.fetchone()[0]:
@@ -77,26 +83,34 @@ CREATE TABLE entries_by_place
 CREATE TABLE entries_by_risk
 (risk int,  date varchar(16), count bigint, max bigint);
 """
+	create_country_asn = """
+CREATE TABLE country_asn
+(country varchar(2), asn varchar(16), date varchar(16));
+"""
 	cursor.execute(create_entries)
 	cursor.execute(create_risks)
 	cursor.execute(create_places)
 	cursor.execute(create_entries_by_place)
 	cursor.execute(create_entries_by_risk)
+	cursor.execute(create_country_asn)
 	connection.commit();
 
 def load_data():
 	epath = os.path.abspath("tests/fixtures/entries.csv")
 	rpath = os.path.abspath("tests/fixtures/risks.csv")
 	ppath = os.path.abspath("tests/fixtures/places.csv")
+	capath = os.path.abspath("tests/fixtures/country_asn.csv")
 	
 	eload = "COPY entries FROM '%s' DELIMITER ',' CSV HEADER;"%epath
 	rload = "COPY risks FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
 	pload = "COPY places FROM '%s' DELIMITER ',' CSV HEADER;"%ppath
+	caload = "COPY country_asn FROM '%s' DELIMITER ',' CSV HEADER;"%capath
 	
 	cursor = connection.cursor()
 	cursor.execute(eload)
 	cursor.execute(rload)
 	cursor.execute(pload)
+	cursor.execute(caload)
 	connection.commit()
 	
 def aggregate_entries():

@@ -2,7 +2,9 @@ var Sequelize = require('sequelize');
 var dbConfig = require('../config').db;
 var logic = require('../logic');
 var assert = require('assert');
+var request = require('supertest');
 var table = 'entries'
+var app = require('../app.js').app;
 
 sequelize = new Sequelize(
   dbConfig.database,
@@ -90,3 +92,68 @@ describe('Database Functions', function(){
     });
   });
 });
+
+describe('API', function(){
+  it('Count by country API', function(done){
+    request(app)
+      .get('/api/v1/count_by_country')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 2000);
+        assert.equal(res.body[0].risk, 'opendns');
+        assert.equal(res.body[0].date, '2016-08-01');
+        done();
+      });  	
+  });
+  it('Places API', function(done){
+    request(app)
+      .get('/api/v1/country')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 225);
+        assert.equal(res.body[0].id, 'ad');
+        assert.equal(res.body[0].name, 'Andorra');
+        done();
+      });  	
+  });
+  it('Risks API', function(done){
+    request(app)
+      .get('/api/v1/risk')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 5);
+        assert.equal(res.body[0].id, 'opendns');
+        assert.equal(res.body[1].id, 'openntp');
+        done();
+      });  	
+  });
+  it('ASNs API', function(done){
+    request(app)
+      .get('/api/v1/asn')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 2250);
+        assert.equal(res.body[0].country, 'AD');
+        assert.equal(res.body[0].date, '2016-01-01');
+        done();
+      });  	
+  });
+  it('Works with API queries', function(done){
+    request(app)
+      .get('/api/v1/count_by_country?risk=spam&country=gb&date=2016-07-01')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 1);
+        assert.equal(res.body[0].risk, 'spam');
+        assert.equal(res.body[0].country, 'gb');
+        assert.equal(res.body[0].date, '2016-07-01');  
+        done();
+      });  	
+  });  
+});
+
