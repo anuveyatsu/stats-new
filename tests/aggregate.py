@@ -80,7 +80,7 @@ CREATE TABLE entries_by_risk
 	cursor.execute(create_entries)
 	cursor.execute(create_risks)
 	cursor.execute(create_places)
-	cursor.execute(create_entries_by_place		)
+	cursor.execute(create_entries_by_place)
 	cursor.execute(create_entries_by_risk)
 	connection.commit();
 
