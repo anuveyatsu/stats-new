@@ -31,6 +31,8 @@ app.get('/api/:id'+'.json', routes.api);
 app.get('/data/geo.json', routes.geo);
 app.get('/asn', routes.asn);
 
+app.get('/api/v1/count_by_country', routes.apiCountByCountry);
+
 app.listen(app.get('port'), function() {
   console.log('Listening on: ' + app.get('port'));
 });
