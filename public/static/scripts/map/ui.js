@@ -388,8 +388,8 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
         } else {
             // calculate for this risk/year/place from entries data
             match = _.find(dataStore.entries, {
-                'place': feature.properties.iso_a2.toLowerCase(),
-                'year': uiState.filter.year,
+                'country': feature.properties.iso_a2.toLowerCase(),
+                'date': uiState.filter.year,
                 'risk': uiState.filter.risk
             });
             if (match) {
@@ -597,8 +597,8 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
             } else {
                 // calculate for this risk/year/place from entries data
                 match = _.find(dataStore.entries, {
-                    'place': place.id,
-                    'year': uiState.filter.year,
+                    'country': place.id,
+                    'date': uiState.filter.year,
                     'risk': uiState.filter.risk
                 });
                 if (match) {
@@ -667,13 +667,13 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
             } else {
                 // calculate for this risk/year/place from entries data
                 match = _.find(dataStore.entries, {
-                    'place': properties.iso_a2.toLowerCase(),
-                    'year': uiState.filter.year,
+                    'country': properties.iso_a2.toLowerCase(),
+                    'date': uiState.filter.year,
                     'risk': uiState.filter.risk
                 });
                 previousMatch = _.find(dataStore.entries, {
-                    'place': properties.iso_a2.toLowerCase(),
-                    'year': (parseInt(uiState.filter.year, 10) - 1).toString(),
+                    'country': properties.iso_a2.toLowerCase(),
+                    'date': (parseInt(uiState.filter.year, 10) - 1).toString(),
                     'risk': uiState.filter.risk
                 });
                 if (match) {

@@ -8,12 +8,12 @@ define(['jquery', 'pubsub'], function($, pubsub) {
             geo: 'data.geo',
             init_entries: 'init_entries',
             init_places: 'init_places'
-        },
+	        },
         api = {
-            summary: 'SITEURL/api/summary.json'.replace('SITEURL', siteUrl),
-            places: 'SITEURL/api/places.json'.replace('SITEURL', siteUrl),
-            risks: 'SITEURL/api/risks.json'.replace('SITEURL', siteUrl),
-            entries: 'SITEURL/api/entries.json'.replace('SITEURL', siteUrl),
+            //summary: 'SITEURL/api/summary.json'.replace('SITEURL', siteUrl),
+            places: 'SITEURL/api/v1/country'.replace('SITEURL', siteUrl),
+            risks: 'SITEURL/api/v1/risk'.replace('SITEURL', siteUrl),
+            entries: 'SITEURL/api/v1/count_by_country'.replace('SITEURL', siteUrl),
             geo: 'SITEURL/data/geo.json'.replace('SITEURL', siteUrl)
         };
 
