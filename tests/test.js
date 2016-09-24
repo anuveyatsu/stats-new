@@ -5,17 +5,6 @@ var assert = require('assert');
 var app = require('../app.js').app;
 var logic = require('../logic');
 
-var fs = require('fs');
-var Papa = require('babyparse'); 
-
-var riskCsv = fs.readFileSync(__dirname + '/fixtures/risks.csv', 'utf8');
-var placeCsv = fs.readFileSync(__dirname + '/fixtures/places.csv', 'utf8');
-var entryCsv = fs.readFileSync(__dirname + '/fixtures/entries.csv', 'utf8');
-// transfoms csv to json
-var risks = Papa.parse(riskCsv, {header: true}).data;
-var places = Papa.parse(placeCsv, {header: true}).data;
-var entries = Papa.parse(entryCsv, {header: true}).data;
-
 describe('Content', function(){
   it('home page', function(done){
     request(app)
@@ -70,20 +59,6 @@ describe('Content', function(){
       });
   });
 });
-
-describe('Logic functions', function(){
-  it('Works with getting single entry', function() {
-    risk = logic.getSingleEntry(risks, 'id', 'openntp');
-    placeById = logic.getSingleEntry(places, 'id', 'gb');
-    placeBySlug = logic.getSingleEntry(places, 'slug', 'united-kingdom');
-    assert.equal(risk.id, 'openntp');
-    assert.equal(placeById.id, 'gb');
-    assert.equal(placeById.name, 'United Kingdom');
-    assert.equal(placeBySlug.id, 'gb');
-  });
-});
-
-
 
 function checkContent(res, expected) {
   var found = res.text.match(expected);
