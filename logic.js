@@ -24,7 +24,6 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
   return sequelize.query(logic);
 };
 
-
 exports.getPlaceScore = function(sequelize, options){
   
   var placeLogic = "1=1";

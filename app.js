@@ -32,6 +32,10 @@ app.get('/data/geo.json', routes.geo);
 app.get('/asn', routes.asn);
 
 app.get('/api/v1/count_by_country', routes.apiCountByCountry);
+app.get('/api/v1/risk', routes.apiRisk);
+app.get('/api/v1/country', routes.apiCountry);
+app.get('/api/v1/asn', routes.apiAsn);
+
 
 app.listen(app.get('port'), function() {
   console.log('Listening on: ' + app.get('port'));
