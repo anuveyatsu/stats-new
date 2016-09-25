@@ -94,6 +94,19 @@ exports.placeID = function(req, res) {
 					map_place: result[0].place_id.toLowerCase()
 				};
 				config.updates = updates;
+				// adds risk in Table if there is no data For given country
+				var isRisk = false
+				risks.forEach(function(risk){
+					result.forEach(function(res){
+						if(risk.id === res.risk){
+							isRisk = true
+						}
+					})
+					if (!isRisk){
+						result.push({risk_title: risk.title, risk: risk.id})
+					}
+					isRisk = false
+				})
 				res.render('place.html', {options: result, asns: asnList, riskOpt: risks, config: config});
 			});
   	});
