@@ -75,3 +75,9 @@ exports.getAsnCount = function(sequelize, options) {
 	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM entries WHERE "+placeLogic+" GROUP BY asn, risk;"
 	return sequelize.query(logic)
 };
+
+exports.getAsnTotal = function(sequelize, options) {
+
+  var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN places ON country_asn.country=upper(places.id) GROUP BY name, slug, country ORDER BY name ASC;"
+  return sequelize.query(logic)
+};
