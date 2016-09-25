@@ -137,8 +137,32 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 2250);
-        assert.equal(res.body[0].country, 'AD');
+        assert.equal(res.body[0].country, 'ad');
         assert.equal(res.body[0].date, '2016-01-01');
+        done();
+      });  	
+  });
+  it('count API', function(done){
+    request(app)
+      .get('/api/v1/count')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 56250);
+        assert.equal(res.body[0].country, 'AD');
+        assert.equal(res.body[0].date, '2016-06-01');
+        done();
+      });  	
+  });
+  it('count API (period)', function(done){
+    request(app)
+      .get('/api/v1/count?start=2016-06-01&end=2016-08-01')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	var rand = res.body[Math.floor(Math.random() * res.body.length)];
+        assert.equal(res.body.length, 11250);
+        assert.equal(rand.date, '2016-07-01');
         done();
       });  	
   });
