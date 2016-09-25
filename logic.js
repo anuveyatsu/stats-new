@@ -78,6 +78,6 @@ exports.getAsnCount = function(sequelize, options) {
 
 exports.getAsnTotal = function(sequelize, options) {
 
-  var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, country ORDER BY name ASC;"
+  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, place ORDER BY name ASC;"
   return sequelize.query(logic)
 };
