@@ -16,7 +16,7 @@ months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-01']
 
 def agregate_data():
 	result = [[ 'id', 'risk','country', 'asn', 'date', 'period_tpe','count']]
-	country_asn = [['country', 'asn', 'date']]
+	country_asn = [['place', 'asn', 'date']]
 	rowid = 0
 	for place in places:
 		two_digit = random.randrange(10, 100) 
@@ -27,7 +27,7 @@ def agregate_data():
 		for i in range(10):            
 			five_digit = random.randrange(10000, 100000)
 			asn = int(str(two_digit) + str(five_digit))
-			country_asn.append([place['id'].upper(), asn, '2016-01-01'])
+			country_asn.append([place['id'], asn, '2016-01-01'])
 			for risk in risks:
 				for month in months:        
 					count = random.randrange(200, 300)
