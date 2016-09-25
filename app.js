@@ -34,7 +34,7 @@ app.get('/api/v1/count_by_country', routes.apiCountByCountry);
 app.get('/api/v1/risk', routes.apiRisk);
 app.get('/api/v1/country', routes.apiCountry);
 app.get('/api/v1/asn', routes.apiAsn);
-
+app.get('/api/v1/count', routes.apiCount);
 
 app.listen(app.get('port'), function() {
   console.log('Listening on: ' + app.get('port'));

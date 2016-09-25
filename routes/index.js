@@ -251,6 +251,13 @@ exports.apiAsn = function(req, res) {
   });
 }
 
+exports.apiCount = function(req, res) {
+
+	logic.getTotalCount(sequelize, req.query).then(function(results){
+  	res.json(results[0]);
+  });
+}
+
 exports.geo = function(req, res) {
   var geoJson = require('../data/geo.json');
   res.json(geoJson);

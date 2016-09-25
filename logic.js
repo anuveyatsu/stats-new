@@ -76,6 +76,24 @@ exports.getAsnCount = function(sequelize, options) {
 	return sequelize.query(logic)
 };
 
+exports.getTotalCount = function(sequelize, options) {
+	
+	var placeLogic = "1=1";
+	var asnLogic = "1=1";
+	var startDate = "1=1";
+	var endDate = "1=1";
+	
+	if (options){
+    if (options.country) placeLogic = "country= '" + options.country.toUpperCase() + "'";
+    if (options.asn) asnLogic = "asn= '" + options.asn + "'";
+    if (options.start) startDate = "date > '" + options.start + "'";
+    if (options.end) endDate = "date < '" + options.end + "'";
+  }
+
+	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM entries WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;"
+	return sequelize.query(logic)
+};
+
 exports.getAsnTotal = function(sequelize, options) {
 
   var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, place ORDER BY name ASC;"
