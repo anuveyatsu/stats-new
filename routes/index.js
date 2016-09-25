@@ -66,6 +66,7 @@ exports.placeID = function(req, res) {
   	var id = result[0].place_id
   	logic.getAsnCount(sequelize, {place: id }).then(function(results) {
   		var asns = {};
+  		var risks = {}
 			results[0].forEach(function(result){
 				if (asns[result.asn]){
 					asns[result.asn][result.risk] = result.count
@@ -73,14 +74,28 @@ exports.placeID = function(req, res) {
 					asns[result.asn] = {}
 					asns[result.asn][result.risk] = result.count
 				}
+				if (risks[result.risk]){
+					risks[result.risk].push({name: result.asn, count: result.count})
+				}else{
+					risks[result.risk] = []
+					risks[result.risk].push({name: result.asn, count: result.count})
+				}
 			});
 			var asnList = [];
+			var riskList = [];
 			for (var asn in asns){
 			  var obj = Object.assign({asn: asn}, asns[asn]);
 			  asnList.push(obj);
 			}
-			return asnList
-  	}).then(function(asnList){
+			// for treemap should be removed later
+			var riskMap = {1: 'opendns', 2:'openntp', 3:'spam',4:'opsnsnmp',5:'openssdp'}
+			for (var risk in risks){
+			  var obj = Object.assign({name: riskMap[risk]}, {children: risks[risk]});
+			  riskList.push(obj);
+			}
+			var asns = {asnList: asnList, riskList: JSON.stringify(riskList)}
+			return asns
+  	}).then(function(asns){
   		logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
 				risks = risks[0]
 				var updates = {
@@ -107,7 +122,8 @@ exports.placeID = function(req, res) {
 					}
 					isRisk = false
 				})
-				res.render('place.html', {options: result, asns: asnList, riskOpt: risks, config: config});
+				
+				res.render('place.html', {options: result, asns: asns.asnList, treeAsn: asns.riskList, riskOpt: risks, config: config});
 			});
   	});
  	});

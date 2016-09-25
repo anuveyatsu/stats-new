@@ -67,6 +67,11 @@
     </div>
   </div>
   <br>
+  {% for risk in riskOpt %}
+  	<div id="treemap{{risk.id}}"></div>
+  {% endfor %}
+  <script type="text/javascript">var treeAsn = {{ treeAsn }}</script>
+  <script type="text/javascript" src="/static/scripts/treemap.js"></script>
   <div class="table-responsive">
 		<table id="places_overview_table" class="table data-table table-header-stuck">
 		  <thead>
