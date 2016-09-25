@@ -19,9 +19,9 @@ exports.home = function(req, res) {
   var updates = {
     embed_width: '100%',
     embed_height: '300px',
-    current_year: 2016,
+    current_year: '2016-08-12',
     filter_risk: 'openntp',
-    embed_title: 'openntp' + ' / ' + 2016,
+    embed_title: 'openntp' + ' / ' + '2016-08-12',
     panel_tools: true
   };
   config.updates = updates;
@@ -86,9 +86,9 @@ exports.placeID = function(req, res) {
 				var updates = {
 					embed_width: '100%',
 					embed_height: '360px',
-					current_year: 2016,
+					current_year: '2016-08-12',
 					filter_risk: 'openntp',
-					embed_title: 'openntp' + ' / ' + 2016,
+					embed_title: 'openntp' + ' / ' + '2016-08-12',
 					panel_tools: true,
 					panel_share: false,
 					map_place: result[0].place_id.toLowerCase()
@@ -150,14 +150,13 @@ exports.risk = function(req, res) {
 exports.riskID = function(req, res) {
   
   logic.getPlaceScore(sequelize, {risk: req.params.id}).then(function(results){
-  	
   	var result = results[0];
   	var updates = {
 		  embed_width: '100%',
 		  embed_height: '360px',
-		  current_year: 2016,
+		  current_year: result[0].date,
 		  filter_risk: req.params.id,
-		  embed_title: req.params.id + ' / ' + 2016,
+		  embed_title: req.params.id + ' / ' + result[0].date,
 		  panel_tools: false,
 		  panel_share: false,
 		};
@@ -175,9 +174,9 @@ exports.placeRisk = function(req, res) {
   	var updates = {
 		  embed_width: '100%',
 		  embed_height: '360px',
-		  current_year: 2016,
+		  current_year: result.date,
 		  filter_risk: req.params.risk,
-		  embed_title: req.params.risk + ' / ' + 2016,
+		  embed_title: req.params.risk + ' / ' + result.date,
 		  map_place: result.place_id.toLowerCase(),
 		  panel_tools: false,
 		  panel_share: false,
