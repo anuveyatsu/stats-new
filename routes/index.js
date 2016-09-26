@@ -131,7 +131,7 @@ exports.placeID = function(req, res) {
 
 exports.placeASN = function(req, res) {
 
-  logic.getEntriesFromDatabase(sequelize, 'entries	', {	asn: req.params.asn}).then(function(results){
+  logic.getEntriesFromDatabase(sequelize, 'entries', {	asn: req.params.asn}).then(function(results){
     
     var dates = {};
    
