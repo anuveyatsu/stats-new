@@ -137,7 +137,7 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 2250);
-        assert.equal(res.body[0].country, 'ad');
+        assert.equal(res.body[0].place, 'ad');
         assert.equal(res.body[0].date, '2016-01-01');
         done();
       });  	
@@ -149,8 +149,6 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 56250);
-        assert.equal(res.body[0].country, 'AD');
-        assert.equal(res.body[0].date, '2016-06-01');
         done();
       });  	
   });
