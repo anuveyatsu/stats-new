@@ -48,7 +48,7 @@
           </a>
         </td>
         {% for risk in riskOpt %}
-          <td class="score" data-score="{{ option[risk.risk_id] }}">
+          <td class="score" data-score="{{ option[risk.id] }}">
             <span>{{ option[risk.id] }}</span>
           </td>
         {% endfor %}
