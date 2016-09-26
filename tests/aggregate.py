@@ -85,7 +85,7 @@ CREATE TABLE entries_by_risk
 """
 	create_country_asn = """
 CREATE TABLE country_asn
-(country varchar(2), asn varchar(16), date varchar(16));
+(place varchar(2), asn varchar(16), date varchar(16));
 """
 	cursor.execute(create_entries)
 	cursor.execute(create_risks)
