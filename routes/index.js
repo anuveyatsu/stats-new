@@ -61,24 +61,24 @@ exports.place = function(req, res) {
 exports.placeID = function(req, res) {
   
   logic.getPlaceScore(sequelize, {place: req.params.id}).then(function(results){
-  	return results[0]	
+  	return results[0];
   }).then(function(result) {
-  	var id = result[0].place_id
+  	var id = result[0].place_id;
   	logic.getAsnCount(sequelize, {place: id }).then(function(results) {
   		var asns = {};
-  		var risks = {}
+  		var risks = {};
 			results[0].forEach(function(result){
 				if (asns[result.asn]){
-					asns[result.asn][result.risk] = result.count
-				}else{
-					asns[result.asn] = {}
-					asns[result.asn][result.risk] = result.count
+					asns[result.asn][result.risk] = result.count;
+				}else {
+					asns[result.asn] = {};
+					asns[result.asn][result.risk] = result.count;
 				}
 				if (risks[result.risk]){
-					risks[result.risk].push({name: result.asn, count: result.count})
+					risks[result.risk].push({name: result.asn, count: result.count});
 				}else{
-					risks[result.risk] = []
-					risks[result.risk].push({name: result.asn, count: result.count})
+					risks[result.risk] = [];
+					risks[result.risk].push({name: result.asn, count: result.count});
 				}
 			});
 			var asnList = [];
@@ -87,17 +87,12 @@ exports.placeID = function(req, res) {
 			  var obj = Object.assign({asn: asn}, asns[asn]);
 			  asnList.push(obj);
 			}
-			// for treemap should be removed later
-			var riskMap = {1: 'opendns', 2:'openntp', 3:'spam',4:'opensnmp',5:'openssdp'}
-			for (var risk in risks){
-			  var obj = Object.assign({name: riskMap[risk]}, {children: risks[risk]});
-			  riskList.push(obj);
-			}
-			var asns = {asnList: asnList, riskList: JSON.stringify(riskList)}
-			return asns
+			
+			var result = {asnList: asnList, riskList: risks};
+			return result;
   	}).then(function(asns){
   		logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
-				risks = risks[0]
+				risks = risks[0];
 				var updates = {
 					embed_width: '100%',
 					embed_height: '360px',
@@ -110,20 +105,27 @@ exports.placeID = function(req, res) {
 				};
 				config.updates = updates;
 				// adds risk in Table if there is no data For given country
-				var isRisk = false
-				risks.forEach(function(risk){
+				var isRisk = false;
+				var riskMap = {};
+        var treeList = [];
+        risks.forEach(function(risk){
+					riskMap[risk.risk_id] = risk.id;
 					result.forEach(function(res){
 						if(risk.id === res.risk){
-							isRisk = true
+							isRisk = true;
 						}
-					})
+					});
 					if (!isRisk){
-						result.push({risk_title: risk.title, risk: risk.id})
+						result.push({risk_title: risk.title, risk: risk.id});
 					}
-					isRisk = false
-				})
-				
-				res.render('place.html', {options: result, asns: asns.asnList, treeAsn: asns.riskList, riskOpt: risks, config: config});
+					isRisk = false;
+				});
+        //console.log(asns.riskList )
+        for (var risk in asns.riskList){
+          var obj = Object.assign({name: riskMap[risk]}, {children: asns.riskList[risk]});
+          treeList.push(obj);
+        }
+        res.render('place.html', {options: result, asns: asns.asnList, treeAsn: JSON.stringify(treeList), riskOpt: risks, config: config});
 			});
   	});
  	});
