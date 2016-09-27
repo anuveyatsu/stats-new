@@ -60,7 +60,7 @@ exports.getCountByCountry = function(sequelize, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT risks.id as risk, LOWER(entries_by_place.country) as country, entries_by_place.date as date, count, ROUND(entries_by_place.score) as score, entries_by_place.rank as rank FROM entries_by_place JOIN risks on (entries_by_place.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);"
+  var logic = "SELECT risks.id as risk, LOWER(entries_by_place.country) as country, to_char(entries_by_place.date,'YYYY-MM-DD') as date, count, ROUND(entries_by_place.score) as score, entries_by_place.rank as rank FROM entries_by_place JOIN risks on (entries_by_place.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);"
   
   return sequelize.query(logic);
 };
