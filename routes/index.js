@@ -88,7 +88,7 @@ exports.placeID = function(req, res) {
 			  asnList.push(obj);
 			}
 			// for treemap should be removed later
-			var riskMap = {1: 'opendns', 2:'openntp', 3:'spam',4:'opsnsnmp',5:'openssdp'}
+			var riskMap = {1: 'opendns', 2:'openntp', 3:'spam',4:'opensnmp',5:'openssdp'}
 			for (var risk in risks){
 			  var obj = Object.assign({name: riskMap[risk]}, {children: risks[risk]});
 			  riskList.push(obj);
