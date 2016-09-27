@@ -16,7 +16,8 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
   var timeLogic = "1=1";
   var riskIdLogic = "1=1";
 	var order = '';
-
+  var logic;
+  
   if (options){
     if (options.place) placeLogic = "country = '" + options.place.toUpperCase() + "'";
     if (options.id) riskLogic = "id = '" + options.id + "'";
@@ -25,8 +26,12 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
-  if (table === 'entries') order = " ORDER BY date ASC"
-  var logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
+  if (table === 'entries') {
+    order = " ORDER BY date ASC";
+    logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
+  } else {
+  logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
+  }
   return sequelize.query(logic);
 };
 
