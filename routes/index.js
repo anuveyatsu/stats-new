@@ -18,7 +18,7 @@ if (process.env.DATABASE_URI) {
 exports.home = function(req, res) {
   var updates = {
     embed_width: '100%',
-    embed_height: '300px',
+    embed_height: '550px',
     current_year: '2016-08-15',
     filter_risk: 'opendns',
     embed_title: 'opendns' + ' / ' + '2016-08-15',

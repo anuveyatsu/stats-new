@@ -30,7 +30,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
         colorDark = '#2d2d2d',
         colorSteps = ['#7ab800', '#edcf3b','#ff0000'],
         colorScale = chroma.scale(colorSteps).domain([0, 100]),
-        mapLatLongBase = [30, 5],
+        mapLatLongBase = [5, 5],
         mapZoomBase = 1,
         res = [90000, 30000, 20000, 10000, 5000, 2500, 1250, 600, 300, 100, 80, 40],
         RD2 = new L.Proj.CRS.TMS(
