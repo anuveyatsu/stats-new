@@ -16,7 +16,7 @@ To build and view the app:
 4. Run the app. From the base directory:
 
     ```
-    node app.js
+    heroku local
     ```
 
 5. Visit the running app in your browser at http://localhost:8000/
@@ -61,4 +61,53 @@ Run aggregation script
 ```
 $ python tests/aggregate.py
 ```
+
+## Deployment to Heroku
+
+Note that you will need to install the [Heroku toolbelt](https://toolbelt.heroku.com/) to carry out the `heroku` commands below.
+
+### Create the application on Heroku
+
+*Skip this step if the application is already deployed*
+
+This is heavily based on [this
+tutorial](https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction).
+```
+    # replace {app-name} with the name of your app
+    heroku create {app-name}
+    git push heroku master
+    # now point at our config
+    heroku ps:scale web=1
+```
+## To deploy (already created):
+
+Push to heroku git repo:
+```
+    git push heroku master
+```
+*Note*: if didn't do the create you will need to add the heroku remote:
+```
+    git remote add heroku git@heroku.com:{app-name}.git
+```
+### Adding collaborators:
+```
+    heroku sharing:add joe@example.com
+```
+### Setting the domain name
+
+Do the following:
+```
+    heroku domains:add {your-domain-name}
+```
+## Define config vars to connect to RDS database in .env for heroku
+
+Construct URI with following format:
+
+```
+DATABASE_URI=dialect+driver://username:password@host:port/database
+# example
+DATABASE_URI=postgres://cg_user:SecetPassword@cg-example.jdutoe634ksdk.cg-region-1.rds.amazonaws.com:1234/cg_database
+```
+
+Now CNAME your domain to {myapp}.herokuapp.com
 

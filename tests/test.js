@@ -43,7 +43,7 @@ describe('Content', function(){
       .expect(200)
       .end(function(err, res) {
         checkContent(res, 'Overview of Risks');
-        checkContent(res, 'Spam'); 
+        checkContent(res, 'Open NTP'); 
         done();
       });
   });

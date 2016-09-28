@@ -12,10 +12,6 @@ Since NTP runs over [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol),
 **Details**
 
 [NTP amplification attacks](https://blog.cloudflare.com/understanding-and-mitigating-ntp-based-ddos-attacks/) have a considerable amplification factor: up to 550.  An attacker with 1 MBit/sec connections can find 10 open ntp servers, each with a GBit/sec connection and thus create a DDOS attack of 500 GBit/sec."
-3,spam,Spam,118970,29120,10,868,54,,137,,,"Spam is roughly equivalent to unsolicited telephone marketing calls, except that the user pays for part of the message since everyone shares the cost of maintaining the Internet. Spammers typically send a piece of e-mail to a distribution list in the millions, expecting that only a tiny number of readers will respond to their offer. It has become a major problem for all Internet users.
-
-**Details**
-From a security standpoint, spam is not only a nuissance. It also is a vector for further infections! Spam can be used for [phishing mails](https://en.wikipedia.org/wiki/Phishing), delivering [trojan horses/malware](https://en.wikipedia.org/wiki/Trojan_horse_(computing)) or for general social engineering attacks. Reducing spam not only increases an economy's effectiveness, it also makes the Internet safer by a clear factor. "
 4,opensnmp,Open SNMP,12790400,2529390,10,61492,49,,208,,,
 5,openssdp,Open SSDP,12790400,2529390,10,61492,49,,208,,,"[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) - the Simple Service Discovery Protocol is used for advertisement and discovery of network services and presence information. It is often enabled in customer end devices (CPEs) such as modems, WLAN modems. Since SSDP runs over UDP, again, it can be used for UDP reflection attacks.
 
