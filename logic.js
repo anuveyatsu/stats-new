@@ -79,8 +79,8 @@ exports.getAsnCount = function(sequelize, options) {
     if (options.place) placeLogic = "country= '" + options.place + "'";
   }
 
-	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE "+placeLogic+" GROUP BY asn, risk;"
-	return sequelize.query(logic)
+	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE "+placeLogic+" GROUP BY asn, risk;";
+	return sequelize.query(logic);
 };
 
 exports.getTotalCount = function(sequelize, options) {
@@ -97,12 +97,12 @@ exports.getTotalCount = function(sequelize, options) {
     if (options.end) endDate = "date < '" + options.end + "'";
   }
 
-	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;"
-	return sequelize.query(logic)
+	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;";
+	return sequelize.query(logic);
 };
 
 exports.getAsnTotal = function(sequelize, options) {
 
-  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, place ORDER BY name ASC;"
-  return sequelize.query(logic)
+  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, place ORDER BY name ASC;";
+  return sequelize.query(logic);
 };
