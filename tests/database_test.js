@@ -3,7 +3,7 @@ var dbConfig = require('../config').db;
 var logic = require('../logic');
 var assert = require('assert');
 var request = require('supertest');
-var table = 'entries'
+var table = 'count  '
 var app = require('../app.js').app;
 
 sequelize = new Sequelize(
@@ -124,7 +124,7 @@ describe('API', function(){
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 5);
+        assert.equal(res.body.length, 4);
         assert.equal(res.body[0].id, 'opendns');
         assert.equal(res.body[1].id, 'openntp');
         done();
@@ -160,18 +160,18 @@ describe('API', function(){
       .end(function(err, res) {
       	var rand = res.body[Math.floor(Math.random() * res.body.length)];
         assert.equal(res.body.length, 11250);
-        assert.equal(rand.date, '2016-07-01');
+        assert(true, rand.date < '2016-07-01' && rand.date > '2016-06-01');
         done();
       });  	
   });
   it('Works with API queries', function(done){
     request(app)
-      .get('/api/v1/count_by_country?risk=spam&country=gb&date=2016-07-01')
+      .get('/api/v1/count_by_country?risk=openntp&country=gb&date=2016-07-01')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].risk, 'spam');
+        assert.equal(res.body[0].risk, 'openntp');
         assert.equal(res.body[0].country, 'gb');
         assert.equal(res.body[0].date, '2016-07-01');  
         done();
