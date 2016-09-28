@@ -26,7 +26,7 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
-  if (table === 'entries') {
+  if (table === 'count') {
     order = " ORDER BY date ASC";
     logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
   } else {
@@ -49,7 +49,7 @@ exports.getPlaceScore = function(sequelize, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT max(date) AS date, entries_by_place.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(entries_by_place.score)/COUNT(entries_by_place.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM entries_by_place JOIN places on (entries_by_place.country = upper(places.id)) JOIN risks on (entries_by_place.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
+  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM count_by_country JOIN places on (count_by_country.country = upper(places.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
   
   return sequelize.query(logic);
 };
@@ -65,7 +65,7 @@ exports.getCountByCountry = function(sequelize, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT risks.id as risk, LOWER(entries_by_place.country) as country, to_char(entries_by_place.date,'YYYY-MM-DD') as date, count, ROUND(entries_by_place.score) as score, entries_by_place.rank as rank FROM entries_by_place JOIN risks on (entries_by_place.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);"
+  var logic = "SELECT risks.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);"
   
   return sequelize.query(logic);
 };
@@ -79,7 +79,7 @@ exports.getAsnCount = function(sequelize, options) {
     if (options.place) placeLogic = "country= '" + options.place + "'";
   }
 
-	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM entries WHERE "+placeLogic+" GROUP BY asn, risk;"
+	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE "+placeLogic+" GROUP BY asn, risk;"
 	return sequelize.query(logic)
 };
 
@@ -97,7 +97,7 @@ exports.getTotalCount = function(sequelize, options) {
     if (options.end) endDate = "date < '" + options.end + "'";
   }
 
-	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM entries WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;"
+	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;"
 	return sequelize.query(logic)
 };
 
