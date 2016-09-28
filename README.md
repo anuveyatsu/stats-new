@@ -16,13 +16,21 @@ To build and view the app:
 4. Run the app. From the base directory:
 
     ```
-    node app.js
+    heroku local
     ```
 
 5. Visit the running app in your browser at http://localhost:8000/
 
+## Setting up a Database
 
-## Instructions for creating a local database
+There are two options:
+
+* A local database - this is needed if you are doing local development and testing. See next section.
+* The online development database - this is for demo-ing and testing against
+  the full dataset. You can connect direct to the live development using your
+  .env. You will need to get the connection details from the tech lead.
+
+### Creating a local database
 
 Install postgresql
 
@@ -31,33 +39,27 @@ sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
 ```
 
-Switch to postgres user
+Create the user and database
 
 ```
+# Switch to postgres user
 sudo su postgres
-```
 
-Log in 
-
-```
+# Log in 
 psql -d postgres -U postgres
-```
 
-Create test role and give it superuser privileges
+# Create test role and give it superuser privileges
 
-```
 CREATE USER test_user WITH PASSWORD 'secret';
 ALTER USER test_user WITH SUPERUSER;
-```
 
-Create test database
-
-```
 CREATE DATABASE testdb;
 ```
+
 Run aggregation script
+
 ```
-$ pyton tests/aggregate.py
+$ python tests/aggregate.py
 ```
 
 ## Deployment to Heroku
@@ -99,12 +101,13 @@ Do the following:
 ```
 ## Define config vars to connect to RDS database in .env for heroku
 
-Construct URI with following format
+Construct URI with following format:
+
 ```
 DATABASE_URI=dialect+driver://username:password@host:port/database
 # example
 DATABASE_URI=postgres://cg_user:SecetPassword@cg-example.jdutoe634ksdk.cg-region-1.rds.amazonaws.com:1234/cg_database
 ```
+
 Now CNAME your domain to {myapp}.herokuapp.com
 
-Run `heroku local` to run app localy
