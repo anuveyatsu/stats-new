@@ -41,7 +41,7 @@
     </thead>
     <tbody>
     {% for option in options %}
-      <tr>
+      <tr data-place="{{ option.name }}">
         <td>  
           <a href="/place/{{ option.slug }}/" title="{{ option.place }}">
             {{ option.name |truncate(28) }}

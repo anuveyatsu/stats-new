@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'stickykit'], function($
             if (query.length < 2) {
                 $(this).show();
             } else if (query.length >= 2) {
-                if ($(this).data('place').indexOf(query) === -1) {
+                if ($(this).data('place').toLowerCase().indexOf(query.toLowerCase()) === -1) {
                     $(this).hide();
                 } else {
                     $(this).show();
@@ -116,6 +116,10 @@ define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'stickykit'], function($
             filterTable($dataTable, query, $this);
 
         });
+
+        $('form.data-table-tools').on('submit', function() {
+            return false;  // Prevent page reload when enter pressed
+        })
 
         $.each($scoreDisplay, function(index, el) {
             var score,

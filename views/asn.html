@@ -36,7 +36,7 @@
     </thead>
     <tbody>
     {% for results in asnCount %}
-      <tr>
+      <tr data-place="{{ results.name }}">
         <td>
           <span>{{ results.name }}</span>
         </td>
