@@ -269,7 +269,7 @@ exports.apiRisk = function(req, res) {
 
 exports.apiCountry = function(req, res) {
 
-	logic.getEntriesFromDatabase(sequelize, 'places', req.query).then(function(results){
+	logic.getEntriesFromDatabase(sequelize, 'country', req.query).then(function(results){
   	res.json(results[0]);
   });
 }

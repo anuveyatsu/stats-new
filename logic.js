@@ -49,7 +49,7 @@ exports.getPlaceScore = function(sequelize, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, places.name as name, places.slug as slug FROM count_by_country JOIN places on (count_by_country.country = upper(places.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
+  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
   
   return sequelize.query(logic);
 };
@@ -103,6 +103,6 @@ exports.getTotalCount = function(sequelize, options) {
 
 exports.getAsnTotal = function(sequelize, options) {
 
-  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN places ON country_asn.place=places.id GROUP BY name, slug, place ORDER BY name ASC;";
+  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN country ON country_asn.place=country.id GROUP BY name, slug, place ORDER BY name ASC;";
   return sequelize.query(logic);
 };
