@@ -11,7 +11,7 @@ exports.home = function(req, res) {
     embed_title: 'opendns' + ' / ' + '2016-08-15',
     panel_tools: true
   };
-  res.render('home.html', {map: map});
+  res.render('home.html', {map: map, config: config});
 };
 
 // places
