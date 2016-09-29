@@ -30,6 +30,7 @@ exports.getEntriesFromDatabase = function(table, options){
   var timeLogic = "1=1";
   var riskIdLogic = "1=1";
 	var order = '';
+  var limit = "";
   var logic;
   
   if (options){
@@ -39,12 +40,13 @@ exports.getEntriesFromDatabase = function(table, options){
     if (options.risk_id) numRiskLogic = "risk_id = '" + options.risk_id + "'";
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
     if (options.date) timeLogic = "date = '" + options.date + "'";
+    if (options.limit) limit = " limit '" + options.limit+ "'";
   }
   if (table === 'count') {
     order = " ORDER BY date ASC";
-    logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
+    logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order + limit;
   } else {
-  logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order;
+  logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order + limit;
   }
   return sequelize.query(logic);
 };
@@ -69,13 +71,16 @@ exports.getCountByCountry = function(options){
   var placeLogic = "1=1";
   var riskLogic = "1=1";
   var timeLogic = "1=1";
+  var limit = "Limit 2000";
+  
 	if (options){
     if (options.country) placeLogic = "country = '" + options.country.toUpperCase() + "'";
     if (options.risk) riskLogic = "risk.id = '" + options.risk + "'";
     if (options.date) timeLogic = "date = '" + options.date + "'";
+    if (options.limit) limit = "limit '" + options.limit+ "'";
   }
   
-  var logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);";
+  var logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC "+limit+";";
 
   return sequelize.query(logic);
 };
@@ -97,15 +102,17 @@ exports.getTotalCount = function(options) {
 	var asnLogic = "1=1";
 	var startDate = "1=1";
 	var endDate = "1=1";
+  var limit = " limit 2000"
 	
 	if (options){
     if (options.country) placeLogic = "country= '" + options.country.toUpperCase() + "'";
     if (options.asn) asnLogic = "asn= '" + options.asn + "'";
     if (options.start) startDate = "date > '" + options.start + "'";
     if (options.end) endDate = "date < '" + options.end + "'";
+    if (options.limit) limit = "limit '" + options.limit+ "'";
   }
 
-	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type;";
+	var logic = "SELECT country, risk, asn, date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type "+limit+";";
 	return sequelize.query(logic);
 };
 
