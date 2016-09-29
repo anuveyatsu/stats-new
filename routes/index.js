@@ -208,14 +208,14 @@ exports.placeRisk = function(req, res) {
 		  panel_tools: false,
 		  panel_share: false,
 		};
-		res.render('place_risk.html', {options: result, map: map});
+		res.render('place_risk.html', {options: result, map: map, config: config});
   });
 };
 
 // download
 
 exports.download = function(req, res) {
-  res.render('download.html');
+  res.render('download.html', {config: config});
 };
 
 // about
@@ -235,7 +235,7 @@ exports.map = function(req, res) {
 exports.asn = function(req, res) {
 
   logic.getAsnTotal('country_asn').then(function(results){
-    res.render('asn.html', {asnCount: results[0]});
+    res.render('asn.html', {asnCount: results[0], config: config});
   });
 };
 
