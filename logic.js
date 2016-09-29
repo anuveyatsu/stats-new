@@ -63,8 +63,7 @@ exports.getPlaceScore = function(options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;"
-  
+  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;";
   return sequelize.query(logic);
 };
 
@@ -79,11 +78,10 @@ exports.getCountByCountry = function(options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
   }
   
-  var logic = "SELECT risks.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);"
-  
+  var logic = "SELECT risks.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+timeLogic+" ORDER BY date DESC, risk ASC LIMIT(2000);";
+
   return sequelize.query(logic);
 };
-
 
 exports.getAsnCount = function(options) {
 	

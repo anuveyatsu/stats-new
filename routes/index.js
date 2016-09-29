@@ -17,31 +17,30 @@ exports.home = function(req, res) {
 
 // places
 exports.place = function(req, res) {
-  
+
   logic.getPlaceScore().then(function(results){
   	var places = {};
   	results[0].forEach(function(result){
   		if (places[result.name]){
-  			places[result.name][result.risk] = result.score
-  			places[result.name]['slug'] = result.slug
+  			places[result.name][result.risk] = result.score;
+  			places[result.name]['slug'] = result.slug;
   		}else{
   			places[result.name] = {}
-  			places[result.name][result.risk] = result.score
-  			places[result.name]['slug'] = result.slug
+  			places[result.name][result.risk] = result.score;
+  			places[result.name]['slug'] = result.slug;
   		}
   	});
   	var result = [];
     for (var place in places){
       var obj = Object.assign({name: place}, places[place]);
       result.push(obj);
-    };
-    return result
+    }
+    return result;
   }).then(function (result) {
   	logic.getEntriesFromDatabase('risks').then(function (risks) {
-  		risks = risks[0]
+  		risks = risks[0];
   		res.render('places.html', {options: result, riskOpt: risks, config: config});
-  	})
-		 
+  	});
   });
 };
 
@@ -69,7 +68,6 @@ exports.placeID = function(req, res) {
 				}
 			});
 			var asnList = [];
-			var riskList = [];
 			for (var asn in asns){
 			  var obj = Object.assign({asn: asn}, asns[asn]);
 			  asnList.push(obj);
@@ -137,11 +135,11 @@ exports.placeASN = function(req, res) {
       var obj = Object.assign({month: date}, dates[date]);
       result.push(obj);
     }
-    return result
+    return result;
     
   }).then(function(result){
   	logic.getEntriesFromDatabase('risks').then(function (risks) {
-			risks = risks[0]
+			risks = risks[0];
 			options = {
 				entries: result, 
 				graphData: JSON.stringify(result), 
@@ -149,7 +147,7 @@ exports.placeASN = function(req, res) {
 				config: config, 
 				risks: risks,
 				graphRisks: JSON.stringify(risks)
-			}
+			};
 			res.render('place_asn.html', options);
 		});
   });
@@ -162,7 +160,7 @@ exports.risk = function(req, res) {
   sequelize.query('SELECT * FROM risks;').then(function(results){
   	var result = results[0];
   	res.render('risks.html', {options: result, config: config});
-  })
+  });
 };
 
 exports.riskID = function(req, res) {
@@ -180,7 +178,7 @@ exports.riskID = function(req, res) {
 		};
 		config.updates = updates;
   	res.render('risk.html', {options: result,  config: config});
-  })
+  });
 };
 
 // place-id/risk-id
@@ -201,7 +199,7 @@ exports.placeRisk = function(req, res) {
 		};
 		config.updates = updates;
 		res.render('place_risk.html', {options: result, config: config});
-  })
+  });
 };
 
 // download
@@ -229,7 +227,7 @@ exports.asn = function(req, res) {
   logic.getAsnTotal('country_asn').then(function(results){
 
                 res.render('asn.html', {asnCount: results[0], config: config});
-  })
+  });
 };
 
 // api
@@ -238,7 +236,7 @@ exports.apiCountByCountry = function(req, res) {
 	logic.getCountByCountry(req.query).then(function(results){
   	res.json(results[0]);
   });
-}
+};
 
 exports.apiCountByCountry = function(req, res) {
 
@@ -252,28 +250,28 @@ exports.apiRisk = function(req, res) {
 	logic.getEntriesFromDatabase('risks', req.query).then(function(results){
   	res.json(results[0]);
   });
-}
+};
 
 exports.apiCountry = function(req, res) {
 
 	logic.getEntriesFromDatabase('country', req.query).then(function(results){
   	res.json(results[0]);
   });
-}
+};
 
 exports.apiAsn = function(req, res) {
 
 	logic.getEntriesFromDatabase('country_asn', req.query).then(function(results){
   	res.json(results[0]);
   });
-}
+};
 
 exports.apiCount = function(req, res) {
 
 	logic.getTotalCount(req.query).then(function(results){
   	res.json(results[0]);
   });
-}
+};
 
 exports.geo = function(req, res) {
   var geoJson = require('../data/geo.json');
