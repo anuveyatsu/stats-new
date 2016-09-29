@@ -677,7 +677,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                     'risk': uiState.filter.risk
                 });
                 if (match) {
-                    place = _.find(dataStore.places, {'id': match.place});
+                    place = _.find(dataStore.places, {'id': match.country});
                     score = match.score;
                     rank = match.rank;
                     count = match.count;
