@@ -2,12 +2,13 @@
 
 
 {% block breadcrumbs_inner %}
-  <li class="active">Download</li>
+  <li class="active">Download and API</li>
 {% endblock breadcrumbs_inner %}
 
 
 {% block content %}
 <section class="row">
+<h2>Download</h2>
     <div class="col-md-12">
     {{ page.content }}
     </div>
@@ -47,6 +48,32 @@
       </ul>
     </div>
   </div>
+</section>
+
+<section class="row">
+  <h2>API</h2>
+    <p>The Cybergreen RESTful API allows for queries against our databases</p>
+    <p>To construct a URL, take:</p>
+    <code>http://cybergreen-stats.herokuapp.com</code>
+    <p>and append the appropriate path with your parameters, in the format:</p>
+    <code>/api/v1/[dataset]?[parameter-a]&[parameter-b]&[parameter-n]</code>
+    <p>Where an example parameter might be <code>risk=openntp</code></p>
+    <h3>Paths</h3>
+    <p>These are the URL path structures, with example datasets, to help you set your parameters:</p>
+    <h4><b>/api/v1/count_by_country</b></h4>
+    <p>Example set:<br><code>{"risk":"openntp","country":"gb","date":"2016-08-08","count":"114205","score":85,"rank":0}</code></p>
+    <h4><b>/api/v1/risk</b></h4>
+    <p>Example set:<br><code>{"risk_id":1,"id":"opendns","title":"Open DNS","total":3865270,"max":539540,"min":10,"mean":18062,"score":49,"rank":null,"place_count":214,"icon":null,"category":null,"description":"The Domain Name System (DNS) is pervasive..."}</code></p>
+    <h4><b>/api/v1/country</b></h4>
+    <p>Example set:<br><code>{"id":"bg","name":"Bulgaria","slug":"bulgaria","region":"Europe","continent":"Europe","score":29.27,"rank":196},{"id":"bh","name":"Bahrain","slug":"bahrain","region":"MENA","continent":"Asia","score":53.18,"rank":120}</code></p>
+    <h4><b>/api/v1/count</b></h4>
+    <p>Example set:<br><code>{"country":"GB","risk":4,"asn":"5580","date":"2016-07-04T00:00:00.000Z","period_type":"monthly","count":"3"}</code></p>
+    <h4><b>/api/v1/asn</b></h4>
+    <p>Example set:<br><code>{"place":"ae","asn":"61137","time":"2016-08-17T00:00:00.000Z"}</code></p>
+    <br>
+    <p>For example, using the URL:<br><code>https://cybergreen-stats.herokuapp.com/api/v1/count_by_country?risk=openntp&date=2016-08-08&country=gb</code><br>will yield the result<br><code>[{"risk":"openntp","country":"gb","date":"2016-08-08","count":"114205","score":85,"rank":0}]</code>
+    <p>The limit by default is 2000</p>
+
 </section>
 
 {% endblock content %}
