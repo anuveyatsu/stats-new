@@ -54,16 +54,13 @@ exports.getPlaceScore = function(options){
   var placeLogic = "1=1";
   var riskLogic = "1=1";
   var asnLogic = "1=1";
-  var timeLogic = "1=1";
 	
 	if (options){
     if (options.place) placeLogic = "slug = '" + options.place + "'";
     if (options.risk) riskLogic = "risks.id = '" + options.risk + "'";
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";
-    if (options.date) timeLogic = "date = '" + options.date + "'";
   }
-  
-  var logic = "SELECT max(date) AS date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(SUM(count_by_country.score)/COUNT(count_by_country.score)) as score, sum(count) as count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risks on (count_by_country.risk=risks.risk_id) WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description;";
+  var logic = "SELECT count_by_country.date as date, count_by_country.country as place_id, risks.description as risk_description, risks.id as risk, risks.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risks on (count_by_country.risk=risks.risk_id)  WHERE date=(select max(date) FROM count_by_country) AND "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" GROUP BY place_id, risks.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
   return sequelize.query(logic);
 };
 
@@ -90,8 +87,7 @@ exports.getAsnCount = function(options) {
 	if (options){
     if (options.place) placeLogic = "country= '" + options.place + "'";
   }
-
-	var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE "+placeLogic+" GROUP BY asn, risk;";
+  var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE date=(select max(date) FROM count) AND "+placeLogic+" GROUP BY asn, risk;";
 	return sequelize.query(logic);
 };
 
