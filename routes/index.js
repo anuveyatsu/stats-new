@@ -152,7 +152,7 @@ exports.placeASN = function(req, res) {
 			var parameters = {
 				entries: result, 
 				graphData: JSON.stringify(result), 
-				page: {name: req.params.place, asn: req.params.asn}, 
+				page: {name: req.params.country, asn: req.params.asn}, 
 				config: config, 
 				risks: risks,
 				graphRisks: JSON.stringify(risks)
@@ -194,7 +194,7 @@ exports.riskID = function(req, res) {
 // place-id/risk-id
 exports.placeRisk = function(req, res) {
 
-  logic.getPlaceScore({risk: req.params.risk, place: req.params.place}).then(function(results){
+  logic.getPlaceScore({risk: req.params.risk, place: req.params.country}).then(function(results){
 
   	var result = results[0][0];
   	var map = {

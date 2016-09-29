@@ -6,8 +6,8 @@
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
-<li><a href="/place">Places</a></li>
-<li><a href="/place/{{ options.slug }}/">{{ options.name }}</a></li>
+<li><a href="/country">Places</a></li>
+<li><a href="/country/{{ options.slug }}/">{{ options.name }}</a></li>
 <li class="active">{{ options.risk_title }}</li>
 {% endblock breadcrumbs_inner %}
 
@@ -21,7 +21,7 @@
         <p class="place-openness" data-score="{{ options.score }}">{{ options.score }}<br /><span style="font-size: 13px">({{options.count}} devices)</span></p>
       </h1}>
       <h3>
-        <a href="/place/{{ place.slug }}/">{{ options.name|truncate(20) }}</a>
+        <a href="/country/{{ place.slug }}/">{{ options.name|truncate(20) }}</a>
       </h3>
       {% if options.content %}
       <div class="row content">{{ options.content }}</div>

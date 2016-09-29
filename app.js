@@ -18,10 +18,10 @@ var env = new nunjucks.configure(__dirname + '/views', {
 markdown.register(env, marked);
 
 app.get('/', routes.home);
-app.get('/place', routes.place);
-app.get('/place/:id', routes.placeID);
-app.get('/place/:place/asn/:asn', routes.placeASN);
-app.get('/place/:place/:risk', routes.placeRisk);
+app.get('/country', routes.place);
+app.get('/country/:id', routes.placeID);
+app.get('/country/:place/asn/:asn', routes.placeASN);
+app.get('/country/:place/:risk', routes.placeRisk);
 app.get('/risk', routes.risk);
 app.get('/risk/:id', routes.riskID);
 app.get('/download', routes.download);
