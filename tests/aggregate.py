@@ -3,9 +3,9 @@ import csv
 import psycopg2
 import os
 
-RISKSFILE = 'tests/fixtures/risks.csv'
+RISKSFILE = 'tests/fixtures/risk.csv'
 COUNTRYFILE = 'tests/fixtures/country.csv'
-COUNT = 'tests/fixtures/entries.csv'
+COUNT = 'tests/fixtures/count.csv'
 COUNTRY_ASN = 'tests/fixtures/country_asn.csv'
 
 fo = open(COUNTRYFILE)
@@ -54,7 +54,7 @@ connection = psycopg2.connect(
 
 def delete_tables():	
 	cursor = connection.cursor();
-	tablenames = ['count', 'risks', 'country', 'count_by_country', 'count_by_risk', 'country_asn']
+	tablenames = ['count', 'risk', 'country', 'count_by_country', 'count_by_risk', 'country_asn']
 	for tablename in tablenames:
 		cursor.execute("select exists(SELECT * FROM information_schema.tables WHERE table_name='%s')"%tablename)	
 		if cursor.fetchone()[0]:
@@ -68,7 +68,7 @@ CREATE TABLE count
 (id bigint, risk int, country varchar(2), asn bigint, date date, period_type varchar(8), count int);
 """
 	create_risks = """
-CREATE TABLE risks
+CREATE TABLE risk
 (risk_id int, id varchar(16), title varchar(16), total int, max int, min int, mean int, score real, rank int, place_count int, icon bytea, category varchar(16), description text);
 """
 	create_country = """
@@ -97,12 +97,12 @@ CREATE TABLE country_asn
 
 def load_data():
 	epath = os.path.abspath("tests/fixtures/count.csv")
-	rpath = os.path.abspath("tests/fixtures/risks.csv")
+	rpath = os.path.abspath("tests/fixtures/risk.csv")
 	cpath = os.path.abspath("tests/fixtures/country.csv")
 	capath = os.path.abspath("tests/fixtures/country_asn.csv")
 	
 	eload = "COPY count FROM '%s' DELIMITER ',' CSV HEADER;"%epath
-	rload = "COPY risks FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
+	rload = "COPY risk FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
 	cload = "COPY country FROM '%s' DELIMITER ',' CSV HEADER;"%cpath
 	caload = "COPY country_asn FROM '%s' DELIMITER ',' CSV HEADER;"%capath
 	
