@@ -117,7 +117,8 @@ exports.placeID = function(req, res) {
           options: result,
           asns: asns.asnList,
           treeAsn: JSON.stringify(treeList),
-          riskOpt: risks, map: map
+          riskOpt: risks, map: map,
+          config: config
         };
         res.render('place.html', parameters);
 			});
@@ -168,7 +169,7 @@ exports.risk = function(req, res) {
 	// TODO: needs to be computed: min, score
   logic.getEntriesFromDatabase('risk').then(function(results){
   	var result = results[0];
-    var parameters = {options: result};
+    var parameters = {options: result, config: config};
   	res.render('risks.html', parameters);
   });
 };
@@ -186,7 +187,7 @@ exports.riskID = function(req, res) {
 		  panel_tools: false,
 		  panel_share: false,
 		};
-    var parameters = {options: result,  map: map};
+    var parameters = {options: result,  map: map, config: config};
   	res.render('risk.html', parameters);
   });
 };
