@@ -36,7 +36,7 @@ exports.place = function(req, res) {
     }
     return result;
   }).then(function (result) {
-  	logic.getEntriesFromDatabase('risks').then(function (risks) {
+  	logic.getEntriesFromDatabase('risk').then(function (risks) {
   		risks = risks[0];
       var parameters = {
         options: result,
@@ -80,7 +80,7 @@ exports.placeID = function(req, res) {
 			var result = {asnList: asnList, riskList: risks};
 			return result;
   	}).then(function(asns){
-  		logic.getEntriesFromDatabase('risks').then(function (risks) {
+  		logic.getEntriesFromDatabase('risk').then(function (risks) {
 				risks = risks[0];
 				// adds risk in Table if there is no data For given country
 				var isRisk = false;
@@ -147,7 +147,7 @@ exports.placeASN = function(req, res) {
     return result;
     
   }).then(function(result){
-  	logic.getEntriesFromDatabase('risks').then(function (risks) {
+  	logic.getEntriesFromDatabase('risk').then(function (risks) {
 			risks = risks[0];
 			var parameters = {
 				entries: result, 
@@ -166,7 +166,7 @@ exports.placeASN = function(req, res) {
 exports.risk = function(req, res) {
 	// TODO: risks table needs primary key for risks
 	// TODO: needs to be computed: min, score
-  logic.getEntriesFromDatabase('risks').then(function(results){
+  logic.getEntriesFromDatabase('risk').then(function(results){
   	var result = results[0];
     var parameters = {options: result};
   	res.render('risks.html', parameters);
@@ -248,7 +248,7 @@ exports.apiCountByCountry = function(req, res) {
 
 exports.apiRisk = function(req, res) {
 
-	logic.getEntriesFromDatabase('risks', req.query).then(function(results){
+	logic.getEntriesFromDatabase('risk', req.query).then(function(results){
   	res.json(results[0]);
   });
 };
