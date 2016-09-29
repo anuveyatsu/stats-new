@@ -15,9 +15,9 @@ var config = {
 		analytics: {
 		  google: ""
 		},
-		years: ["2016","2015"],
-		current_year: "2016",
-		previous_year: "2015",
+		years: ["2016-08-15","2016-08-08"],
+		current_year: "2016-08-15",
+		previous_year: "2016-08-08",
 		na: "n/a", 
 		twitter: "",
 		author: {
