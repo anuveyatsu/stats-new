@@ -685,13 +685,15 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                         previousScore = previousMatch.score;
                     }
                 }
+                else {
+                    place = _.find(dataStore.places, {'id': properties.iso_a2.toLowerCase()})
+                }
             }
 
             score = (score)? parseInt(score, 10) : 0;
             previousScore = (previousScore)? parseInt(previousScore, 10) : 0;
             rank = (rank)? parseInt(rank, 10) : 0;
             count = (count)? parseInt(count, 10) : 0;
-
 
             context.year = uiState.filter.year;
             context.title = makeTitle();
@@ -701,10 +703,8 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
             context.rank = rank;
             context.count = count;
             context.previous_score = previousScore;
-            if (score) {
-                $placeBox.html(placeBoxTmpl(context));
-                $placeBox.show();
-            }
+            $placeBox.html(placeBoxTmpl(context));
+            $placeBox.show();
         }
     }
 
