@@ -24,7 +24,7 @@ var config = {
 			"name": "AUTHOR"
 		}
 	},
-	SITELOGO: "/static/images/cybergreen-logo-beta.png",
+	SITELOGO: "/static/images/cybergreen-logo-2.png",
 	data: {
 			test: {"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}
     },
