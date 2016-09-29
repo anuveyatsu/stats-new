@@ -1,18 +1,5 @@
 var config = require('../config');
 var logic = require('../logic');
-var Sequelize = require('sequelize');
-
-if (process.env.DATABASE_URI) {
-  // Use DATABASE_URL if it exists, for Heroku.
-  sequelize = new Sequelize(process.env.DATABASE_URI, {})
-} else {
-  // Fallback to normal config, for local development and test environments.
-  sequelize = new Sequelize(
-    config.db.database,
-    config.db.username,
-    config.db.password,
-    config.db);
-}
 
 // home page
 exports.home = function(req, res) {
@@ -31,7 +18,7 @@ exports.home = function(req, res) {
 // places
 exports.place = function(req, res) {
   
-  logic.getPlaceScore(sequelize).then(function(results){
+  logic.getPlaceScore().then(function(results){
   	var places = {};
   	results[0].forEach(function(result){
   		if (places[result.name]){
@@ -50,7 +37,7 @@ exports.place = function(req, res) {
     };
     return result
   }).then(function (result) {
-  	logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
+  	logic.getEntriesFromDatabase('risks').then(function (risks) {
   		risks = risks[0]
   		res.render('places.html', {options: result, riskOpt: risks, config: config});
   	})
@@ -60,11 +47,11 @@ exports.place = function(req, res) {
 
 exports.placeID = function(req, res) {
   
-  logic.getPlaceScore(sequelize, {place: req.params.id}).then(function(results){
+  logic.getPlaceScore({place: req.params.id}).then(function(results){
   	return results[0];
   }).then(function(result) {
   	var id = result[0].place_id;
-  	logic.getAsnCount(sequelize, {place: id }).then(function(results) {
+  	logic.getAsnCount({place: id }).then(function(results) {
   		var asns = {};
   		var risks = {};
 			results[0].forEach(function(result){
@@ -91,7 +78,7 @@ exports.placeID = function(req, res) {
 			var result = {asnList: asnList, riskList: risks};
 			return result;
   	}).then(function(asns){
-  		logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
+  		logic.getEntriesFromDatabase('risks').then(function (risks) {
 				risks = risks[0];
 				var updates = {
 					embed_width: '100%',
@@ -133,7 +120,7 @@ exports.placeID = function(req, res) {
 
 exports.placeASN = function(req, res) {
 
-  logic.getEntriesFromDatabase(sequelize, 'count', {	asn: req.params.asn}).then(function(results){
+  logic.getEntriesFromDatabase('count', {	asn: req.params.asn}).then(function(results){
     
     var dates = {};
    
@@ -153,7 +140,7 @@ exports.placeASN = function(req, res) {
     return result
     
   }).then(function(result){
-  	logic.getEntriesFromDatabase(sequelize, 'risks').then(function (risks) {
+  	logic.getEntriesFromDatabase('risks').then(function (risks) {
 			risks = risks[0]
 			options = {
 				entries: result, 
@@ -180,7 +167,7 @@ exports.risk = function(req, res) {
 
 exports.riskID = function(req, res) {
   
-  logic.getPlaceScore(sequelize, {risk: req.params.id}).then(function(results){
+  logic.getPlaceScore({risk: req.params.id}).then(function(results){
   	var result = results[0];
   	var updates = {
 		  embed_width: '100%',
@@ -199,7 +186,7 @@ exports.riskID = function(req, res) {
 // place-id/risk-id
 exports.placeRisk = function(req, res) {
 
-  logic.getPlaceScore(sequelize, {risk: req.params.risk, place: req.params.place}).then(function(results){
+  logic.getPlaceScore({risk: req.params.risk, place: req.params.place}).then(function(results){
 
   	var result = results[0][0];
   	var updates = {
@@ -239,7 +226,7 @@ exports.map = function(req, res) {
 
 exports.asn = function(req, res) {
 
-  logic.getAsnTotal(sequelize, 'country_asn').then(function(results){
+  logic.getAsnTotal('country_asn').then(function(results){
 
                 res.render('asn.html', {asnCount: results[0], config: config});
   })
@@ -248,42 +235,42 @@ exports.asn = function(req, res) {
 // api
 exports.apiCountByCountry = function(req, res) {
 
-	logic.getCountByCountry(sequelize, req.query).then(function(results){
+	logic.getCountByCountry(req.query).then(function(results){
   	res.json(results[0]);
   });
 }
 
 exports.apiCountByCountry = function(req, res) {
 
-	logic.getCountByCountry(sequelize, req.query).then(function(results){
+	logic.getCountByCountry(req.query).then(function(results){
   	res.json(results[0]);
   });
 }
 
 exports.apiRisk = function(req, res) {
 
-	logic.getEntriesFromDatabase(sequelize, 'risks', req.query).then(function(results){
+	logic.getEntriesFromDatabase('risks', req.query).then(function(results){
   	res.json(results[0]);
   });
 }
 
 exports.apiCountry = function(req, res) {
 
-	logic.getEntriesFromDatabase(sequelize, 'country', req.query).then(function(results){
+	logic.getEntriesFromDatabase('country', req.query).then(function(results){
   	res.json(results[0]);
   });
 }
 
 exports.apiAsn = function(req, res) {
 
-	logic.getEntriesFromDatabase(sequelize, 'country_asn', req.query).then(function(results){
+	logic.getEntriesFromDatabase('country_asn', req.query).then(function(results){
   	res.json(results[0]);
   });
 }
 
 exports.apiCount = function(req, res) {
 
-	logic.getTotalCount(sequelize, req.query).then(function(results){
+	logic.getTotalCount(req.query).then(function(results){
   	res.json(results[0]);
   });
 }

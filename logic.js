@@ -1,3 +1,17 @@
+var Sequelize = require('sequelize');
+var config = require('./config');
+
+if (process.env.DATABASE_URI) {
+  // Use DATABASE_URL if it exists, for Heroku.
+  sequelize = new Sequelize(process.env.DATABASE_URI, {});
+} else {
+  // Fallback to normal config, for local development and test environments.
+  sequelize = new Sequelize(
+    config.db.database,
+    config.db.username,
+    config.db.password,
+    config.db);
+}
 exports.getSingleEntry= function(data, matchWith, matchTo){
   var result = {};
   data.forEach(function(entry) {
@@ -8,7 +22,7 @@ exports.getSingleEntry= function(data, matchWith, matchTo){
   return result;
 };
 
-exports.getEntriesFromDatabase = function(sequelize, table, options){
+exports.getEntriesFromDatabase = function(table, options){
   var placeLogic = "1=1";
   var riskLogic = "1=1";
   var numRiskLogic = "1=1";
@@ -35,7 +49,7 @@ exports.getEntriesFromDatabase = function(sequelize, table, options){
   return sequelize.query(logic);
 };
 
-exports.getPlaceScore = function(sequelize, options){
+exports.getPlaceScore = function(options){
   
   var placeLogic = "1=1";
   var riskLogic = "1=1";
@@ -54,7 +68,7 @@ exports.getPlaceScore = function(sequelize, options){
   return sequelize.query(logic);
 };
 
-exports.getCountByCountry = function(sequelize, options){
+exports.getCountByCountry = function(options){
   
   var placeLogic = "1=1";
   var riskLogic = "1=1";
@@ -71,7 +85,7 @@ exports.getCountByCountry = function(sequelize, options){
 };
 
 
-exports.getAsnCount = function(sequelize, options) {
+exports.getAsnCount = function(options) {
 	
 	var placeLogic = "1=1";
 	
@@ -83,7 +97,7 @@ exports.getAsnCount = function(sequelize, options) {
 	return sequelize.query(logic);
 };
 
-exports.getTotalCount = function(sequelize, options) {
+exports.getTotalCount = function(options) {
 	
 	var placeLogic = "1=1";
 	var asnLogic = "1=1";
@@ -101,8 +115,7 @@ exports.getTotalCount = function(sequelize, options) {
 	return sequelize.query(logic);
 };
 
-exports.getAsnTotal = function(sequelize, options) {
-
+exports.getAsnTotal = function() {
   var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN country ON country_asn.place=country.id GROUP BY name, slug, place ORDER BY name ASC;";
   return sequelize.query(logic);
 };
