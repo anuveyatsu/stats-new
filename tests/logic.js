@@ -129,7 +129,7 @@ describe('API', function(){
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 56250);
+        assert.equal(res.body.length, 2000);
         done();
       });  	
   });
@@ -140,7 +140,7 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
       	var rand = res.body[Math.floor(Math.random() * res.body.length)];
-        assert.equal(res.body.length, 11250);
+        assert.equal(res.body.length, 2000);
         assert(true, rand.date < '2016-07-01' && rand.date > '2016-06-01');
         done();
       });  	
@@ -173,21 +173,21 @@ describe('Content', function(){
   
   it('place page', function(done){
     request(app)
-      .get('/place')
+      .get('/country')
       .expect(200)
       .end(function(err, res) {
-        checkContent(res, 'Place overview');
+        checkContent(res, 'Country overview');
         done();
       });
   });
   
   it('place/{id} page', function(done){
     request(app)
-      .get('/place/united-kingdom')
+      .get('/country/united-kingdom')
       .expect(200)
       .end(function(err, res) {
         checkContent(res, 'united-kingdom');
-        checkContent(res, 'Places');
+        checkContent(res, 'Countries');
         done();
       });
   });
