@@ -14,15 +14,12 @@
 <div class="table-responsive">
   <table id="datasets_overview_table" class="table data-table table-header-stuck">
     <col style="width:10%">
-    <col style="width:52%">
-    <col style="width:20%">
+    <col style="width:80%">
     <col style="width:10%">
-    <col style="width:8%">
     <thead>
       <tr>
         <th>Risk</th>
         <th>Description</th>
-        <th>Best and Worst</th>
         <th>Total Devices</th>
       </tr>
     </thead>
@@ -39,17 +36,6 @@
 {% markdown %}
 {{ option.description | truncate(400) }} <a href="/risk/{{ option.id }}">Read more</a>
 {% endmarkdown %}
-					</td>
-					<td>	
-						<span class="score score-top" data-score="{{ option.topPlaces[0].score }}">{{ option.topPlaces[0].score }}</span>
-						{% for place in option.topPlaces %}
-							<a href="/country/{{ place.slug }}/{{ option.id }}/">{{ place.name }}</a>&nbsp;
-						{% endfor %}
-					<br>
-						<span class="score score-bottom" data-score="{{ option.worstPlaces[0].score }}">{{ option.worstPlaces[0].score }}</span>
-						{% for place in option.worstPlaces %}
-							<a href="/country/{{ place.slug }}/{{ option.id }}/">{{ place.name }}</a>&nbsp;
-						{% endfor %}
 					</td>
 					<td class="total">
 						<span>{{ option.total }}</span>
