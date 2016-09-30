@@ -36,6 +36,22 @@ app.get('/api/v1/country', routes.apiCountry);
 app.get('/api/v1/asn', routes.apiAsn);
 app.get('/api/v1/count', routes.apiCount);
 
+app.get('/api/count_by_country', function(req, res){
+  res.redirect('/api/v1/count_by_country');
+});
+app.get('/api/risk', function(req, res){
+  res.redirect('/api/v1/risk');
+});
+app.get('/api/country', function(req, res){
+  res.redirect('/api/v1/country');
+});
+app.get('/api/asn', function(req, res){
+  res.redirect('/api/v1/asn');
+});
+app.get('/api/count', function(req, res){
+  res.redirect('/api/v1/count');
+});
+
 app.listen(app.get('port'), function() {
   console.log('Listening on: ' + app.get('port'));
 });
