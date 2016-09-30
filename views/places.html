@@ -5,12 +5,12 @@
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
-    <li class="active">Places</li>
+    <li class="active">Countries</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
 <header id="place-intro" class="page-header">
-  <h1>Place overview {{ page.year }}</h1>
+  <h1>Country overview {{ page.year }}</h1>
   <hr />
 </header>
 
@@ -19,7 +19,7 @@
     <h4>Search</h4>
     <form role="form" class="form-inline data-table-tools">
       <div class="form-group">
-        <input class="form-control filter-table" type="search" name="filter-table" placeholder="Search for a place" />
+        <input class="form-control filter-table" type="search" name="filter-table" placeholder="Search for a country" />
       </div>
     </form>
   </div>
@@ -29,7 +29,7 @@
   <table id="places_overview_table" class="table data-table table-header-stuck">
     <thead>
       <tr>
-        <th class="sort_place" title="Sort by A-Z">Place</th>
+        <th class="sort_place" title="Sort by A-Z">Country</th>
         {% for risk in riskOpt %}
           {% if risk.title %}
             <th>
