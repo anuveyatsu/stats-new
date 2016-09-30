@@ -36,6 +36,12 @@ app.get('/api/v1/country', routes.apiCountry);
 app.get('/api/v1/asn', routes.apiAsn);
 app.get('/api/v1/count', routes.apiCount);
 
+app.get('/api/v1/country/:id', function(req, res){
+  res.redirect('/api/v1/country?id=' + req.params.id.toLowerCase());
+});
+app.get('/api/v1/asn/:asn', function(req, res){
+  res.redirect('/api/v1/asn?asn=' + req.params.asn);
+});
 app.get('/api/count_by_country', function(req, res){
   res.redirect('/api/v1/count_by_country');
 });
