@@ -12,7 +12,7 @@ Since NTP runs over [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol),
 **Details**
 
 [NTP amplification attacks](https://blog.cloudflare.com/understanding-and-mitigating-ntp-based-ddos-attacks/) have a considerable amplification factor: up to 550.  An attacker with 1 MBit/sec connections can find 10 open ntp servers, each with a GBit/sec connection and thus create a DDOS attack of 500 GBit/sec."
-4,opensnmp,Open SNMP,12790400,2529390,10,61492,49,,208,,,
+4,opensnmp,Open SNMP,12790400,2529390,10,61492,49,,208,,,"number of open recursive SNMP devices (opensnmp)"
 5,openssdp,Open SSDP,12790400,2529390,10,61492,49,,208,,,"[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) - the Simple Service Discovery Protocol is used for advertisement and discovery of network services and presence information. It is often enabled in customer end devices (CPEs) such as modems, WLAN modems. Since SSDP runs over UDP, again, it can be used for UDP reflection attacks.
 
 **Details**
