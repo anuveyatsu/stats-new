@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'stickykit'], function($, bootstrap, chroma, tablesorter, stickykit) {
+define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'floatThead'], function($, bootstrap, chroma, tablesorter, floatThead) {
 
     var placeCount = placeCount || 260,
         colorSteps = ['#7ab800', '#edcf3b', '#ff0000',],
@@ -41,10 +41,10 @@ define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'stickykit'], function($
     $('#datasets_overview_table').tablesorter(tablesorterRiskOptions);
     $('#slice-table').tablesorter(tablesorterSliceOptions);
     $('#place-slice-table').tablesorter();
-    
-    $("#places_overview_table thead").stick_in_parent();
-    $("#datasets_overview_table thead").stick_in_parent();
-    $("#slice-table thead").stick_in_parent();
+
+    $("#places_overview_table").floatThead();
+    $("#datasets_overview_table").floatThead();
+    $("#slice-table").floatThead();
 
     $('.content').on('click', '.sexyHeader .sort_rank, .sexyHeader .sort_place', function(e){
         $("#places_overview_table").trigger("sorton", [ [[ $(e.target).hasClass('sort_place')/1, sortFlag]] ]);
@@ -141,17 +141,8 @@ define(['jquery', 'bootstrap', 'chroma', 'tablesorter', 'stickykit'], function($
 
     }
 
-    function setColumnTHWidths() {
-        $('thead th')
-            .each(function () {
-                var width = $(this).outerWidth();
-                $(this).css('width', width);
-            });
-    }
-
     function initializeTable() {
         setInteractions();
-        setColumnTHWidths();
     }
 
     return {

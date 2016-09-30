@@ -8953,3 +8953,7 @@ a.silent-link:hover {
 xmp {
   white-space: pre-wrap;
 }
+
+table.floatThead-table thead {
+    background-color: white;
+}

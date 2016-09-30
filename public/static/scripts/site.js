@@ -20,7 +20,8 @@ require.config({
         place: 'scripts/site/place',
         ui: 'scripts/site/ui',
         kinetic: 'vendor/jquery.kinetic.min',
-        sexyTables: 'vendor/sexytables-1.0.min'
+        sexyTables: 'vendor/sexytables-1.0.min',
+        floatThead: 'vendor/jquery.floatThead.min'
     }
 });
 
