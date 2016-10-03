@@ -35,7 +35,7 @@ exports.getEntriesFromDatabase = function(table, options){
   
   if (options){
     if (options.place) placeLogic = "country = '" + options.place.toUpperCase() + "'";
-    if (options.id) riskLogic = "id = '" + options.id + "'";
+    if (options.id) riskLogic = "id = '" + options.id.toLowerCase() + "'";
     if (options.risk) riskIdLogic = "risk = '" + options.risk + "'";
     if (options.risk_id) numRiskLogic = "risk_id = '" + options.risk_id + "'";
     if (options.asn) asnLogic = "asn = '" + options.asn + "'";

@@ -29,19 +29,15 @@ app.get('/about', routes.about);
 app.get('/vis/map/embed', routes.map);
 app.get('/data/geo.json', routes.geo);
 app.get('/asn', routes.asn);
-
+// API
 app.get('/api/v1/count_by_country', routes.apiCountByCountry);
 app.get('/api/v1/risk', routes.apiRisk);
 app.get('/api/v1/country', routes.apiCountry);
+app.get('/api/v1/country/:id', routes.apiCountry);
 app.get('/api/v1/asn', routes.apiAsn);
+app.get('/api/v1/asn/:asn', routes.apiAsn);
 app.get('/api/v1/count', routes.apiCount);
-
-app.get('/api/v1/country/:id', function(req, res){
-  res.redirect('/api/v1/country?id=' + req.params.id.toLowerCase());
-});
-app.get('/api/v1/asn/:asn', function(req, res){
-  res.redirect('/api/v1/asn?asn=' + req.params.asn);
-});
+// API redirects
 app.get('/api/count_by_country', function(req, res){
   res.redirect('/api/v1/count_by_country');
 });

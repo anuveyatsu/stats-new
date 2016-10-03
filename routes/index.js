@@ -241,11 +241,11 @@ exports.asn = function(req, res) {
 
 // api
 exports.apiCountByCountry = function(req, res) {
-
 	logic.getCountByCountry(req.query).then(function(results){
   	res.json(results[0]);
   });
 };
+
 
 exports.apiRisk = function(req, res) {
 
@@ -255,17 +255,29 @@ exports.apiRisk = function(req, res) {
 };
 
 exports.apiCountry = function(req, res) {
-
-	logic.getEntriesFromDatabase('country', req.query).then(function(results){
-  	res.json(results[0]);
-  });
+  // handles with query and /{id} for REST
+  if (Object.keys(req.params).length) { 
+    logic.getEntriesFromDatabase('country', req.params).then(function(results){
+      res.json(results[0]);
+    });
+  } else {
+    logic.getEntriesFromDatabase('country', req.query).then(function(results){
+      res.json(results[0]);
+    });
+  }
 };
 
 exports.apiAsn = function(req, res) {
-
-	logic.getEntriesFromDatabase('country_asn', req.query).then(function(results){
-  	res.json(results[0]);
-  });
+  // handles with query and /{asn} for REST
+  if (Object.keys(req.params).length) { 
+    logic.getEntriesFromDatabase('country_asn', req.params).then(function(results){
+      res.json(results[0]);
+    });
+  } else {
+    logic.getEntriesFromDatabase('country_asn', req.query).then(function(results){
+      res.json(results[0]);
+    });
+  }
 };
 
 exports.apiCount = function(req, res) {
