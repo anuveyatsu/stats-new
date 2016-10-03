@@ -167,9 +167,8 @@ exports.placeASN = function(req, res) {
 
 // risks
 exports.risk = function(req, res) {
-	// TODO: risks table needs primary key for risks
-	// TODO: needs to be computed: min, score
-  logic.getEntriesFromDatabase('risk').then(function(results){
+	
+  logic.getRiskCount().then(function(results){
   	var result = results[0];
     var parameters = {options: result, config: config};
   	res.render('risks.html', parameters);
