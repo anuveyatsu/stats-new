@@ -112,7 +112,7 @@ exports.getTotalCount = function(options) {
     if (options.limit) limit = "limit '" + options.limit+ "'";
   }
 
-	var logic = "SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD') as date, period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type ORDER BY date"+limit+";";
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type ORDER BY date) AS foo"+limit+";";
 	return sequelize.query(logic);
 };
 
