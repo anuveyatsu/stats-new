@@ -66,15 +66,7 @@ exports.getPlaceScore = function(options){
   return sequelize.query(logic);
 };
 
-exports.getRiskCount = function(options){
-  
-  var placeLogic = "1=1";
-  var riskLogic = "1=1";
-
-	if (options){
-    if (options.place) placeLogic = "slug = '" + options.place + "'";
-    if (options.risk) riskLogic = "risk.id = '" + options.risk + "'";
-  }
+exports.getRiskCount = function(){
   var logic = "SELECT id, title, description, date, count FROM risk LEFT JOIN (SELECT * FROM count_by_risk WHERE date=(select max(date) FROM count_by_risk)) AS foo ON risk_id=risk GROUP BY id, title, date, count, description;";
   return sequelize.query(logic);
 };
