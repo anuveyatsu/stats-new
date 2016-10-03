@@ -58,12 +58,13 @@ risks.forEach(function(risk){
           "name": "y",
           "type": "linear",
           "range": "height",
-          "nice": true,
+          "nice": true,	
+		  "zero": false,
           "domain": {"data": "risks", "field": String(risk.risk_id)}
         }
       ],
       "axes": [
-        {"type": "x", "scale": "x", "ticks": 5, "grid": true},
+        {"type": "x", "scale": "x", "ticks": 15, "grid": true},
         {"type": "y", "scale": "y", "ticks": 3,"grid": true}
       ],
       "marks": [

@@ -31,8 +31,10 @@ exports.place = function(req, res) {
   	});
   	var result = [];
     for (var place in places){
-      var obj = Object.assign({name: place}, places[place]);
-      result.push(obj);
+      if (Object.keys(places[place]).length > 3) {
+        var obj = Object.assign({name: place}, places[place]);
+        result.push(obj);
+      }
     }
     return result;
   }).then(function (result) {
