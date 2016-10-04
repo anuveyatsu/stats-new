@@ -19,7 +19,7 @@ To build and view the app:
     heroku local
     ```
 
-5. Visit the running app in your browser at http://localhost:8000/
+5. Visit the running app in your browser at http://localhost:5000/
 
 ## Setting up a Database
 
