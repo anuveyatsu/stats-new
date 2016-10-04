@@ -105,19 +105,23 @@ exports.getTotalCount = function(options) {
 	
 	var placeLogic = "1=1";
 	var asnLogic = "1=1";
+	var date = "1=1";
 	var startDate = "1=1";
 	var endDate = "1=1";
   var limit = " limit 2000";
+  var order = " DESC";
 	
 	if (options){
     if (options.country) placeLogic = "country= '" + options.country.toUpperCase() + "'";
     if (options.asn) asnLogic = "asn= '" + options.asn + "'";
+    if (options.date) date = "date = '" + options.date + "'";
     if (options.start) startDate = "date > '" + options.start + "'";
     if (options.end) endDate = "date < '" + options.end + "'";
-    if (options.limit) limit = "limit '" + options.limit+ "'";
+    if (options.limit) limit = " limit " + options.limit+ "";
+    if (options.order) order = " " + options.order;
   }
 
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo"+limit+";";
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" AND "+date+" GROUP BY country, risk, asn, date, period_type ORDER BY date "+order+") AS foo"+limit+";";
 	return sequelize.query(logic);
 };
 

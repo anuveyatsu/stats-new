@@ -51,27 +51,135 @@
 </section>
 
 <section class="row">
-  <h2>API</h2>
+  <h2>API v1</h2>
     <p>The Cybergreen RESTful API allows for queries against our databases</p>
-    <p>The limit by default is 2000</p>
     <p>The base URL is <code>/api/v1/</code>. Append the desired path and your parameters to get the required URL, using the format:</p>
     <code>/api/v1/[path]?[parameter-a]&[parameter-b]&[parameter-n]</code>
     <p>Where an example parameter might be <code>risk=openntp</code></p>
+    <h3>Limits</h3>
+    <p>The limit by default is 2000. This can be cahnged by setting <code>limit=n</code> inside query string</p>
+    <p>
+      Examples:
+      <br>
+      Qury string - <code>/api/v1/count?limit=1</code>
+      <br>
+      Result - <code>[{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"}]</code>
+      <br>
+      Qury string - <code>/api/v1/count?country=gb&limit=1</code>
+      <br>
+      Result - <code>[{"country":"GB","risk":1,"asn":"33","date":"2016-08-15","period_type":"monthly","count":"2"},{"country":"GB","risk":1,"asn":"174","date":"2016-08-15","period_type":"monthly","count":"288"}]</code>
+    </p>
+    <h3>Order</h3>
+    <p>
+      All results that contain <code>date</code> parameter, by default are order by date in descending order
+      (most date recent first). This can be cahnged by setting <code>order=asc</code> inside query sting.
+    </p>
+    <p>
+      Examples:
+      <br>
+      Qury string - <code>/api/v1/count?limit=3</code>
+      <br>
+      Result -
+      <code>
+        [{"country":"AE","risk":2,"asn":"8966","date":"2013-12-30","period_type":"monthly","count":"93"},
+        {"country":"AE","risk":2,"asn":"15412","date":"2013-12-29","period_type":"monthly","count":"4"},
+        {"country":"AE","risk":2,"asn":"15802","date":"2013-12-28","period_type":"monthly","count":"231"}]
+      </code>
+      <br>
+      <br>
+      Qury string - <code>/api/v1/count?order=asc&limit=3</code>
+      <br>
+      Result -
+      <code>
+        [{"country":"AE","risk":2,"asn":"8966","date":"2013-12-28","period_type":"monthly","count":"93"},
+        {"country":"AE","risk":2,"asn":"15412","date":"2013-12-29","period_type":"monthly","count":"4"},
+        {"country":"AE","risk":2,"asn":"15802","date":"2013-12-30","period_type":"monthly","count":"231"}]
+      </code>
+    </p>
     <h3>Paths</h3>
     <p>These are the paths, with example datasets, to help you set your parameters:</p>
     <h4><b>/count_by_country</b></h4>
-    <p>Example set:<br><code>{"risk":"openntp","country":"gb","date":"2016-08-08","count":"114205","score":85,"rank":0}</code></p>
+    <p>Available query parameters: <code>risk</code>, <code>country</code>, <code>date</code></p>
+    <p>
+      Example:
+      <br>
+      Qury string - <code>/api/v1/count_by_country?risk=opendns&country=gb&date=2016-08-01</code>
+      <br>
+      Result - <code>[{"risk":"opendns","country":"gb","date":"2016-08-01","count":"278307","score":85,"rank":0}]</code>
+      <br>
+    </p>
     <h4><b>/risk</b></h4>
-    <p>Example set:<br><code>{"risk_id":1,"id":"opendns","title":"Open DNS","total":3865270,"max":539540,"min":10,"mean":18062,"score":49,"rank":null,"place_count":214,"icon":null,"category":null,"description":"The Domain Name System (DNS) is pervasive..."}</code></p>
+    <p>Available query parameters: <code>risk_id</code>, <code>id</code></p>
+    <p>
+      Example:
+      <br>
+      Qury string - <code>/api/v1/risk?risk_id=1</code>
+      <br>
+      Result - <code>[{"risk_id":1,"id":"opendns","title":"Open DNS","total":3865270,"max":539540,"min":10,"mean":18062,"score":49,"rank":null,"place_count":214,"icon":null,"category":null,"description":"The Domain Name System (DNS) is pervasive..."}]</code>
+      <br>
+    </p>
     <h4><b>/country</b></h4>
-    <p>Example set:<br><code>{"id":"bg","name":"Bulgaria","slug":"bulgaria","region":"Europe","continent":"Europe","score":29.27,"rank":196},{"id":"bh","name":"Bahrain","slug":"bahrain","region":"MENA","continent":"Asia","score":53.18,"rank":120}</code></p>
+    <p>
+      Available query parameters: <code>id</code>
+      where id is <b>ISO 3166-1 alpha-2 code</b>.
+    </p>
+    <p>
+      Examples:
+      <br>
+      Qury string - <code>/api/v1/country?id=gb</code>
+      <br>
+      Result - <code>[{"id":"gb","name":"United Kingdom","slug":"united-kingdom","region":"Europe","continent":"Europe","score":24.35,"rank":207}]</code>
+      <br>
+    </p>
     <h4><b>/count</b></h4>
-    <p>Example set:<br><code>{"country":"GB","risk":4,"asn":"5580","date":"2016-07-04T00:00:00.000Z","period_type":"monthly","count":"3"}</code></p>
+    <p>
+      Available query parameters:
+      <br>
+      <code>country</code> - <b>ISO 3166-1 alpha-2 code</b>
+      <br>
+      <code>asn</code> - Unic Autonomous System Number (ASN)
+      <br>
+      <code>date</code> - Exact ISO 8601 formated date
+      <br>
+      <code>start</code> - Start date
+      <br>
+      <code>end</code> - End date
+    </p>
+    <p>
+      Examples:
+      <br>
+      Qury string - <code>/api/v1/count?asn=6752&date=2016</code>
+      <br>
+      Result -
+      <code>
+        [{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"},
+        {"country":"AD","risk":5,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"371"},
+        {"country":"AD","risk":4,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"}]
+      </code>
+      <br>
+      <br>
+      Qury string - <code>/api/v1/count?asn=6752&start=2016-05-31&end=2016-07-01&limit=3</code>
+      <br>
+      Result -
+      <code>
+        [{"country":"AD","risk":5,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"434"},
+        {"country":"AD","risk":4,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"71"},
+        {"country":"AD","risk":1,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"70"}]
+      </code>
+      <br>
+    </p>
     <h4><b>/asn</b></h4>
-    <p>Example set:<br><code>{"place":"ae","asn":"61137","time":"2016-08-17T00:00:00.000Z"}</code></p>
-    <br>
-    <p>For example, using the URL:<br><code>/api/v1/count_by_country?risk=openntp&date=2016-08-08&country=gb</code><br>will yield the result<br><code>[{"risk":"openntp","country":"gb","date":"2016-08-08","count":"114205","score":85,"rank":0}]</code>
-    
+    <p>
+      Available query parameters: <code>country</code>, <code>asn</code>
+    </p>
+    <p>
+      Example:
+      <br>
+      Qury string - <code>/api/v1/asn?asn=41152</code>
+      <br>
+      Result - <code>[{"country":"ae","asn":"41152","time":"2016-08-17T00:00:00.000Z"}]</code>
+      <br>
+    </p>    
 </section>
 
 {% endblock content %}
