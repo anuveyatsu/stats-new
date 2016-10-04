@@ -4,6 +4,7 @@ require.config({
         bootstrap: {deps:['jquery']},
         tablesorter: {deps: ['jquery']},
         stickykit: {deps: ['jquery']},
+        floatThead: {deps: ['jquery']},
         kinetic: {deps: ['jquery']},
         sexyTables: {deps: ['kinetic']}
     },
