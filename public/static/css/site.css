@@ -8780,21 +8780,16 @@ h3 a:hover {
   font-weight: 300;
   background-color: #181818;
 }
-#places_overview_table thead tr th:first-child,
-#datasets_overview_table thead tr th:first-child,
-#slice-table thead tr th:first-child {
-  cursor: pointer;
-  color: #262626;
+
+.floatThead-table thead tr th:hover:after {
+    font-family: FontAwesome;
+    color: #aaa;
+    content: "\f0ab";
+    text-align: right;
+    float: right;
 }
-#places_overview_table thead tr th:nth-child(2),
-#datasets_overview_table thead tr th:nth-child(2),
-#slice-table thead tr th:nth-child(2) {
-  cursor: pointer;
-  color: #262626;
-}
-#places_overview_table thead tr th:last-child,
-#datasets_overview_table thead tr th:last-child,
-#slice-table thead tr th:last-child {
+
+.floatThead-table thead tr th {
   cursor: pointer;
   color: #262626;
 }
