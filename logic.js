@@ -107,7 +107,7 @@ exports.getTotalCount = function(options) {
 	var asnLogic = "1=1";
 	var startDate = "1=1";
 	var endDate = "1=1";
-  var limit = " limit 2000"
+  var limit = " limit 2000";
 	
 	if (options){
     if (options.country) placeLogic = "country= '" + options.country.toUpperCase() + "'";
@@ -117,7 +117,7 @@ exports.getTotalCount = function(options) {
     if (options.limit) limit = "limit '" + options.limit+ "'";
   }
 
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type ORDER BY date) AS foo"+limit+";";
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo"+limit+";";
 	return sequelize.query(logic);
 };
 
