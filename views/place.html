@@ -39,7 +39,11 @@
                 {{ option.rank or "N/A" }}
               </td>
               <td>
+								{% if option.slug %}
                   <a href="/country/{{ option.slug }}/{{ option.risk }}/">{{ option.risk_title }}</a>
+								{% else %}
+									<a>{{ option.risk_title }}</a>
+								{% endif %}
               </td>
               <td class="previous-results">
               {% if option.previous and option.previous.score %}
