@@ -115,9 +115,10 @@ exports.placeID = function(req, res) {
 					panel_share: false,
 					map_place: result[0].place_id.toLowerCase()
 				};
+        console.log("result is", asns.asnList.length)
         var parameters = {
           options: result,
-          asns: asns.asnList,
+          asns: asns.asnList.slice(0, 5000),
           treeAsn: JSON.stringify(treeList),
           riskOpt: risks, map: map,
           config: config
