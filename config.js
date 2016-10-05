@@ -1,6 +1,6 @@
 var config = {
 	AUTHOR: "CyberGreen",
-	SITENAME: "CyberGreen Statistics",
+	SITENAM: "CyberGreen Statistics",
 	CGR: {
 		scheme: "",
 		domain: "",
@@ -24,6 +24,7 @@ var config = {
 			"name": "AUTHOR"
 		}
 	},
+	SOURCE_CODE: "https://github.com/cybergreen-net/stats-new",
 	SITELOGO: "/static/images/cybergreen-logo-2.png",
 	data: {
 			test: {"risk":"opendns","place":"ad","year":"2016","count":"30","score":"74.23","rank":"24"}
