@@ -16,7 +16,7 @@ months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-15']
 
 def agregate_data():
 	result = [[ 'id', 'risk', 'country', 'asn', 'date', 'period_tpe','count']]
-	country_asn = [['place', 'asn', 'date']]
+	country_asn = [['country', 'asn', 'date']]
 	rowid = 0
 	for place in places:
 		two_digit = random.randrange(10, 100) 
@@ -85,7 +85,7 @@ CREATE TABLE count_by_risk
 """
 	create_country_asn = """
 CREATE TABLE country_asn
-(place varchar(2), asn varchar(16), date varchar(16));
+(country varchar(2), asn varchar(16), date varchar(16));
 """
 	cursor.execute(create_entries)
 	cursor.execute(create_risks)
