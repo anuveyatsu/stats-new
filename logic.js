@@ -126,6 +126,6 @@ exports.getTotalCount = function(options) {
 };
 
 exports.getAsnTotal = function() {
-  var logic = "SELECT name, slug, place, count(asn) FROM country_asn JOIN country ON country_asn.place=country.id GROUP BY name, slug, place ORDER BY name ASC;";
+  var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN country ON country_asn.country=country.id GROUP BY name, slug, country ORDER BY name ASC;";
   return sequelize.query(logic);
 };
