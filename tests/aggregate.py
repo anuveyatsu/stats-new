@@ -12,7 +12,7 @@ fo = open(COUNTRYFILE)
 places = [ place['id'] for place in csv.DictReader(fo) ]
 fo = open(RISKSFILE)
 risks = [risk['risk_id'] for risk in csv.DictReader(fo)]
-months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-01']
+months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-15']
 
 def agregate_data():
 	result = [[ 'id', 'risk', 'country', 'asn', 'date', 'period_tpe','count']]
