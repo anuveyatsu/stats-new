@@ -17,7 +17,7 @@ exports.home = function(req, res) {
 // places
 exports.place = function(req, res) {
 
-  logic.getPlaceScore().then(function(results){
+  logic.getScores().then(function(results){
   	var places = {};
   	results[0].forEach(function(result){
   		if (places[result.name]){
@@ -52,10 +52,14 @@ exports.place = function(req, res) {
 
 exports.placeID = function(req, res) {
   
-  logic.getPlaceScore({place: req.params.id}).then(function(results){
-  	return results[0];
+  logic.getScores({country: req.params.id}).then(function(results){
+    if(!results[0].length){
+      res.render('404.html');
+      return;
+    }
+    return results[0];
   }).then(function(result) {
-  	var id = result[0].place_id;
+  	var id = result[0].country_id;
   	logic.getAsnCount({place: id }).then(function(results) {
   		var asns = {};
   		var risks = {};
@@ -113,7 +117,7 @@ exports.placeID = function(req, res) {
 					embed_title: 'opendsn' + ' / ' + '2016-08-15',
 					panel_tools: true,
 					panel_share: false,
-					map_place: result[0].place_id.toLowerCase()
+					map_place: result[0].country_id.toLowerCase()
 				};
         var parameters = {
           options: result,
@@ -177,7 +181,7 @@ exports.risk = function(req, res) {
 
 exports.riskID = function(req, res) {
   
-  logic.getPlaceScore({risk: req.params.id}).then(function(results){
+  logic.getScores({risk: req.params.id}).then(function(results){
   	var result = results[0];
   	var map = {
 		  embed_width: '100%',
@@ -196,7 +200,7 @@ exports.riskID = function(req, res) {
 // place-id/risk-id
 exports.placeRisk = function(req, res) {
 
-  logic.getPlaceScore({risk: req.params.risk, place: req.params.country}).then(function(results){
+  logic.getScores({risk: req.params.risk, country: req.params.country}).then(function(results){
 
   	var result = results[0][0];
   	var map = {
@@ -205,7 +209,7 @@ exports.placeRisk = function(req, res) {
 		  current_year: result.date,
 		  filter_risk: req.params.risk,
 		  embed_title: req.params.risk + ' / ' + result.date,
-		  map_place: result.place_id.toLowerCase(),
+		  map_place: result.country_id.toLowerCase(),
 		  panel_tools: false,
 		  panel_share: false,
 		};
