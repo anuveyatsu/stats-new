@@ -21,6 +21,13 @@ exports.getSingleEntry= function(data, matchWith, matchTo){
   });
   return result;
 };
+// reference data
+exports.getRisks= function(){
+  return sequelize.query("SELECT * FROM risk");
+};
+exports.getCountries= function(){
+  return sequelize.query("SELECT * FROM country");
+};
 
 exports.getEntriesFromDatabase = function(table, options){
   var placeLogic = "1=1";
