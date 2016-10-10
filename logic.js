@@ -49,13 +49,13 @@ exports.getEntriesFromDatabase = function(table, options){
     if (options.date) timeLogic = "date = '" + options.date + "'";
     if (options.limit) limit = " limit '" + options.limit+ "'";
   }
-  if (table === 'count') {
-    order = " ORDER BY date ASC";
-    logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order + limit;
-  } else {
   logic = "SELECT * FROM "+table+" WHERE "+placeLogic+" AND "+riskLogic+" AND "+asnLogic+" AND "+timeLogic+" AND "+numRiskLogic+" AND "+riskIdLogic + order + limit;
-  }
   return sequelize.query(logic);
+};
+
+exports.getEntriesByASN= function(asn){
+  logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM count WHERE asn = $asn ORDER BY date ASC";
+  return sequelize.query(logic, { bind: { asn: asn }});
 };
 
 exports.getScores = function(options){

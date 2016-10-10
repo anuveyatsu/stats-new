@@ -134,10 +134,8 @@ exports.placeID = function(req, res) {
 
 exports.placeASN = function(req, res) {
 
-  logic.getEntriesFromDatabase('count', {	asn: req.params.asn}).then(function(results){
-    
+  logic.getEntriesByASN(req.params.asn).then(function(results){
     var dates = {};
-   
     results[0].forEach(function (entry){
       if (dates[entry.date]){
         dates[entry.date][entry.risk] = entry.count || 'N/A';
