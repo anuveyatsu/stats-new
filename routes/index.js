@@ -60,7 +60,7 @@ exports.placeID = function(req, res) {
     return results[0];
   }).then(function(result) {
   	var id = result[0].country_id;
-  	logic.getAsnCount({place: id }).then(function(results) {
+  	logic.getAsnCount(id).then(function(results) {
   		var asns = {};
   		var risks = {};
 			results[0].forEach(function(result){

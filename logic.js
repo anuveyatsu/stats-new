@@ -102,15 +102,9 @@ exports.getCountByCountry = function(options){
   return sequelize.query(logic);
 };
 
-exports.getAsnCount = function(options) {
-	
-	var placeLogic = "1=1";
-	
-	if (options){
-    if (options.place) placeLogic = "country= '" + options.place + "'";
-  }
-  var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE date=(select max(date) FROM count) AND "+placeLogic+" GROUP BY asn, risk;";
-	return sequelize.query(logic);
+exports.getAsnCount = function(country) {
+  var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE date=(select max(date) FROM count) AND country = $country GROUP BY asn, risk;";
+	return sequelize.query(logic, { bind: { country: country }});
 };
 
 exports.getTotalCount = function(options) {
