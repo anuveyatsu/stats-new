@@ -247,10 +247,15 @@ exports.apiCountByCountry = function(req, res) {
 };
 
 exports.apiRisk = function(req, res) {
-
-	logic.getEntriesFromDatabase('risk', req.query).then(function(results){
-  	res.json(results[0]);
-  });
+	if (Object.keys(req.params).length) { 
+    logic.getRiskAPI(req.params).then(function(results){
+      res.json(results[0]);
+    });
+  } else {
+    logic.getRiskAPI(req.query).then(function(results){
+      res.json(results[0]);
+    });
+  }
 };
 
 exports.apiCountry = function(req, res) {

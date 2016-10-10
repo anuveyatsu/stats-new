@@ -75,6 +75,17 @@ exports.getRiskCount = function(){
   return sequelize.query(logic);
 };
 
+exports.getRiskAPI = function(options){
+  var id = '';
+  var risk_id = '';
+  var title = ''; 
+  if (options.id) id = options.id;
+  if (options.risk_id) risk_id = options.risk_id;
+  if (options.title) title = options.title.toLowerCase();
+  var logic = "SELECT * FROM risk WHERE ($id = '' OR id = $id) AND ($risk_id = '' OR risk_id::text = $risk_id) AND ($title = '' OR lower(title) = $title) ORDER BY risk_id ASC";
+  return sequelize.query(logic, { bind: { id: id, risk_id: risk_id, title: title}});
+};
+
 exports.getCountByCountry = function(options){
   var country = '';
   var risk = '';
