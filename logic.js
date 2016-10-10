@@ -84,7 +84,7 @@ exports.getAsnAPI = function(options){
   if (options.country) country = options.country.toLowerCase();
   if (options.asn) asn = options.asn;
   if (options.date) date = options.date;
-  var logic = "SELECT country, asn, to_char(country_asn.date,'YYYY-MM-DD') as date FROM country_asn WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) ORDER BY country ASC";
+  var logic = "SELECT country, asn, to_char(time,'YYYY-MM-DD') as date FROM country_asn WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR time::text = $date) ORDER BY country ASC";
   return sequelize.query(logic, { bind: { country: country, asn: asn, date: date}});
 };
 
