@@ -261,11 +261,11 @@ exports.apiRisk = function(req, res) {
 exports.apiCountry = function(req, res) {
   // handles with query and /{id} for REST
   if (Object.keys(req.params).length) { 
-    logic.getEntriesFromDatabase('country', req.params).then(function(results){
+    logic.getCountryAPI(req.params).then(function(results){
       res.json(results[0]);
     });
   } else {
-    logic.getEntriesFromDatabase('country', req.query).then(function(results){
+    logic.getCountryAPI(req.query).then(function(results){
       res.json(results[0]);
     });
   }
@@ -274,11 +274,11 @@ exports.apiCountry = function(req, res) {
 exports.apiAsn = function(req, res) {
   // handles with query and /{asn} for REST
   if (Object.keys(req.params).length) { 
-    logic.getEntriesFromDatabase('country_asn', req.params).then(function(results){
+    logic.getAsnAPI(req.params).then(function(results){
       res.json(results[0]);
     });
   } else {
-    logic.getEntriesFromDatabase('country_asn', req.query).then(function(results){
+    logic.getAsnAPI(req.query).then(function(results){
       res.json(results[0]);
     });
   }

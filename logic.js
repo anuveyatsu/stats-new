@@ -86,6 +86,32 @@ exports.getRiskAPI = function(options){
   return sequelize.query(logic, { bind: { id: id, risk_id: risk_id, title: title}});
 };
 
+exports.getCountryAPI = function(options){
+  var id = '';
+  var name = '';
+  var slug = '';
+  var region = '';
+  var continent = '';
+  if (options.id) id = options.id.toLowerCase();
+  if (options.name) name = options.name.toLowerCase();
+  if (options.slug) slug = options.slug.toLowerCase();
+  if (options.region) region = options.region.toLowerCase();
+  if (options.continent) continent = options.continent.toLowerCase();
+  var logic = "SELECT * FROM country WHERE ($id = '' OR lower(id) = $id) AND ($name = '' OR lower(name) = $name) AND ($slug = '' OR lower(slug) = $slug) AND ($region = '' OR lower(region) = $region) AND ($continent = '' OR lower(continent) = $continent) ORDER BY id ASC";
+  return sequelize.query(logic, { bind: { id: id, name: name, slug: slug, region: region, continent: continent}});
+};
+
+exports.getAsnAPI = function(options){
+  var country = '';
+  var asn = '';
+  var date = ''; 
+  if (options.country) country = options.country.toLowerCase();
+  if (options.asn) asn = options.asn;
+  if (options.date) date = options.date;
+  var logic = "SELECT * FROM country_asn WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) ORDER BY date DESC, country ASC";
+  return sequelize.query(logic, { bind: { country: country, asn: asn, date: date}});
+};
+
 exports.getCountByCountry = function(options){
   var country = '';
   var risk = '';
