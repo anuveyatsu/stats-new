@@ -38,7 +38,7 @@ exports.place = function(req, res) {
     }
     return result;
   }).then(function (result) {
-  	logic.getRisks('risk').then(function (risks) {
+  	logic.getRisks().then(function (risks) {
   		risks = risks[0];
       var parameters = {
         options: result,
@@ -86,7 +86,7 @@ exports.placeID = function(req, res) {
 			var result = {asnList: asnList, riskList: risks};
 			return result;
   	}).then(function(asns){
-  		logic.getRisks('risk').then(function (risks) {
+  		logic.getRisks().then(function (risks) {
 				risks = risks[0];
 				// adds risk in Table if there is no data For given country
 				var isRisk = false;
@@ -152,7 +152,7 @@ exports.placeASN = function(req, res) {
     return result;
     
   }).then(function(result){
-  	logic.getRisks('risk').then(function (risks) {
+  	logic.getRisks().then(function (risks) {
 			risks = risks[0];
 			var parameters = {
 				entries: result, 
