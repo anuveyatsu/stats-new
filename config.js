@@ -34,7 +34,8 @@ var config = {
 		username: 'test_user',
 		password: 'secret',
 		host: 'localhost',
-		dialect: 'postgres'
+		dialect: 'postgres',
+		logging: false
 	},
 	updates: {}
 };
