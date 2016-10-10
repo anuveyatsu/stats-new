@@ -139,8 +139,34 @@ describe('API', function(){
         assert.equal(res.body.length, 2000);
         assert.equal(res.body[0].risk, 'opendns');
         assert.equal(res.body[0].date, '2016-08-15');
+      });
+    request(app)
+      .get('/api/v1/count_by_country?country=gb&risk=openntp&limit=4')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 4);
+        assert.equal(res.body[0].country, 'gb');
+        assert.equal(res.body[0].risk, 'openntp');
+        assert.equal(res.body[0].date, '2016-08-15');
+      });
+    request(app)
+      .get('/api/v1/count_by_country?date=2016-07-01&risk=openntp&limit=30')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 30);
+        assert.equal(res.body[0].risk, 'openntp');
+        assert.equal(res.body[0].date, '2016-07-01');
+      });
+    request(app)
+      .get('/api/v1/count_by_country?country=test OR 1=1')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 0);
         done();
-      });  	
+      });
   });
   it('Places API', function(done){
     request(app)
