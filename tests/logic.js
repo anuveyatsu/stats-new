@@ -6,10 +6,59 @@ var table = 'count';
 var app = require('../app.js').app;
 var asn;
 
+describe('Get Scores', function(){
+  it('Works without parameters', function(done){
+    logic.getScores().then(function(results){
+      assert(true, results[0].length > 0);
+      done();
+    });
+  });
+  it('Works with country parameter', function(done){
+    logic.getScores({country:'united-kingdom'}).then(function(results){
+      assert(true, results[0].length > 0);
+      assert.equal(results[0][0].country_id, 'GB');
+      done();
+    });
+  });
+  it('Works with risk parameter', function(done){
+    logic.getScores({risk:'openntp'}).then(function(results){
+      assert(true, results[0].length > 0);
+      assert.equal(results[0][0].risk, 'openntp');
+      done();
+    });
+  });
+  it('Works with country and risk parameters together', function(done){
+    logic.getScores({country:'united-kingdom', risk: 'openntp'}).then(function(results){
+      assert(true, results[0].length > 0);
+      assert.equal(results[0][0].country_id, 'GB');
+      assert.equal(results[0][0].risk, 'openntp');
+      done();
+    });
+  });
+  it('Fails with wrong parameters', function(done){
+    logic.getScores({country:'country', risk: 'openntp'}).then(function(results){
+      assert.equal(results[0].length, 0);
+    });
+    logic.getScores({country:'united-kingdom', risk: 'unknown'}).then(function(results){
+      assert.equal(results[0].length, 0);
+      done();
+    });
+  });
+  it('Handles with SQL injections', function(done){
+    logic.getScores({country:'united-kingdom or 1=1'}).then(function(results){
+      assert.equal(results[0].length, 0);
+    });
+    logic.getScores({country:" OR country %3D 'LV'%3B --"}).then(function(results){
+      assert.equal(results[0].length, 0);
+      done();
+    });
+  });
+});
+
 describe('Database Functions', function(){
   it('Works with single no options', function(done) {
     logic.getEntriesFromDatabase(table).then(function(results){
-      assert.equal(results[0].length, 56250);
+      assert.equal(results[0].length, 45000);
       done();
     });
   });
@@ -83,7 +132,7 @@ describe('API', function(){
       .end(function(err, res) {
         assert.equal(res.body.length, 2000);
         assert.equal(res.body[0].risk, 'opendns');
-        assert.equal(res.body[0].date, '2016-08-01');
+        assert.equal(res.body[0].date, '2016-08-15');
         done();
       });  	
   });
@@ -118,7 +167,7 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 2250);
-        assert.equal(res.body[0].place, 'ad');
+        assert.equal(res.body[0].country, 'ad');
         assert.equal(res.body[0].date, '2016-01-01');
         done();
       });  	
