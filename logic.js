@@ -12,15 +12,7 @@ if (process.env.DATABASE_URI) {
     config.db.password,
     config.db);
 }
-exports.getSingleEntry= function(data, matchWith, matchTo){
-  var result = {};
-  data.forEach(function(entry) {
-    if(entry[matchWith] === matchTo ){
-      result = entry;
-    }
-  });
-  return result;
-};
+
 // reference data
 exports.getRisks= function(){
   return sequelize.query("SELECT * FROM risk");
