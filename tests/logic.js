@@ -177,8 +177,20 @@ describe('API', function(){
         assert.equal(res.body.length, 225);
         assert.equal(res.body[0].id, 'ad');
         assert.equal(res.body[0].name, 'Andorra');
+      });
+    request(app)
+      .get('/api/v1/country?id=ad&name=Andorra&region=europe&continent=europe')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 1);
+        assert.equal(res.body[0].id, 'ad');
+        assert.equal(res.body[0].name, 'Andorra');
+        assert.equal(res.body[0].slug, 'andorra');
+        assert.equal(res.body[0].region, 'Europe');
+        assert.equal(res.body[0].continent, 'Europe');
         done();
-      });  	
+      });
   });
   it('Risks API', function(done){
     request(app)
