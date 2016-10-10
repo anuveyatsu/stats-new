@@ -216,13 +216,11 @@ exports.placeRisk = function(req, res) {
 };
 
 // download
-
 exports.download = function(req, res) {
   res.render('download.html', {config: config});
 };
 
 // about
-
 exports.about = function(req, res) {
   res.render('about.html');
 };
@@ -236,8 +234,7 @@ exports.map = function(req, res) {
 // asn
 
 exports.asn = function(req, res) {
-
-  logic.getAsnTotal('country_asn').then(function(results){
+  logic.getAsnTotal().then(function(results){
     res.render('asn.html', {asnCount: results[0], config: config});
   });
 };
@@ -248,7 +245,6 @@ exports.apiCountByCountry = function(req, res) {
   	res.json(results[0]);
   });
 };
-
 
 exports.apiRisk = function(req, res) {
 
