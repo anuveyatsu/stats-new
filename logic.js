@@ -110,26 +110,24 @@ exports.getAsnCount = function(country) {
 
 exports.getTotalCount = function(options) {
 	
-	var placeLogic = "1=1";
-	var asnLogic = "1=1";
-	var date = "1=1";
-	var startDate = "1=1";
-	var endDate = "1=1";
-  var limit = " limit 2000";
-  var order = " DESC";
-	
+	var placeLogic = "";
+	var asnLogic = "";
+	var date = "";
+	var startDate = "";
+	var endDate = "";
+  var limit = " 2000";
+  
 	if (options){
-    if (options.country) placeLogic = "country= '" + options.country.toUpperCase() + "'";
-    if (options.asn) asnLogic = "asn= '" + options.asn + "'";
-    if (options.date) date = "date = '" + options.date + "'";
-    if (options.start) startDate = "date > '" + options.start + "'";
-    if (options.end) endDate = "date < '" + options.end + "'";
-    if (options.limit) limit = " limit " + options.limit+ "";
-    if (options.order) order = " " + options.order;
+    if (options.country) placeLogic =options.country.toLowerCase();
+    if (options.asn) asnLogic = options.asn;
+    if (options.date) date = options.date;
+    if (options.start) startDate = options.start;
+    if (options.end) endDate = options.end;
+    if (options.limit) limit = options.limit;
   }
 
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE "+placeLogic+" AND "+asnLogic+" AND "+startDate+" AND "+endDate+" AND "+date+" GROUP BY country, risk, asn, date, period_type ORDER BY date "+order+") AS foo"+limit+";";
-	return sequelize.query(logic);
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) AND ($start = '' OR date::text > $start) AND ($end = '' OR date::text < $end) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo limit $limit;";
+	return sequelize.query(logic, { bind: { country: placeLogic, asn: asnLogic, date: date, start: startDate, end: endDate, limit: limit}});
 };
 
 exports.getAsnTotal = function() {

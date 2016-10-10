@@ -285,7 +285,6 @@ exports.apiAsn = function(req, res) {
 };
 
 exports.apiCount = function(req, res) {
-
 	logic.getTotalCount(req.query).then(function(results){
   	res.json(results[0]);
   });
