@@ -16,7 +16,7 @@ months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-15']
 
 def agregate_data():
 	result = [[ 'id', 'risk', 'country', 'asn', 'date', 'period_tpe','count']]
-	country_asn = [['country', 'asn', 'date']]
+	country_asn = [['country', 'asn', 'time']]
 	rowid = 0
 	for place in places:
 		two_digit = random.randrange(10, 100) 
