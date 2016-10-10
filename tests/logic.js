@@ -56,6 +56,12 @@ describe('Get Scores', function(){
 });
 
 describe('Database Functions', function(){
+  it('Works with ASN count', function(done) {
+    logic.getAsnCount('GB').then(function(results){
+      assert.equal(results[0].length, 40);
+      done();
+    });
+  });
   it('Works with single no options', function(done) {
     logic.getEntriesFromDatabase(table).then(function(results){
       assert.equal(results[0].length, 45000);
