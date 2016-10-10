@@ -189,8 +189,16 @@ describe('API', function(){
         assert.equal(res.body.length, 4);
         assert.equal(res.body[0].id, 'opendns');
         assert.equal(res.body[1].id, 'openntp');
+      });
+    request(app)
+      .get('/api/v1/risk?title=Open NTP&risk_id=2&id=openntp')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 1);
+        assert.equal(res.body[0].id, 'openntp');
         done();
-      });  	
+      });
   });
   it('ASNs API', function(done){
     request(app)
