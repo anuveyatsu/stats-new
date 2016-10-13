@@ -1,6 +1,6 @@
 {% extends 'page.html' %}
 
-
+{% block heading %}{% endblock heading %}
 {% block breadcrumbs_inner %}
   <li class="active">Download and API</li>
 {% endblock breadcrumbs_inner %}
@@ -8,10 +8,22 @@
 
 {% block content %}
 <section class="row">
-<h2>Download</h2>
-    <div class="col-md-12">
-    {{ page.content }}
-    </div>
+  <header  class="page-header">
+    <h1>Download</h1>
+  </header>
+
+  <div class="col-md-12">
+{% markdown %}
+# Aggregated data format
+
+We currently provide full data dumps of our aggregated data sets.
+The CSV format is:
+
+`` risk,country,date,count,score,rank ``
+
+In addition to the above CSV format, we also provide a JSON download.
+{% endmarkdown %}
+  </div>
   <div class="col-md-4">
     <div class="">
       <h3>CSV</h3>
