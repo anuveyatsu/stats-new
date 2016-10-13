@@ -222,7 +222,7 @@ exports.download = function(req, res) {
 
 // about
 exports.about = function(req, res) {
-  res.render('about.html');
+  res.render('about.html', {config: config});
 };
 
 
