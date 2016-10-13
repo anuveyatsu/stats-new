@@ -21,6 +21,9 @@ app.get('/', routes.home);
 app.get('/country', routes.place);
 app.get('/country/:id', routes.placeID);
 app.get('/country/:country/asn/:asn', routes.placeASN);
+app.get('/country/:country/asn', function(req, res) {
+  res.redirect('/country/'+ req.params.country);
+});
 app.get('/country/:country/:risk', routes.placeRisk);
 app.get('/risk', routes.risk);
 app.get('/risk/:id', routes.riskID);
