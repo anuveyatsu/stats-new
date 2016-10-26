@@ -126,7 +126,7 @@ exports.getTotalCount = function(options) {
     if (options.limit) limit = options.limit;
   }
 
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) AND ($start = '' OR date::text > $start) AND ($end = '' OR date::text < $end) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo limit $limit;";
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) AND ($start = '' OR date::text >= $start) AND ($end = '' OR date::text < $end) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo limit $limit;";
 	return sequelize.query(logic, { bind: { country: placeLogic, asn: asnLogic, date: date, start: startDate, end: endDate, limit: limit}});
 };
 
