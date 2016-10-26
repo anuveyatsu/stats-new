@@ -1,6 +1,6 @@
 {% extends 'page.html' %}
 
-{% from 'macros.html' import history, share, popover_slice_title, popover_slice_content %}
+{% from 'macros.html' import share %}
 {% set fragment = 'place' %}
 
 {% block heading %}{% endblock heading %}
@@ -33,7 +33,7 @@
 {% endmarkdown %}                    
         </div>
         <div class="col-md-12">
-           {{ share(fragment, with_embed=True) }}
+           {{ share(map, with_text=1) }}
         </div>
       </div>
     </div>

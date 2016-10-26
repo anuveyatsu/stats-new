@@ -1,5 +1,5 @@
 {% extends 'page.html' %}
-
+{% from 'macros.html' import share %}
 {% set fragment = 'place / {{ options[0].slug }}' %}
 
 {% block heading %}{% endblock heading %}
@@ -63,7 +63,12 @@
           </tbody>
         </table>
       </div>
-    </div>
+			<div class="row navigate">
+				<div class="col-md-6">
+					{{ share(map) }}
+				</div>
+			</div> 
+		</div>
     <div class="col-md-6">
       <div id="map-container">
         {% include 'dataviews/embed_map.html' %}
