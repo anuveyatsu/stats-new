@@ -5,6 +5,19 @@
 <link rel="stylesheet" type="text/css" href="/static/css/map.css" />
 {% endblock head_css %}
 
+{% block head_scripts %}
+{{ super() }}
+<script type="text/javascript">
+    var siteUrl = '',
+        currentYear = "",
+        previousYear = "",
+        years = {{ dates }},
+        sitename = "Cybergreen Statistics",
+        sponsor = "Cybergreen"
+        ;
+</script>
+{% endblock head_scripts %}
+
 {% block content %}
 <div class="cgr-vis cgr-vis-choropleth">
     <div class="cgr-vis-view">
