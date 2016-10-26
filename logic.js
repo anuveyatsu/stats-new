@@ -30,24 +30,24 @@ exports.getScores = function(options){
   var logic;
   if (options){
     if (options.country && options.risk){
-      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM count_by_country) AND slug = $slug AND risk.id = $risk GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
+      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM (SELECT date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country)) as t) AND slug = $slug AND risk.id = $risk GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
       return sequelize.query(logic, { bind: { slug: options.country, risk: options.risk }});
     } else if (options.country) {
-      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM count_by_country) AND slug = $slug GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
+      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM (SELECT date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country)) as t) AND slug = $slug GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
       
       return sequelize.query(logic, { bind: { slug: options.country}});
     } else if (options.risk) {
-      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM count_by_country) AND risk.id = $risk GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
+      logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM (SELECT date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country)) as t) AND risk.id = $risk GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
       return sequelize.query(logic, { bind: { risk: options.risk }});
     }
   } else {
-    logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM count_by_country) GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
+    logic = "SELECT TO_CHAR(count_by_country.date, 'YYYY-MM-DD') as date, count_by_country.country as country_id, risk.description as risk_description, risk.id as risk, risk.title as risk_title, ROUND(count_by_country.score) as score, count, country.name as name, country.slug as slug FROM count_by_country JOIN country on (count_by_country.country = upper(country.id)) JOIN risk on (count_by_country.risk=risk.risk_id)  WHERE date=(select max(date) FROM (SELECT date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country)) as t) GROUP BY country_id, risk.id, risk_title, name, slug, risk_description, count_by_country.score, date, count;";
     return sequelize.query(logic);
   } 
 };
 
 exports.getRiskCount = function(){
-  var logic = "SELECT id, title, description, date, count FROM risk LEFT JOIN (SELECT * FROM count_by_risk WHERE date=(select max(date) FROM count_by_risk)) AS foo ON risk_id=risk GROUP BY id, title, date, count, description;";
+  var logic = "SELECT id, title, description, TO_CHAR(date, 'YYYY-MM-DD') as date, count FROM risk LEFT JOIN (SELECT * FROM count_by_risk WHERE date=(select max(date) FROM (SELECT date FROM count_by_risk WHERE date!=(select max(date) FROM count_by_risk)) as t)) AS foo ON risk_id=risk GROUP BY id, title, date, count, description;";
   return sequelize.query(logic);
 };
 
@@ -104,7 +104,7 @@ exports.getCountByCountry = function(options){
 };
 
 exports.getAsnCount = function(country) {
-  var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE date=(select max(date) FROM count) AND country = $country GROUP BY asn, risk;";
+  var logic = "SELECT asn, risk, max(date) as date, sum(count) as count FROM count WHERE date=(select max(date) FROM (SELECT date FROM count WHERE date!=(select max(date) FROM count)) as t) AND country = $country GROUP BY asn, risk;";
 	return sequelize.query(logic, { bind: { country: country }});
 };
 
@@ -132,5 +132,10 @@ exports.getTotalCount = function(options) {
 
 exports.getAsnTotal = function() {
   var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN country ON country_asn.country=country.id GROUP BY name, slug, country ORDER BY name ASC;";
+  return sequelize.query(logic);
+};
+
+exports.getDates = function() {
+  var logic = "SELECT TO_CHAR(date,'YYYY-MM-DD') as date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country) GROUP BY date ORDER BY date DESC;";
   return sequelize.query(logic);
 };

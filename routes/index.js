@@ -3,15 +3,18 @@ var logic = require('../logic');
 
 // home page
 exports.home = function(req, res) {
-  var map = {
-    embed_width: '100%',
-    embed_height: '550px',
-    current_year: '2016-08-15',
-    filter_risk: 'opendns',
-    embed_title: 'opendns' + ' / ' + '2016-08-15',
-    panel_tools: true
-  };
-  res.render('home.html', {map: map, config: config});
+  logic.getDates().then(function(results){
+    var date = results[0][0].date;
+    var map = {
+      embed_width: '100%',
+      embed_height: '550px',
+      current_year: date,
+      filter_risk: 'opendns',
+      embed_title: 'opendns'+' / '+ date,
+      panel_tools: true
+    };
+    res.render('home.html', {map: map, config: config});  
+  });
 };
 
 // places
@@ -23,10 +26,12 @@ exports.place = function(req, res) {
   		if (places[result.name]){
   			places[result.name][result.risk] = result.score;
   			places[result.name]['slug'] = result.slug;
+        places[result.name]['date'] = result.date;
   		}else{
   			places[result.name] = {};
   			places[result.name][result.risk] = result.score;
   			places[result.name]['slug'] = result.slug;
+        places[result.name]['date'] = result.date;
   		}
   	});
   	var result = [];
@@ -112,9 +117,9 @@ exports.placeID = function(req, res) {
         var map = {
 					embed_width: '100%',
 					embed_height: '360px',
-					current_year: '2016-08-15',
+					current_year: result[0].date,
 					filter_risk: 'opendns',
-					embed_title: 'opendsn' + ' / ' + '2016-08-15',
+					embed_title: 'opendsn' + ' / ' + result[0].date,
 					panel_tools: true,
 					panel_share: false,
 					map_place: result[0].country_id.toLowerCase()
@@ -228,7 +233,13 @@ exports.about = function(req, res) {
 
 // map
 exports.map = function(req, res) {
-  res.render('map.embed.html', {config: config});
+  logic.getDates().then(function(results){
+    var dates = [];
+    results[0].forEach(function(date){
+      dates.push(date.date);
+    });
+    res.render('map.embed.html', { config: config, dates: JSON.stringify(dates)});  
+  });
 };
 
 // asn

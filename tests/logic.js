@@ -8,6 +8,7 @@ describe('Get Scores', function(){
   it('Works without parameters', function(done){
     logic.getScores().then(function(results){
       assert(true, results[0].length > 0);
+      assert.equal(results[0][0].date, '2016-07-01');
       done();
     });
   });
