@@ -19,122 +19,129 @@ exports.home = function(req, res) {
 
 // places
 exports.place = function(req, res) {
-
-  logic.getScores().then(function(results){
-  	var places = {};
-  	results[0].forEach(function(result){
-  		if (places[result.name]){
-  			places[result.name][result.risk] = result.score;
-  			places[result.name]['slug'] = result.slug;
-        places[result.name]['date'] = result.date;
-  		}else{
-  			places[result.name] = {};
-  			places[result.name][result.risk] = result.score;
-  			places[result.name]['slug'] = result.slug;
-        places[result.name]['date'] = result.date;
-  		}
-  	});
-  	var result = [];
-    for (var place in places){
-      if (Object.keys(places[place]).length > 3) {
-        var obj = Object.assign({name: place}, places[place]);
-        result.push(obj);
+  logic.getDates().then(function(dates){
+    return dates[0][0];
+  }).then(function (second_week){
+    logic.getScores({date: second_week.date}).then(function(results){
+      var places = {};
+      results[0].forEach(function(result){
+        if (places[result.name]){
+          places[result.name][result.risk] = result.score;
+          places[result.name]['slug'] = result.slug;
+          places[result.name]['date'] = result.date;
+        }else{
+          places[result.name] = {};
+          places[result.name][result.risk] = result.score;
+          places[result.name]['slug'] = result.slug;
+          places[result.name]['date'] = result.date;
+        }
+      });
+      var result = [];
+      for (var place in places){
+        if (Object.keys(places[place]).length > 3) {
+          var obj = Object.assign({name: place}, places[place]);
+          result.push(obj);
+        }
       }
-    }
-    return result;
-  }).then(function (result) {
-  	logic.getRisks().then(function (risks) {
-  		risks = risks[0];
-      var parameters = {
-        options: result,
-        riskOpt: risks,
-        config: config
-      };
-  		res.render('places.html', parameters);
-  	});
-  });
+      return result;
+    }).then(function (result) {
+      logic.getRisks().then(function (risks) {
+        risks = risks[0];
+        var parameters = {
+          options: result,
+          riskOpt: risks,
+          config: config
+        };
+        res.render('places.html', parameters);
+      });
+    });
+  })
 };
 
 exports.placeID = function(req, res) {
-  
-  logic.getScores({country: req.params.id}).then(function(results){
-    if(!results[0].length){
-      res.render('404.html');
-      return;
-    }
-    return results[0];
-  }).then(function(result) {
-  	var id = result[0].country_id;
-  	logic.getAsnCount(id).then(function(results) {
-  		var asns = {};
-  		var risks = {};
-			results[0].forEach(function(result){
-				if (asns[result.asn]){
-					asns[result.asn][result.risk] = result.count;
-				}else {
-					asns[result.asn] = {};
-					asns[result.asn][result.risk] = result.count;
-				}
-				if (risks[result.risk]){
-					risks[result.risk].push({name: result.asn, count: result.count});
-				}else{
-					risks[result.risk] = [];
-					risks[result.risk].push({name: result.asn, count: result.count});
-				}
-			});
-			var asnList = [];
-			for (var asn in asns){
-			  var obj = Object.assign({asn: asn}, asns[asn]);
-			  asnList.push(obj);
-			}
-			
-			var result = {asnList: asnList, riskList: risks};
-			return result;
-  	}).then(function(asns){
-  		logic.getRisks().then(function (risks) {
-				risks = risks[0];
-				// adds risk in Table if there is no data For given country
-				var isRisk = false;
-				var riskMap = {};
-        var treeList = [];
-        risks.forEach(function(risk){
-					riskMap[risk.risk_id] = risk.id;
-					result.forEach(function(res){
-						if(risk.id === res.risk){
-							isRisk = true;
-						}
-					});
-					if (!isRisk){
-						result.push({risk_title: risk.title, risk: risk.id});
-					}
-					isRisk = false;
-				});
-        //console.log(asns.riskList )
-        for (var risk in asns.riskList){
-          var obj = Object.assign({name: riskMap[risk]}, {children: asns.riskList[risk]});
-          treeList.push(obj);
+  logic.getDates().then(function(dates){
+    return dates[0][0];
+  }).then(function (second_week){
+    logic.getScores({date: second_week.date, country: req.params.id}).then(function(results){
+      if(!results[0].length){
+        res.render('404.html');
+        return;
+      }
+      return results[0];
+    }).then(function(result) {
+      var id = result[0].country_id;
+      var date = result[0].date;
+      logic.getAsnCount(id, date).then(function(results) {
+        var asns = {};
+        var risks = {};
+        results[0].forEach(function(result){
+          if (asns[result.asn]){
+            asns[result.asn][result.risk] = result.count;
+          }else {
+            asns[result.asn] = {};
+            asns[result.asn][result.risk] = result.count;
+          }
+          if (risks[result.risk]){
+            risks[result.risk].push({name: result.asn, count: result.count});
+          }else{
+            risks[result.risk] = [];
+            risks[result.risk].push({name: result.asn, count: result.count});
+          }
+        });
+        var asnList = [];
+        for (var asn in asns){
+          var obj = Object.assign({asn: asn}, asns[asn]);
+          asnList.push(obj);
         }
-        var map = {
-					embed_width: '100%',
-					embed_height: '360px',
-					current_year: result[0].date,
-					filter_risk: 'opendns',
-					embed_title: 'opendsn' + ' / ' + result[0].date,
-					panel_tools: true,
-					panel_share: false,
-					map_place: result[0].country_id.toLowerCase()
-				};
-        var parameters = {
-          options: result,
-          asns: asns.asnList.slice(0, 5000),
-          treeAsn: JSON.stringify(treeList),
-          riskOpt: risks, map: map,
-          config: config
-        };
-        res.render('place.html', parameters);
-			});
-  	});
- 	});
+        
+        var result = {asnList: asnList, riskList: risks};
+        return result;
+      }).then(function(asns){
+        logic.getRisks().then(function (risks) {
+          risks = risks[0];
+          // adds risk in Table if there is no data For given country
+          var isRisk = false;
+          var riskMap = {};
+          var treeList = [];
+          risks.forEach(function(risk){
+            riskMap[risk.risk_id] = risk.id;
+            result.forEach(function(res){
+              if(risk.id === res.risk){
+                isRisk = true;
+              }
+            });
+            if (!isRisk){
+              result.push({risk_title: risk.title, risk: risk.id});
+            }
+            isRisk = false;
+          });
+          //console.log(asns.riskList )
+          for (var risk in asns.riskList){
+            var obj = Object.assign({name: riskMap[risk]}, {children: asns.riskList[risk]});
+            treeList.push(obj);
+          }
+          var map = {
+            embed_width: '100%',
+            embed_height: '360px',
+            current_year: result[0].date,
+            filter_risk: 'opendns',
+            embed_title: 'opendsn' + ' / ' + result[0].date,
+            panel_tools: true,
+            panel_share: false,
+            map_place: result[0].country_id.toLowerCase()
+          };
+          var parameters = {
+            options: result,
+            asns: asns.asnList.slice(0, 5000),
+            treeAsn: JSON.stringify(treeList),
+            riskOpt: risks, map: map,
+            config: config
+          };
+          res.render('place.html', parameters);
+        });
+      });
+    });
+  });
 };
 
 exports.placeASN = function(req, res) {
@@ -174,49 +181,58 @@ exports.placeASN = function(req, res) {
 
 // risks
 exports.risk = function(req, res) {
-	
-  logic.getRiskCount().then(function(results){
-  	var result = results[0];
-    var parameters = {options: result, config: config};
-  	res.render('risks.html', parameters);
+	logic.getDates().then(function(dates){
+    return dates[0][0];
+  }).then(function (second_week){
+    logic.getRiskCount({date: second_week.date}).then(function(results){
+      var result = results[0];
+      var parameters = {options: result, config: config};
+      res.render('risks.html', parameters);
+    });
   });
 };
 
 exports.riskID = function(req, res) {
-  
-  logic.getScores({risk: req.params.id}).then(function(results){
-  	var result = results[0];
-  	var map = {
-		  embed_width: '100%',
-		  embed_height: '360px',
-		  current_year: result[0].date,
-		  filter_risk: req.params.id,
-		  embed_title: req.params.id + ' / ' + result[0].date,
-		  panel_tools: false,
-		  panel_share: false,
-		};
-    var parameters = {options: result,  map: map, config: config};
-  	res.render('risk.html', parameters);
+  logic.getDates().then(function(dates){
+    return dates[0][0];
+  }).then(function (second_week){
+    logic.getScores({date: second_week.date, risk: req.params.id}).then(function(results){
+      var result = results[0];
+      var map = {
+        embed_width: '100%',
+        embed_height: '360px',
+        current_year: result[0].date,
+        filter_risk: req.params.id,
+        embed_title: req.params.id + ' / ' + result[0].date,
+        panel_tools: false,
+        panel_share: false,
+      };
+      var parameters = {options: result,  map: map, config: config};
+      res.render('risk.html', parameters);
+    });
   });
 };
 
 // place-id/risk-id
 exports.placeRisk = function(req, res) {
-
-  logic.getScores({risk: req.params.risk, country: req.params.country}).then(function(results){
-
-  	var result = results[0][0];
-  	var map = {
-		  embed_width: '100%',
-		  embed_height: '360px',
-		  current_year: result.date,
-		  filter_risk: req.params.risk,
-		  embed_title: req.params.risk + ' / ' + result.date,
-		  map_place: result.country_id.toLowerCase(),
-		  panel_tools: false,
-		  panel_share: false,
-		};
-		res.render('place_risk.html', {options: result, map: map, config: config});
+  logic.getDates().then(function(dates){
+    return dates[0][0];
+  }).then(function (second_week){
+    logic.getScores({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
+  
+      var result = results[0][0];
+      var map = {
+        embed_width: '100%',
+        embed_height: '360px',
+        current_year: result.date,
+        filter_risk: req.params.risk,
+        embed_title: req.params.risk + ' / ' + result.date,
+        map_place: result.country_id.toLowerCase(),
+        panel_tools: false,
+        panel_share: false,
+      };
+      res.render('place_risk.html', {options: result, map: map, config: config});
+    });
   });
 };
 

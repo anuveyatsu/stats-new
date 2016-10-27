@@ -5,32 +5,35 @@ var request = require('supertest');
 var app = require('../app.js').app;
 
 describe('Get Scores', function(){
-  it('Works without parameters', function(done){
-    logic.getScores().then(function(results){
+  it('Works without country and risk parameters', function(done){
+    logic.getScores({date: '2016-07-01'}).then(function(results){
       assert(true, results[0].length > 0);
-      assert.equal(results[0][0].date, '2016-07-01');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
       done();
     });
   });
   it('Works with country parameter', function(done){
-    logic.getScores({country:'united-kingdom'}).then(function(results){
+    logic.getScores({date: '2016-07-01', country:'united-kingdom'}).then(function(results){
       assert(true, results[0].length > 0);
       assert.equal(results[0][0].country_id, 'GB');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
       done();
     });
   });
   it('Works with risk parameter', function(done){
-    logic.getScores({risk:'openntp'}).then(function(results){
+    logic.getScores({date: '2016-07-01', risk:'openntp'}).then(function(results){
       assert(true, results[0].length > 0);
       assert.equal(results[0][0].risk, 'openntp');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
       done();
     });
   });
   it('Works with country and risk parameters together', function(done){
-    logic.getScores({country:'united-kingdom', risk: 'openntp'}).then(function(results){
+    logic.getScores({date: '2016-07-01', country:'united-kingdom', risk: 'openntp'}).then(function(results){
       assert(true, results[0].length > 0);
       assert.equal(results[0][0].country_id, 'GB');
       assert.equal(results[0][0].risk, 'openntp');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
       done();
     });
   });
@@ -56,7 +59,7 @@ describe('Get Scores', function(){
 
 describe('Database Functions', function(){
   it('Works with ASN count', function(done) {
-    logic.getAsnCount('GB').then(function(results){
+    logic.getAsnCount('GB', '2016-07-01').then(function(results){
       assert.equal(results[0].length, 40);
       done();
     });
