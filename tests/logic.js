@@ -173,13 +173,15 @@ describe('API', function(){
   });
   it('count API (period)', function(done){
     request(app)
-      .get('/api/v1/count?limit=18000&start=2016-06-01&end=2016-08-01')
+      .get('/api/v1/count?limit=27000&start=2016-06-01&end=2016-08-15')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
       	var rand = res.body[Math.floor(Math.random() * res.body.length)];
-        assert.equal(res.body.length, 18000);
-        assert(true, new Date(rand.date) < new Date('2016-08-01') && new Date(rand.date) > new Date('2016-06-01'));
+        assert.equal(res.body.length, 27000);
+        assert(true, new Date(rand.date) <= new Date('2016-08-01') && new Date(rand.date) >= new Date('2016-06-01'));
+        assert.deepEqual(new Date(res.body[0].date), new Date('2016-08-15'));
+        assert.deepEqual(new Date(res.body[26999].date), new Date('2016-06-01'));
         done();
       });  	
   });
