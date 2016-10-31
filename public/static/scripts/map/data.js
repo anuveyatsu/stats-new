@@ -13,7 +13,7 @@ define(['jquery', 'pubsub'], function($, pubsub) {
             //summary: 'SITEURL/api/summary.json'.replace('SITEURL', siteUrl),
             places: 'SITEURL/api/v1/country'.replace('SITEURL', siteUrl),
             risks: 'SITEURL/api/v1/risk'.replace('SITEURL', siteUrl),
-            entries: 'SITEURL/api/v1/count_by_country'.replace('SITEURL', siteUrl),
+            entries: 'SITEURL/api/v1/count_by_country?limit=none'.replace('SITEURL', siteUrl),
             geo: 'SITEURL/data/geo.json'.replace('SITEURL', siteUrl)
         };
 

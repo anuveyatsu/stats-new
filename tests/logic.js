@@ -102,8 +102,15 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 0);
-        done();
       });
+    request(app)
+      .get('/api/v1/count_by_country?limit=none')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.length, 4500);
+        done();
+      });  
   });
   it('Places API', function(done){
     request(app)

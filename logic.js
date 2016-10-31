@@ -86,14 +86,20 @@ exports.getCountByCountry = function(options){
   var risk = '';
   var date = '';
   var limit = "2000";
+  var logic;
 	if (options){
     if (options.country) country = options.country.toUpperCase();
     if (options.risk) risk = options.risk ;
     if (options.date) date = options.date ;
     if (options.limit) limit = options.limit;
   }
-  var logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR country = $country) AND ($risk = '' OR risk.id = $risk) AND ($time = '' OR date::text = $time) ORDER BY date DESC, risk ASC limit $limit;";
-  return sequelize.query(logic, { bind: { country: country, risk: risk, time: date, limit: limit}});
+  if (limit.toLowerCase() === 'none'){
+    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR country = $country) AND ($risk = '' OR risk.id = $risk) AND ($time = '' OR date::text = $time) ORDER BY date DESC, risk ASC;";
+    return sequelize.query(logic, { bind: { country: country, risk: risk, time: date, limit: limit}});
+  }else {
+    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR country = $country) AND ($risk = '' OR risk.id = $risk) AND ($time = '' OR date::text = $time) ORDER BY date DESC, risk ASC limit $limit;";
+    return sequelize.query(logic, { bind: { country: country, risk: risk, time: date, limit: limit}});
+  }
 };
 
 exports.getAsnCount = function(country, date) {
