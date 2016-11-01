@@ -31,6 +31,13 @@ describe('Routes', function(){
       .end(function(err, res) {
         checkContent(res, 'united-kingdom');
         checkContent(res, 'Countries');
+      });
+    request(app)
+      .get('/country/United-Kingdom')
+      .expect(200)
+      .end(function(err, res) {
+        checkContent(res, 'united-kingdom');
+        checkContent(res, 'Countries');
         done();
       });
   });

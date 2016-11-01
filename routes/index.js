@@ -62,7 +62,7 @@ exports.placeID = function(req, res) {
   logic.getDates().then(function(dates){
     return dates[0][0];
   }).then(function (second_week){
-    logic.getScores({date: second_week.date, country: req.params.id}).then(function(results){
+    logic.getScores({date: second_week.date, country: req.params.id.toLowerCase()}).then(function(results){
       if(!results[0].length){
         res.render('404.html');
         return;
