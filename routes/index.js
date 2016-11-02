@@ -312,8 +312,36 @@ exports.apiAsn = function(req, res) {
 };
 
 exports.apiCount = function(req, res) {
-	logic.getTotalCount(req.query).then(function(results){
-  	res.json(results[0]);
+  var queryOptions = {
+    country: req.query.country || "", asn: req.query.asn || "",
+    start: req.query.start || "", end: req.query.end || "",
+    limit:checkLimit(req.query.limit) || "20", page: req.query.page || 1
+  };
+  queryOptions.country = queryOptions.country.toLowerCase();
+  req.query.page = queryOptions.page;
+  logic.getRowCount(queryOptions).then(function(results) {
+    return results[0][0].count;
+  }).then(function (rows){
+    queryOptions.offset = queryOptions.limit*(queryOptions.page-1);
+    var totalPages = Math.ceil(rows / queryOptions.limit);
+    var pages = checkCurrentPage(parseInt(queryOptions.page), totalPages, req.route.path, req.query);
+    logic.getTotalCount(queryOptions).then(function(results){ 
+      res.json({
+        status: "ok",
+        number_of_data_results: rows,
+        page: req.baseUrl+pages.curPage,
+        total_pages: totalPages,
+        next_page: req.baseUrl+pages.nextPage,
+        status_code: 200,
+        version: "1.2",
+        cached: false,
+        see_also: [],
+        time: new Date().toISOString(),
+        results: results[0]
+      });
+    }).catch(function(err) {
+      res.json({error: err.message});
+    });
   });
 };
 
@@ -322,12 +350,27 @@ exports.geo = function(req, res) {
   res.json(geoJson);
 };
 
-function getMatchedEntry(data, matchWith, matchTo){
-  var result = {};
-  data.forEach(function(entry){
-    if(entry[matchWith] === matchTo ){
-      result = entry;
-    }
-  });
-  return result;
+function checkLimit(limit){
+    if (parseInt(limit) > 500){
+      return 500; 
+    } 
+    return limit;
+}
+
+function checkCurrentPage(current, max, url, args){
+  if (current < max){
+    return {curPage: makeURL(url, args), nextPage: makeURL(url, args).replace("page="+current, "page="+(current+1))};
+  } else if (current === max) {
+    return {curPage: makeURL(url, args), nextPage: null};
+  } else {
+    return {curPage: null, nextPage: null};
+  }
+}
+
+function makeURL(path, args) {
+  path = path+'?';
+  for (var arg in args){
+    path += (arg + "=" + args[arg]+"&");
+  }
+  return path;
 }

@@ -108,25 +108,13 @@ exports.getAsnCount = function(country, date) {
 };
 
 exports.getTotalCount = function(options) {
-	
-	var placeLogic = "";
-	var asnLogic = "";
-	var date = "";
-	var startDate = "";
-	var endDate = "";
-  var limit = " 2000";
-  
-	if (options){
-    if (options.country) placeLogic =options.country.toLowerCase();
-    if (options.asn) asnLogic = options.asn;
-    if (options.date) date = options.date;
-    if (options.start) startDate = options.start;
-    if (options.end) endDate = options.end;
-    if (options.limit) limit = options.limit;
-  }
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC, country ASC) AS foo LIMIT $limit OFFSET $offset;";
+	return sequelize.query(logic, { bind: options});
+};
 
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) AND ($start = '' OR date::text >= $start) AND ($end = '' OR date::text <= $end) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC) AS foo limit $limit;";
-	return sequelize.query(logic, { bind: { country: placeLogic, asn: asnLogic, date: date, start: startDate, end: endDate, limit: limit}});
+exports.getRowCount= function(options) {
+  var logic = "SELECT COUNT(*) FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
+  return sequelize.query(logic, { bind: options});
 };
 
 exports.getAsnTotal = function() {
