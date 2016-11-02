@@ -48,47 +48,109 @@ In addition to the above CSV format, we also provide a JSON download.
   <h2>API v1</h2>
     <p>The Cybergreen RESTful API allows for queries against our databases</p>
     <p>The base URL is <code>/api/v1/</code>. Append the desired path and your parameters to get the required URL, using the format:</p>
-    <code>/api/v1/[path]?[parameter-a]&[parameter-b]&[parameter-n]</code>
+    <code>/api/v1/[path]?parameter_a=a&parameter_b=b]&[parameter_n=n]</code>
     <p>Where an example parameter might be <code>risk=openntp</code></p>
+
+    <p>API Includes a pagination feature, where an API user can iterate through successive "pages"
+    of results to get the full dataset. See the API specifications:</p>
+{% markdown %}
+    {
+      "status":"ok", 
+      "number_of_data_results":"1000", 
+      "page":"/api/v1/count?page=1&",
+      "total_pages":9496248,
+      "next_page":"/api/v1/count?limit=1&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T16:25:22.481Z",
+      "results":[{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"}]
+    }
+
+- status: Status indicator.
+- number_of_data_results: Number of total results
+- page: Link to current page, returns none if exceeds total number of pages
+- total_pages: Total number of ages. Calculated by ceiling total number of results devided by limit <code>Math.ceil(total/limit)</code>
+- next_page: Link to next page, returns none if current page is last
+- status_code: Status code
+- version: Current version
+- cached: Cached or not
+- time: Exact time result was generated
+- results: List of records are available
+{% endmarkdown %}    
     <h3>Limits</h3>
-    <p>The limit by default is 2000. This can be cahnged by setting <code>limit=n</code> inside query string</p>
+    <p>
+      The limit by default is 20 per page. This can be cahnged by setting <code>limit=n</code>
+      inside query string. Maximum value for limit may be 500. Indicating value for limit more than
+      maximum valu, E.g: <code>Limit=1000</code> will result same as <code>Limit=500</code> 
+    </p>
     <p>
       Examples:
       <br>
+      Query string - <code>/api/v1/count</code>
+      <br>
+      Result:
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"9496248",
+      "page":"/api/v1/count?page=1&",
+      "total_pages":474813,
+      "next_page":"/api/v1/count?page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T16:27:53.738Z",
+      "results":[
+        {"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"},
+        {"country":"AD","risk":1,"asn":"39020","date":"2016-08-15","period_type":"monthly","count":"68"},
+        {"country":"AD","risk":1,"asn":"60485","date":"2016-08-15","period_type":"monthly","count":"250"},
+        {"country":"AD","risk":2,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"},
+        {"country":"AD","risk":4,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"},
+        {"country":"AD","risk":5,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"371"},
+        {"country":"AE","risk":1,"asn":"260","date":"2016-08-15","period_type":"monthly","count":"7"},
+        {"country":"AE","risk":1,"asn":"5384","date":"2016-08-15","period_type":"monthly","count":"5396"},
+        {"country":"AE","risk":1,"asn":"8966","date":"2016-08-15","period_type":"monthly","count":"39"},
+        {"country":"AE","risk":1,"asn":"9009","date":"2016-08-15","period_type":"monthly","count":"38"},
+        {"country":"AE","risk":1,"asn":"12653","date":"2016-08-15","period_type":"monthly","count":"2"},
+        {"country":"AE","risk":1,"asn":"13126","date":"2016-08-15","period_type":"monthly","count":"9"},
+        {"country":"AE","risk":1,"asn":"15802","date":"2016-08-15","period_type":"monthly","count":"1879"},
+        {"country":"AE","risk":1,"asn":"17803","date":"2016-08-15","period_type":"monthly","count":"16"},
+        {"country":"AE","risk":1,"asn":"18101","date":"2016-08-15","period_type":"monthly","count":"4"},
+        {"country":"AE","risk":1,"asn":"20940","date":"2016-08-15","period_type":"monthly","count":"8"},
+        {"country":"AE","risk":1,"asn":"23033","date":"2016-08-15","period_type":"monthly","count":"5"},
+        {"country":"AE","risk":1,"asn":"24753","date":"2016-08-15","period_type":"monthly","count":"1"},
+        {"country":"AE","risk":1,"asn":"29077","date":"2016-08-15","period_type":"monthly","count":"3"},
+        {"country":"AE","risk":1,"asn":"30981","date":"2016-08-15","period_type":"monthly","count":"35"}
+      ]
+    }
+{% endmarkdown %}
+      <br>
       Query string - <code>/api/v1/count?limit=1</code>
       <br>
-      Result - <code>[{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"}]</code>
-      <br>
-      Query string - <code>/api/v1/count?country=gb&limit=1</code>
-      <br>
-      Result - <code>[{"country":"GB","risk":1,"asn":"33","date":"2016-08-15","period_type":"monthly","count":"2"},{"country":"GB","risk":1,"asn":"174","date":"2016-08-15","period_type":"monthly","count":"288"}]</code>
+      Result:
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"9496248",
+      "page":"/api/v1/count?limit=1&page=1&",
+      "total_pages":9496248,
+      "next_page":"/api/v1/count?limit=1&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T16:25:22.481Z",
+      "results":[{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"}]
+    }
+{% endmarkdown %}
     </p>
     <h3>Order</h3>
     <p>
       All results that contain <code>date</code> parameter, by default are order by date in descending order
-      (most date recent first). This can be cahnged by setting <code>order=asc</code> inside query sting.
-    </p>
-    <p>
-      Examples:
-      <br>
-      Query string - <code>/api/v1/count?limit=3</code>
-      <br>
-      Result -
-      <code>
-        [{"country":"AE","risk":2,"asn":"8966","date":"2013-12-30","period_type":"monthly","count":"93"},
-        {"country":"AE","risk":2,"asn":"15412","date":"2013-12-29","period_type":"monthly","count":"4"},
-        {"country":"AE","risk":2,"asn":"15802","date":"2013-12-28","period_type":"monthly","count":"231"}]
-      </code>
-      <br>
-      <br>
-      Query string - <code>/api/v1/count?order=asc&limit=3</code>
-      <br>
-      Result -
-      <code>
-        [{"country":"AE","risk":2,"asn":"8966","date":"2013-12-28","period_type":"monthly","count":"93"},
-        {"country":"AE","risk":2,"asn":"15412","date":"2013-12-29","period_type":"monthly","count":"4"},
-        {"country":"AE","risk":2,"asn":"15802","date":"2013-12-30","period_type":"monthly","count":"231"}]
-      </code>
+      (most recent date first) and sort by country id (where available) alphabetically.
     </p>
     <h3>Paths</h3>
     <p>These are the paths, with example datasets, to help you set your parameters:</p>
@@ -102,78 +164,122 @@ In addition to the above CSV format, we also provide a JSON download.
       Result - <code>[{"risk":"opendns","country":"gb","date":"2016-08-01","count":"278307","score":85,"rank":0}]</code>
       <br>
     </p>
-    <h4><b>/risk</b></h4>
-    <p>Available query parameters: <code>risk_id</code>, <code>id</code></p>
-    <p>
-      Example:
-      <br>
-      Query string - <code>/api/v1/risk?risk_id=1</code>
-      <br>
-      Result - <code>[{"risk_id":1,"id":"opendns","title":"Open DNS","total":3865270,"max":539540,"min":10,"mean":18062,"score":49,"rank":null,"place_count":214,"icon":null,"category":null,"description":"The Domain Name System (DNS) is pervasive..."}]</code>
-      <br>
-    </p>
-    <h4><b>/country</b></h4>
-    <p>
-      Available query parameters: <code>id</code>
-      where id is <b>ISO 3166-1 alpha-2 code</b>.
-    </p>
-    <p>
-      Examples:
-      <br>
-      Query string - <code>/api/v1/country?id=gb</code>
-      <br>
-      Result - <code>[{"id":"gb","name":"United Kingdom","slug":"united-kingdom","region":"Europe","continent":"Europe","score":24.35,"rank":207}]</code>
-      <br>
-    </p>
-    <h4><b>/count</b></h4>
+    <br>
+    <h3><b>/count</b></h3>
     <p>
       Available query parameters:
       <br>
-      <code>country</code> - <b>ISO 3166-1 alpha-2 code</b>
+      <code>limit</code> - <b>Integer</b>
       <br>
-      <code>asn</code> - Unic Autonomous System Number (ASN)
+      <code>page</code> - <b>Integer</b>
       <br>
-      <code>date</code> - Exact ISO 8601 formated date
+      <code>country</code> - <b>String</b> - ISO 3166-1 alpha-2 code (case insensitive) 
       <br>
-      <code>start</code> - Start date
+      <code>asn</code> - <b>Integer</b> - Unic Autonomous System Number (ASN)
       <br>
-      <code>end</code> - End date
+      <code>start</code> - <b>Exact ISO 8601 formated date</b> - Start date
+      <br>
+      <code>end</code> - <b>Exact ISO 8601 formated date</b> - End date
+      <br>
     </p>
     <p>
       Examples:
       <br>
-      Query string - <code>/api/v1/count?asn=6752&date=2016</code>
+      Query string - <code>/api/v1/count?limit=3&asn=6752</code>
       <br>
       Result -
-      <code>
-        [{"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"},
-        {"country":"AD","risk":5,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"371"},
-        {"country":"AD","risk":4,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"}]
-      </code>
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"338",
+      "page":"/api/v1/count?asn=6752&limit=3&page=1&",
+      "total_pages":113,
+      "next_page":"/api/v1/count?asn=6752&limit=3&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T15:35:43.421Z",
+      "results":[
+        {"country":"AD","risk":1,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"67"},
+        {"country":"AD","risk":2,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"},
+        {"country":"AD","risk":4,"asn":"6752","date":"2016-08-15","period_type":"monthly","count":"61"}
+      ]
+    }
+{% endmarkdown %}
       <br>
       <br>
-      Query string - <code>/api/v1/count?asn=6752&start=2016-05-31&end=2016-07-01&limit=3</code>
+      Query string - <code>/api/v1/count?limit=3&country=ge</code>
       <br>
       Result -
-      <code>
-        [{"country":"AD","risk":5,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"434"},
-        {"country":"AD","risk":4,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"71"},
-        {"country":"AD","risk":1,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"70"}]
-      </code>
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"13949",
+      "page":"/api/v1/count?country=ge&limit=3&page=1&",
+      "total_pages":4650,
+      "next_page":"/api/v1/count?country=ge&limit=3&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T16:08:04.599Z",
+      "results":[
+        {"country":"GE","risk":1,"asn":"2116","date":"2016-08-15","period_type":"monthly","count":"19"},
+        {"country":"GE","risk":1,"asn":"8513","date":"2016-08-15","period_type":"monthly","count":"2"},
+        {"country":"GE","risk":1,"asn":"9144","date":"2016-08-15","period_type":"monthly","count":"2"}
+      ]
+    }
+{% endmarkdown %}
+      <br>
+      <br>
+      Query string - <code>/api/v1/count?start=2016-06-27&end=2016-07-01&limit=3</code>
+      <br>
+      Result -
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"108881",
+      "page":"/api/v1/count?start=2016-06-27&end=2016-07-01&limit=3&page=1&",
+      "total_pages":36294,
+      "next_page":"/api/v1/count?start=2016-06-27&end=2016-07-01&limit=3&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T15:51:33.841Z",
+      "results":[
+        {"country":"AD","risk":1,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"70"},
+        {"country":"AD","risk":2,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"61"},
+        {"country":"AD","risk":4,"asn":"6752","date":"2016-06-27","period_type":"monthly","count":"71"}
+      ]
+    }
+{% endmarkdown %}
+      <br>
+      <br>
+      Query string - <code>/api/v1/count?start=2016-06-27&end=2016-07-01&limit=3&page=36294</code> (last page)
+      <br>
+      Result -
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"108881",
+      "page":"/api/v1/count?start=2016-06-27&end=2016-07-01&limit=3&page=36294&",
+      "total_pages":36294,
+      "next_page":"null",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-02T15:58:38.475Z",
+      "results":[
+        {"country":"ZW","risk":5,"asn":"30844","date":"2016-06-27","period_type":"monthly","count":"4"},
+        {"country":"ZW","risk":4,"asn":"39356","date":"2016-06-27","period_type":"monthly","count":"2"}
+      ]
+    }
+{% endmarkdown %}
       <br>
     </p>
-    <h4><b>/asn</b></h4>
-    <p>
-      Available query parameters: <code>country</code>, <code>asn</code>
-    </p>
-    <p>
-      Example:
-      <br>
-      Query string - <code>/api/v1/asn?asn=41152</code>
-      <br>
-      Result - <code>[{"country":"ae","asn":"41152","time":"2016-08-17T00:00:00.000Z"}]</code>
-      <br>
-    </p>    
 </section>
 
 {% endblock content %}
