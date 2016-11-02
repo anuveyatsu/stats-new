@@ -112,7 +112,7 @@ describe('API', function(){
         done();
       });  
   });
-  it('Places API', function(done){
+  it('Countries API', function(done){
     request(app)
       .get('/api/v1/country')
       .expect(200)
@@ -169,29 +169,101 @@ describe('API', function(){
       });  	
   });
   it('count API', function(done){
+    // checks defaults
     request(app)
       .get('/api/v1/count')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 2000);
-        done();
-      });  	
-  });
-  it('count API (period)', function(done){
+        assert.equal(res.body.results.length, 20);
+        // cheks sorting country ASC
+        assert.equal(res.body.results[0].country, "AD");
+        // cheks sortin date DESC
+        assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+        assert.equal(res.body.status, 'ok');
+        assert.equal(res.body.number_of_data_results, 45000);
+        assert.equal(res.body.page, "/api/v1/count?page=1&");
+        assert.equal(res.body.next_page, "/api/v1/count?page=2&");
+        assert.equal(res.body.total_pages, 2250);
+        assert.equal(res.body.status_code, 200);
+        assert.equal(res.body.total_pages, 2250);
+      });
+    // ckecks dinamyc limit and pagination
     request(app)
-      .get('/api/v1/count?limit=27000&start=2016-06-01&end=2016-08-15')
+      .get('/api/v1/count?limit=30')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-      	var rand = res.body[Math.floor(Math.random() * res.body.length)];
-        assert.equal(res.body.length, 27000);
-        assert(true, new Date(rand.date) <= new Date('2016-08-01') && new Date(rand.date) >= new Date('2016-06-01'));
-        assert.deepEqual(new Date(res.body[0].date), new Date('2016-08-15'));
-        assert.deepEqual(new Date(res.body[26999].date), new Date('2016-06-01'));
+        assert.equal(res.body.results.length, 30);
+        assert.equal(res.body.total_pages, 1500);
+      });
+    // cheks maks limit and pagination
+    request(app)
+      .get('/api/v1/count?limit=3000')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.results.length, 500);
+        assert.equal(res.body.total_pages, 90);
+      });
+    // cheks error hendling
+    request(app)
+      .get('/api/v1/count?limit=invalidIntiger')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.error, 'invalid input syntax for integer: "invalidIntiger"');
+      });
+    // cheks country id
+    request(app)
+      .get('/api/v1/count?country=gb')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.results.length, 20);
+        assert.equal(res.body.results[0].country, "GB");
+      });
+    // cheks country id Caseinsensitive
+    request(app)
+      .get('/api/v1/count?country=Gb')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.results.length, 20);
+        assert.equal(res.body.results[0].country, "GB");
+      });
+    // checks ivalid country id
+    request(app)
+      .get('/api/v1/count?country=unknown')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.results.length, 0);
+      });
+    request(app)
+      .get('/api/v1/count?start=2016-06-01&end=2016-08-15')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+      });
+    request(app)
+      .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=1350')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
+      });
+    request(app)
+      .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=700')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
         done();
-      });  	
+      });
   });
+  
   it('Works with API queries', function(done){
     request(app)
       .get('/api/v1/count_by_country?risk=openntp&country=gb&date=2016-07-01')
