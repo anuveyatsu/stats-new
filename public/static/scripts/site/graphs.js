@@ -2,7 +2,6 @@ var data = graphData
 var risks = graphRisks
 
 risks.forEach(function(risk){
-	var template = "Count: {{parent."+String(risk.risk_id)+"}}";
 	var test = "datum['"+String(risk.risk_id)+"'] >= 0";
 	var spec = {
     "actions": false,
@@ -10,27 +9,15 @@ risks.forEach(function(risk){
       "width": 1080,
       "height": 100,
 			"signals": [
-				{
-					"name": "mouseDate",
-					"streams": [
-						{
-							"type": "mousemove",
-							"expr": "eventX()",
-							"scale": {"name": "x","invert": true}
-						}
-					]
-				},
-				{
-					"name": "mouseCount",
-					"streams": [
-						{
-							"type": "mousemove",
-							"expr": "eventY()",
-							"scale": {"name": "y","invert": true}
-						}
-					]
-				}
-			],
+        {
+          "name": "tooltip",
+          "init": {},
+          "streams": [
+            {"type": "symbol:mouseover", "expr": "datum"},
+            {"type": "symbol:mouseout", "expr": "{}"}
+          ]
+        }
+      ],
 			"data": [
 				{
 					"name": "risks",
@@ -38,16 +25,6 @@ risks.forEach(function(risk){
 					"format": {"parse": {"month":"date"}},
 					"transform": [
 						{"type": "filter", "test": test}
-					]
-				},
-				{
-					"name": "count",
-					"source": "risks",
-					"transform": [
-						{
-							"type": "filter",
-							"test": "year(datum.month) == year(mouseDate) && month(datum.month) == month(mouseDate) && date(datum.month) == date(mouseDate)"
-						}
 					]
 				}
 			],
@@ -78,8 +55,6 @@ risks.forEach(function(risk){
 					"from": {"data": "risks"},
 					"properties": {
 						"enter": {
-							"shape": {"value": "circle"},
-							"size": {"value": "80"},
 							"x": {"scale": "x", "field": "month"},
 							"y": {"scale": "y", "field": String(risk.risk_id)},
 							"strokeWidth": {"value": 2}
@@ -108,29 +83,69 @@ risks.forEach(function(risk){
 				},
 				{
 					"type": "group",
-					"from": {"data": "count"},
 					"properties": {
 						"update": {
-							"x": {"scale": "x", "signal": "mouseDate", "offset": 15},
-							"y": {"scale": "y", "signal": "mouseCount", "offset": -10},
-							"width": {"value": 120},
+							"x": {"scale": "x", "signal": "tooltip.month", "offset": 15},
+              "y": {"scale": "y", "signal": "tooltip."+String(risk.risk_id), "offset": -20},
+              "width": {"value": 120},
 							"height": {"value": 30},
 							"fill": {"value": "#edf1f7"},
-							"fillOpacity": {"value": 0.85},
+							"fillOpacity": [
+								{
+									"test": "!tooltip._id",
+                  "value": 0
+                },
+									{"value": 0.8}
+								],
 							"stroke": {"value": "#aaa"},
-							"strokeWidth": {"value": 0.5}
+							"strokeWidth": [
+								{
+									"test": "!tooltip._id",
+                  "value": 0
+                },
+								{"value": 1}
+							]
 						}
 					},
 					"marks": [
 						{
 							"type": "text",
 							"properties": {
+								"enter": {
+									"align": {"value": "left"},
+									"fill": {"value": "#333"}
+								},
 								"update": {
 									"x": {"value": 6},
-									"y": {"value": 19},
-									"text": {"template": template},
-									"fill": {"value": "black"},
-									"align": {"value": "left"}
+									"y": {"value": 13},
+									"text": {"template": "Date: {{tooltip.month | time: '%Y %b %d'}}"},
+									"fillOpacity": [
+										{
+											"test": "!tooltip._id",
+											"value": 0
+										},
+										{"value": 1}
+									]
+								}
+							}
+						},
+						{
+							"type": "text",
+							"properties": {
+								"enter": {
+									"align": {"value": "left"},
+									"fill": {"value": "#333"}
+								},
+								"update": {
+									"x": {"value": 6},
+									"y": {"value": 27},
+									"text": {"signal": "tooltip."+String(risk.risk_id)},
+									"fillOpacity": [
+										{ "test": "!tooltip._id",
+											"value": 0
+										},
+										{"value": 1}
+									]
 								}
 							}
 						}
