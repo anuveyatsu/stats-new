@@ -154,17 +154,6 @@ In addition to the above CSV format, we also provide a JSON download.
     </p>
     <h3>Paths</h3>
     <p>These are the paths, with example datasets, to help you set your parameters:</p>
-    <h4><b>/count_by_country</b></h4>
-    <p>Available query parameters: <code>risk</code>, <code>country</code>, <code>date</code></p>
-    <p>
-      Example:
-      <br>
-      Query string - <code>/api/v1/count_by_country?risk=opendns&country=gb&date=2016-08-01</code>
-      <br>
-      Result - <code>[{"risk":"opendns","country":"gb","date":"2016-08-01","count":"278307","score":85,"rank":0}]</code>
-      <br>
-    </p>
-    <br>
     <h3><b>/count</b></h3>
     <p>
       Available query parameters:
@@ -280,6 +269,51 @@ In addition to the above CSV format, we also provide a JSON download.
 {% endmarkdown %}
       <br>
     </p>
+    <h3><b>/count_by_country</b></h3>
+    <p>
+      Available query parameters:
+      <br>
+      <code>limit</code> - <b>Integer</b>
+      <br>
+      <code>page</code> - <b>Integer</b>
+      <br>
+      <code>risk</code> - <b>String</b> Name of risk without spaces
+      <br>
+      <code>country</code> - <b>String</b> - ISO 3166-1 alpha-2 code (case insensitive) 
+      <br>
+      <code>start</code> - <b>Exact ISO 8601 formated date</b> - Start date
+      <br>
+      <code>end</code> - <b>Exact ISO 8601 formated date</b> - End date
+      <br>
+    </p>
+    <p>
+      Example:
+      <br>
+      Query string - <code>/api/v1/count_by_country?risk=openntp&country=gb&limit=3</code>
+      <br>
+      Result:
+{% markdown %}
+    {
+      "status":"ok",
+      "number_of_data_results":"143",
+      "page":"/api/v1/count_by_country?risk=openntp&country=gb&limit=3&page=1&",
+      "total_pages":48,
+      "next_page":"/api/v1/count_by_country?risk=openntp&country=gb&limit=3&page=2&",
+      "status_code":200,
+      "version":"1.2",
+      "cached":false,
+      "see_also":[],
+      "time":"2016-11-03T10:06:28.206Z",
+      "results":[
+        {"risk":"openntp","country":"gb","date":"2016-09-19","count":"114842","score":85,"rank":0},
+        {"risk":"openntp","country":"gb","date":"2016-09-12","count":"116401","score":85,"rank":0},
+        {"risk":"openntp","country":"gb","date":"2016-09-05","count":"115195","score":85,"rank":0}
+      ]
+    }
+{% endmarkdown %}
+      <br>
+    </p>
+    <br>
 </section>
 
 {% endblock content %}
