@@ -82,24 +82,19 @@ exports.getAsnAPI = function(options){
 };
 
 exports.getCountByCountry = function(options){
-  var country = '';
-  var risk = '';
-  var date = '';
-  var limit = "2000";
-  var logic;
-	if (options){
-    if (options.country) country = options.country.toUpperCase();
-    if (options.risk) risk = options.risk ;
-    if (options.date) date = options.date ;
-    if (options.limit) limit = options.limit;
-  }
-  if (limit.toLowerCase() === 'none'){
-    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR country = $country) AND ($risk = '' OR risk.id = $risk) AND ($time = '' OR date::text = $time) ORDER BY date DESC, risk ASC;";
-    return sequelize.query(logic, { bind: { country: country, risk: risk, time: date, limit: limit}});
+  if (options.limit.toLowerCase() === 'none'){
+    // for map
+    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) ORDER BY date DESC, risk ASC;";
+    return sequelize.query(logic);
   }else {
-    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR country = $country) AND ($risk = '' OR risk.id = $risk) AND ($time = '' OR date::text = $time) ORDER BY date DESC, risk ASC limit $limit;";
-    return sequelize.query(logic, { bind: { country: country, risk: risk, time: date, limit: limit}});
+    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR risk.id  = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
+    return sequelize.query(logic, { bind: options});
   }
+};
+
+exports.getRowCountBYCountry = function(options) {  
+  var logic = "SELECT COUNT(*) FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR risk.id = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
+  return sequelize.query(logic, { bind: options});
 };
 
 exports.getAsnCount = function(country, date) {

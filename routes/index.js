@@ -267,12 +267,6 @@ exports.asn = function(req, res) {
 };
 
 // api
-exports.apiCountByCountry = function(req, res) {
-	logic.getCountByCountry(req.query).then(function(results){
-  	res.json(results[0]);
-  });
-};
-
 exports.apiRisk = function(req, res) {
 	if (Object.keys(req.params).length) { 
     logic.getRiskAPI(req.params).then(function(results){
@@ -311,6 +305,42 @@ exports.apiAsn = function(req, res) {
   }
 };
 
+
+exports.apiCountByCountry = function(req, res) {
+	var queryOptions = {
+    country: req.query.country || "", risk: req.query.risk || "",
+    start: req.query.start || "", end: req.query.end || "",
+    limit:checkLimit(req.query.limit) || "20", page: req.query.page || 1
+  };
+  req.query.page = queryOptions.page;
+  req.query.limit = checkLimit(queryOptions.limit);
+  queryOptions.country = queryOptions.country.toLowerCase();
+  logic.getRowCountBYCountry(queryOptions).then(function(results) {
+    return results[0][0].count;
+  }).then(function (rows) {
+    queryOptions.offset = queryOptions.limit*(queryOptions.page-1);
+    var totalPages = Math.ceil(rows / queryOptions.limit);
+    var pages = checkCurrentPage(parseInt(queryOptions.page), totalPages, req.route.path, req.query);
+    logic.getCountByCountry(queryOptions).then(function(results){
+      res.json({
+        status: "ok",
+        number_of_data_results: rows,
+        page: req.baseUrl+pages.curPage,
+        total_pages: totalPages,
+        next_page: req.baseUrl+pages.nextPage,
+        status_code: 200,
+        version: "1.2",
+        cached: false,
+        see_also: [],
+        time: new Date().toISOString(),
+        results: results[0]
+      });
+    }).catch(function(err) {
+      res.json({error: err.message});
+    });
+  });
+};
+
 exports.apiCount = function(req, res) {
   var queryOptions = {
     country: req.query.country || "", asn: req.query.asn || "",
@@ -319,6 +349,7 @@ exports.apiCount = function(req, res) {
   };
   queryOptions.country = queryOptions.country.toLowerCase();
   req.query.page = queryOptions.page;
+  req.query.limit = checkLimit(queryOptions.limit);
   logic.getRowCount(queryOptions).then(function(results) {
     return results[0][0].count;
   }).then(function (rows){
@@ -352,7 +383,7 @@ exports.geo = function(req, res) {
 
 function checkLimit(limit){
     if (parseInt(limit) > 500){
-      return 500; 
+      return '500'; 
     } 
     return limit;
 }

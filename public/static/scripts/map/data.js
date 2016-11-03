@@ -122,7 +122,7 @@ define(['jquery', 'pubsub'], function($, pubsub) {
     function getEntryData() {
         $.get(api.entries)
           .done(function(data) {
-            pubsub.publish(topics.init_entries, data);
+            pubsub.publish(topics.init_entries, data.results);
         });
     }
 
