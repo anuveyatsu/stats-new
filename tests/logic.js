@@ -73,42 +73,60 @@ describe('API', function(){
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 2000);
-        assert.equal(res.body[0].risk, 'opendns');
-        assert.equal(res.body[0].date, '2016-08-15');
+        assert.equal(res.body.results.length, 20);
+        assert.equal(res.body.results[0].country, "ad");
+        assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+        assert.equal(res.body.status, 'ok');
+        assert.equal(res.body.number_of_data_results, 4500);
+        assert.equal(res.body.page, "/api/v1/count_by_country?page=1&limit=20&");
+        assert.equal(res.body.next_page, "/api/v1/count_by_country?page=2&limit=20&");
+        assert.equal(res.body.total_pages, 225);
+        assert.equal(res.body.status_code, 200);
       });
     request(app)
       .get('/api/v1/count_by_country?country=gb&risk=openntp&limit=4')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 4);
-        assert.equal(res.body[0].country, 'gb');
-        assert.equal(res.body[0].risk, 'openntp');
-        assert.equal(res.body[0].date, '2016-08-15');
+        assert.equal(res.body.results.length, 4);
+        assert.equal(res.body.results[0].country, 'gb');
+        assert.equal(res.body.results[0].risk, 'openntp');
+        assert.equal(res.body.results[0].date, '2016-08-15');
       });
     request(app)
-      .get('/api/v1/count_by_country?date=2016-07-01&risk=openntp&limit=30')
+      .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 30);
-        assert.equal(res.body[0].risk, 'openntp');
-        assert.equal(res.body[0].date, '2016-07-01');
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+      });
+    request(app)
+      .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15&page=135')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
+      });
+    request(app)
+      .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15&page=70')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
       });
     request(app)
       .get('/api/v1/count_by_country?country=test OR 1=1')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 0);
+        assert.equal(res.body.results.length, 0);
       });
     request(app)
       .get('/api/v1/count_by_country?limit=none')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 4500);
+        assert.equal(res.body.results.length, 4500);
         done();
       });  
   });
@@ -182,11 +200,10 @@ describe('API', function(){
         assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
         assert.equal(res.body.status, 'ok');
         assert.equal(res.body.number_of_data_results, 45000);
-        assert.equal(res.body.page, "/api/v1/count?page=1&");
-        assert.equal(res.body.next_page, "/api/v1/count?page=2&");
+        assert.equal(res.body.page, "/api/v1/count?page=1&limit=20&");
+        assert.equal(res.body.next_page, "/api/v1/count?page=2&limit=20&");
         assert.equal(res.body.total_pages, 2250);
         assert.equal(res.body.status_code, 200);
-        assert.equal(res.body.total_pages, 2250);
       });
     // ckecks dinamyc limit and pagination
     request(app)
@@ -263,18 +280,4 @@ describe('API', function(){
         done();
       });
   });
-  
-  it('Works with API queries', function(done){
-    request(app)
-      .get('/api/v1/count_by_country?risk=openntp&country=gb&date=2016-07-01')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].risk, 'openntp');
-        assert.equal(res.body[0].country, 'gb');
-        assert.equal(res.body[0].date, '2016-07-01');  
-        done();
-      });  	
-  });  
 });
