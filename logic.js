@@ -77,7 +77,7 @@ exports.getAsnAPI = function(options){
   if (options.country) country = options.country.toLowerCase();
   if (options.asn) asn = options.asn;
   if (options.date) date = options.date;
-  var logic = "SELECT country, asn, to_char(time,'YYYY-MM-DD') as date FROM country_asn WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR time::text = $date) ORDER BY country ASC";
+  var logic = "SELECT country, asn, to_char(date,'YYYY-MM-DD') as date FROM country_asn WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($date = '' OR date::text = $date) ORDER BY country ASC";
   return sequelize.query(logic, { bind: { country: country, asn: asn, date: date}});
 };
 
@@ -113,7 +113,7 @@ exports.getRowCount= function(options) {
 };
 
 exports.getAsnTotal = function() {
-  var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN country ON country_asn.country=country.id GROUP BY name, slug, country ORDER BY name ASC;";
+  var logic = "SELECT name, slug, country, count(asn) FROM country_asn JOIN country ON LOWER(country_asn.country)=LOWER(country.id) GROUP BY name, slug, country ORDER BY name ASC;";
   return sequelize.query(logic);
 };
 
