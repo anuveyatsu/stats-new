@@ -209,6 +209,8 @@ exports.riskID = function(req, res) {
       };
       var parameters = {options: result,  map: map, config: config};
       res.render('risk.html', parameters);
+    }).catch(function() {
+      res.render('404.html');
     });
   });
 };
