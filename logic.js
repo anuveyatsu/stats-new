@@ -103,12 +103,12 @@ exports.getAsnCount = function(country, date) {
 };
 
 exports.getTotalCount = function(options) {
-	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC, country ASC) AS foo LIMIT $limit OFFSET $offset;";
+	var logic = "SELECT country, risk, asn, to_char as date, period_type, count FROM (SELECT country, risk, asn, TO_CHAR(date,'YYYY-MM-DD'), period_type, sum(count) as count FROM count WHERE ($risk = '' OR risk::text = $risk) AND ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) GROUP BY country, risk, asn, date, period_type ORDER BY date DESC, country ASC) AS foo LIMIT $limit OFFSET $offset;";
 	return sequelize.query(logic, { bind: options});
 };
 
 exports.getRowCount= function(options) {
-  var logic = "SELECT COUNT(*) FROM count WHERE ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
+  var logic = "SELECT COUNT(*) FROM count WHERE ($risk = '' OR risk::text = $risk) AND ($country = '' OR lower(country) = $country) AND ($asn = '' OR asn::text = $asn) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
   return sequelize.query(logic, { bind: options});
 };
 

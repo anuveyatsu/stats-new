@@ -231,6 +231,15 @@ describe('API', function(){
       .end(function(err, res) {
         assert.equal(res.body.error, 'invalid input syntax for integer: "invalidIntiger"');
       });
+    // cheks risk id  
+    request(app)
+      .get('/api/v1/count?risk=1')
+      .expect(200)
+      .expect('Content-Type', /json/)	
+      .end(function(err, res) {
+        assert.equal(res.body.results.length, 20);
+        assert.equal(res.body.results[0].risk, "1");
+      });
     // cheks country id
     request(app)
       .get('/api/v1/count?country=gb')
