@@ -161,7 +161,7 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 4);
-        assert.equal(res.body[0].id, 'opendns');
+        assert.equal(res.body[0].id, 'openrecursivedns');
         assert.equal(res.body[1].id, 'openntp');
       });
     request(app)

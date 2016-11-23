@@ -30,7 +30,7 @@ def agregate_data():
 			country_asn.append([place, asn, '2016-01-01'])
 			for risk in risks:
 				for month in months:        
-					count = random.randrange(200, 300)
+					count = random.randrange(1, 300)
 					country = place.upper()
 					result.append([rowid, risk, country, asn, month, 'weekly', count])
 					rowid += 1
@@ -43,6 +43,10 @@ def write_csv(data):
     with open(COUNTRY_ASN, 'w') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerows(data[1])
+
+def delete_csv():
+	os.remove(COUNT)
+	os.remove(COUNTRY_ASN)
 
 connection = psycopg2.connect(
 	database='testdb',
@@ -69,7 +73,7 @@ CREATE TABLE count
 """
 	create_risks = """
 CREATE TABLE risk
-(risk_id int, id varchar(16), title varchar(16), total int, max int, min int, mean int, score real, rank int, place_count int, icon bytea, category varchar(16), description text);
+(risk_id int, id varchar(32), title varchar(32), total int, max int, min int, mean int, score real, rank int, place_count int, icon bytea, category varchar(16), description text);
 """
 	create_country = """
 CREATE TABLE country
@@ -85,7 +89,7 @@ CREATE TABLE count_by_risk
 """
 	create_country_asn = """
 CREATE TABLE country_asn
-(country varchar(2), asn varchar(16), date varchar(16));
+(country varchar(2), asn varchar(16), date date);
 """
 	cursor.execute(create_entries)
 	cursor.execute(create_risks)
@@ -139,7 +143,7 @@ FROM %s GROUP BY date, risk)
 	placetable = 'count_by_country'
 	query = """
 UPDATE {0}
-SET score = (LOG({1}.max) - LOG({0}.count))/(LOG({1}.max))*100
+SET score = 100 * (LOG({0}.count) / LOG({1}.max))
 FROM {1}
 WHERE {0}.risk = {1}.risk AND {0}.date = {1}.date;
 """.format(placetable, risktable)
@@ -153,3 +157,4 @@ if __name__ == '__main__':
 	create_tables()
 	load_data() 
 	aggregate_entries()
+	delete_csv()
