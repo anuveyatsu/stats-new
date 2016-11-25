@@ -84,8 +84,8 @@ exports.getAsnAPI = function(options){
 exports.getCountByCountry = function(options){
   if (options.limit.toLowerCase() === 'none'){
     // for map
-    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) ORDER BY date DESC, risk ASC;";
-    return sequelize.query(logic);
+    logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR risk.id  = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, risk ASC;";
+    return sequelize.query(logic, { bind: options});
   }else {
     logic = "SELECT risk.id as risk, LOWER(count_by_country.country) as country, to_char(count_by_country.date,'YYYY-MM-DD') as date, count, ROUND(count_by_country.score) as score, count_by_country.rank as rank FROM count_by_country JOIN risk on (count_by_country.risk=risk.risk_id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR risk.id  = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
     return sequelize.query(logic, { bind: options});
@@ -118,6 +118,6 @@ exports.getAsnTotal = function() {
 };
 
 exports.getDates = function() {
-  var logic = "SELECT TO_CHAR(date,'YYYY-MM-DD') as date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country) GROUP BY date ORDER BY date DESC;";
+  var logic = "SELECT TO_CHAR(date,'YYYY-MM-DD') as date FROM count_by_country WHERE date!=(select max(date) FROM count_by_country) GROUP BY date ORDER BY date DESC LIMIT 3;";
   return sequelize.query(logic);
 };

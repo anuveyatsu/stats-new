@@ -9,8 +9,8 @@ exports.home = function(req, res) {
       embed_width: '100%',
       embed_height: '550px',
       current_year: date,
-      filter_risk: 'opendns',
-      embed_title: 'opendns'+' / '+ date,
+      filter_risk: 'openntp',
+      embed_title: 'openntp'+' / '+ date,
       panel_tools: true
     };
     res.render('home.html', {map: map, config: config});  
