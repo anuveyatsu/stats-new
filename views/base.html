@@ -42,52 +42,24 @@
 <body class="{% block body_classes %}{% endblock body_classes %}">
 
 {% block header %}
-<header id="header">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container">
-            <div>
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                            data-target="#navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="logo">
-                        <a href="/">
-                          <img src="{{ config.SITELOGO }}" />
-			  <span>Beta-2</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar-collapse">
-                    <ul class="nav navbar-nav" >
-                        <li>
-                            <a href="/country/" title="See countries' performance">
-                                 Countries
-                            </a>
-                        </li>
-						<li>
-                            <a href="/asn/" title="ASNs">
-                                ASNs
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/risk/" title="View information for a given risk">
-                                Risks
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/download/" title="Download the data">
-                                Download & API
-                            </a>
-                        </li>
-                     </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+<header class="navigation" role="banner">
+	<div class="navigation-wrapper">
+	  <div class="container">
+	  <a href="/" class="logo" style="box-sizing:initial;">
+		  <img src="{{ config.SITELOGO }}">
+		<span style="color:black;">Beta-2</span>
+	  <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">MENU</a>
+	  <nav role="navigation">
+		<ul id="js-navigation-menu" class="navigation-menu show">
+		  <li class="nav-link"><a href="/country/" title="See countries' performance">Countries</a></li>
+		  <li class="nav-link"><a href="/asn/" title="ASNs">ASNs</a></li>
+		  <li class="nav-link"><a href="/risk/" title="View information for a given risk">Risks</a></li>
+		  <li class="nav-link"><a href="/">Statistics</a></li>
+		  <li class="nav-link"><a href="/download/" title="Download the data">Download &amp; API</a></li>
+		</ul>
+	  </nav>
+	</div>
+	</div>
 </header>
 
 {% endblock header %}
@@ -123,13 +95,16 @@
         <div class="row">
             <div class="footer-main col-md-8">
                 <div class="footer-meta">
-                  <a class="naked" href="https://cybergreen.net/"><img src="{{config.SITELOGO}}" alt="" height="28"></a>
+                  <a class="naked" href="https://cybergreen.net/">
+					<img src="{{config.SITELOGO}}" alt="" height="28">
+				  </a>
                 </div>
                 <div class="footer-attribution">
                     <p>
-                      <br />
+                      <br>
                         Copyright 2016, CyberGreen. All Rights Reserved.
-                    <p>
+                    <p/>
+					<p>
                       <a href="http://atomatic.net/" style="font-size: 12px;">Built by <strong>ATOMATIC</strong> &ndash; experts in data-driven websites</a>
                     </p>
                 </div>
