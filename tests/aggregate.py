@@ -1,52 +1,17 @@
+from psycopg2.extensions import AsIs
+from textwrap import dedent
+
+import psycopg2
 import random
 import csv
-import psycopg2
 import os
 
-RISKSFILE = 'tests/fixtures/risk.csv'
-COUNTRYFILE = 'tests/fixtures/country.csv'
-COUNT = 'tests/fixtures/count.csv'
-COUNTRY_ASN = 'tests/fixtures/country_asn.csv'
-
-fo = open(COUNTRYFILE)
-places = [ place['id'] for place in csv.DictReader(fo) ]
-fo = open(RISKSFILE)
-risks = [risk['risk_id'] for risk in csv.DictReader(fo)]
-months = ['2016-04-01','2016-05-01','2016-06-01','2016-07-01','2016-08-15']
-
-def agregate_data():
-	result = [[ 'id', 'risk', 'country', 'asn', 'date', 'period_tpe','count']]
-	country_asn = [['country', 'asn', 'time']]
-	rowid = 0
-	for place in places:
-		two_digit = random.randrange(10, 100) 
-		digit_traker = {}
-		while two_digit not in digit_traker:
-			two_digit = random.randrange(10, 100)
-			digit_traker[two_digit] = place
-		for i in range(10):            
-			five_digit = random.randrange(10000, 100000)
-			asn = int(str(two_digit) + str(five_digit))
-			country_asn.append([place, asn, '2016-01-01'])
-			for risk in risks:
-				for month in months:        
-					count = random.randrange(1, 300)
-					country = place.upper()
-					result.append([rowid, risk, country, asn, month, 'weekly', count])
-					rowid += 1
-	return result, country_asn
-
-def write_csv(data):
-    with open(COUNT, 'w') as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerows(data[0])
-    with open(COUNTRY_ASN, 'w') as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerows(data[1])
-
-def delete_csv():
-	os.remove(COUNT)
-	os.remove(COUNTRY_ASN)
+fixtures = {
+	'risk': 'tests/fixtures/risk.csv',
+	'country': 'tests/fixtures/country.csv',
+	'asn':'tests/fixtures/asn.csv',
+	'count':'tests/fixtures/count.csv'
+}
 
 connection = psycopg2.connect(
 	database='testdb',
@@ -56,59 +21,79 @@ connection = psycopg2.connect(
 	port=5432
 	)
 
-def delete_tables():	
+def delete_tables():
 	cursor = connection.cursor();
-	tablenames = ['count', 'risk', 'country', 'count_by_country', 'count_by_risk', 'country_asn']
+	tablenames = [
+		'fact_count', 'agg_risk_country_week',
+		'agg_risk_country_month', 'agg_risk_country_quarter',
+		'agg_risk_country_year', 'dim_risk', 'dim_country', 
+		'dim_asn', 'dim_time'
+	]
 	for tablename in tablenames:
-		cursor.execute("select exists(SELECT * FROM information_schema.tables WHERE table_name='%s')"%tablename)	
-		if cursor.fetchone()[0]:
-			cursor.execute('DROP TABLE %s'%tablename)
-		connection.commit();
-			
-def create_tables():
-	cursor = connection.cursor();
-	create_entries = """
-CREATE TABLE count
-(id bigint, risk int, country varchar(2), asn bigint, date date, period_type varchar(8), count int);
-"""
-	create_risks = """
-CREATE TABLE risk
-(risk_id int, id varchar(32), title varchar(32), total int, max int, min int, mean int, score real, rank int, place_count int, icon bytea, category varchar(16), description text);
-"""
-	create_country = """
-CREATE TABLE country
-(id varchar(2), name varchar(32), slug varchar(32), region varchar(32), continent varchar(16), score real, rank int);
-"""
-	create_count_by_country = """
-CREATE TABLE count_by_country
-(risk int, country varchar(2), date date, count bigint, score real, rank int);
-"""
-	create_count_by_risk = """
-CREATE TABLE count_by_risk
-(risk int,  date date, count bigint, max bigint);
-"""
-	create_country_asn = """
-CREATE TABLE country_asn
-(country varchar(2), asn varchar(16), date date);
-"""
-	cursor.execute(create_entries)
-	cursor.execute(create_risks)
-	cursor.execute(create_country)
-	cursor.execute(create_count_by_country)
-	cursor.execute(create_count_by_risk)
-	cursor.execute(create_country_asn)
+		cursor.execute('DROP TABLE IF EXISTS %(table)s CASCADE',{'table': AsIs(tablename)})
 	connection.commit();
 
+
+def create_tables():
+	cursor = connection.cursor();
+	create_time = dedent('''
+	CREATE TABLE dim_time(
+		date DATE, month INT,
+		year INT, quarter INT,
+		week INT, week_start DATE,
+		week_end DATE
+		)''')
+	create_count = dedent('''
+	CREATE TABLE fact_count(
+		date DATE, risk INT,
+		country VARCHAR(2),
+		asn BIGINT, count BIGINT,
+		count_amplified FLOAT
+		)''')
+	create_cube = dedent('''
+	CREATE TABLE agg_risk_country_{time}(
+		date DATE, risk INT,
+		country VARCHAR(2),
+		count BIGINT,
+		count_amplified FLOAT
+		)''')
+	create_risks = dedent('''
+	CREATE TABLE dim_risk(
+		id DOUBLE PRECISION,
+		slug TEXT, title TEXT,
+		amplification_factor DOUBLE PRECISION,
+		description TEXT
+		)''')
+	create_country = dedent('''
+	CREATE TABLE dim_country(
+		id TEXT, name TEXT, slug TEXT,
+		region TEXT, continent TEXT
+		)''')
+	create_asn = dedent('''
+	CREATE TABLE dim_asn(
+		number DOUBLE PRECISION,
+		title TEXT, country TEXT
+	)
+	''')
+	cursor.execute(create_time)
+	cursor.execute(create_risks)
+	cursor.execute(create_country)
+	cursor.execute(create_asn)
+	cursor.execute(create_count)
+	create_or_update_cubes(cursor, create_cube)
+	connection.commit()
+
+
 def load_data():
-	epath = os.path.abspath("tests/fixtures/count.csv")
-	rpath = os.path.abspath("tests/fixtures/risk.csv")
-	cpath = os.path.abspath("tests/fixtures/country.csv")
-	capath = os.path.abspath("tests/fixtures/country_asn.csv")
+	epath = os.path.abspath('tests/fixtures/count.csv')
+	rpath = os.path.abspath('tests/fixtures/risk.csv')
+	cpath = os.path.abspath('tests/fixtures/country.csv')
+	capath = os.path.abspath('tests/fixtures/asn.csv')
 	
-	eload = "COPY count FROM '%s' DELIMITER ',' CSV HEADER;"%epath
-	rload = "COPY risk FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
-	cload = "COPY country FROM '%s' DELIMITER ',' CSV HEADER;"%cpath
-	caload = "COPY country_asn FROM '%s' DELIMITER ',' CSV HEADER;"%capath
+	eload = "COPY fact_count FROM '%s' DELIMITER ',' CSV HEADER;"%epath
+	rload = "COPY dim_risk FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
+	cload = "COPY dim_country FROM '%s' DELIMITER ',' CSV HEADER;"%cpath
+	caload = "COPY dim_asn FROM '%s' DELIMITER ',' CSV HEADER;"%capath
 	
 	cursor = connection.cursor()
 	cursor.execute(eload)
@@ -116,45 +101,75 @@ def load_data():
 	cursor.execute(cload)
 	cursor.execute(caload)
 	connection.commit()
-	
+
+
 def aggregate_entries():
-	tablename = 'count_by_country'
-	copytable = 'count'
 	cursor = connection.cursor()    
-	query = """
-INSERT INTO %s
-(SELECT risk, country, date, SUM(count) AS count, 0, 0
-FROM %s GROUP BY date, risk, country)
-"""%(tablename, copytable)
-	cursor.execute(query)
+	update_time = dedent('''
+	INSERT INTO dim_time
+	(SELECT
+		date,
+		EXTRACT(MONTH FROM date) as month,
+		EXTRACT(YEAR FROM date) as year,
+		EXTRACT(QUARTER FROM date) as quarter,
+		EXTRACT(WEEK FROM date) as week,
+		date_trunc('week', date) as week_start,
+		(date_trunc('week', date)+'6 days') as week_end
+	FROM fact_count GROUP BY date)
+	''')
+	populate_cube = dedent('''
+	INSERT INTO agg_risk_country_{time}
+		(SELECT date_trunc('{time}', date) AS date, risk, country, 
+		SUM(count) AS count, SUM(count_amplified) FROM fact_count
+	GROUP BY CUBE(date, country, risk) ORDER BY date DESC, country)
+	''')
+	cursor.execute(update_time)
+	create_or_update_cubes(cursor, populate_cube)
 	connection.commit()
 
-	tablename = 'count_by_risk'
-	copytable = 'count_by_country'
-	query = """
-INSERT INTO %s
-(SELECT risk, date, SUM(count), max(count)
-FROM %s GROUP BY date, risk)
-"""%(tablename, copytable)
-	cursor.execute(query)
+
+def create_constraints():
+	cursor = connection.cursor()
+	risk_constraints = 'ALTER TABLE dim_risk ADD PRIMARY KEY (id);'
+	country_constraints = 'ALTER TABLE dim_country ADD PRIMARY KEY (id);'
+	time_constraints = 'ALTER TABLE dim_time ADD PRIMARY KEY (date)'
+	asn_constraints = dedent('''
+	ALTER TABLE dim_asn
+	ADD PRIMARY KEY (number),
+	ADD CONSTRAINT fk_asn_country FOREIGN KEY (country) REFERENCES dim_country(id)
+	''')
+	count_counstraints = dedent('''
+	ALTER TABLE fact_count
+	ADD CONSTRAINT fk_count_risk FOREIGN KEY (risk) REFERENCES dim_risk(id),
+	ADD CONSTRAINT fk_count_country FOREIGN KEY (country) REFERENCES dim_country(id),
+	ADD CONSTRAINT fk_count_asn FOREIGN KEY (asn) REFERENCES dim_asn(number),
+	ADD CONSTRAINT fk_count_time FOREIGN KEY (date) REFERENCES dim_time(date);
+	''')
+	cube_counstraints = dedent('''
+	ALTER TABLE agg_risk_country_{time}
+	ADD CONSTRAINT fk_cube_risk FOREIGN KEY (risk) REFERENCES dim_risk(id),
+	ADD CONSTRAINT fk_cube_country FOREIGN KEY (country) REFERENCES dim_country(id)
+	''')
+	cursor.execute(risk_constraints)
+	cursor.execute(country_constraints)
+	cursor.execute(asn_constraints)
+	cursor.execute(time_constraints)
+	cursor.execute(count_counstraints)
+	create_or_update_cubes(cursor, cube_counstraints)
 	connection.commit()
 
-	risktable = 'count_by_risk'
-	placetable = 'count_by_country'
-	query = """
-UPDATE {0}
-SET score = 100 * (LOG({0}.count) / LOG({1}.max))
-FROM {1}
-WHERE {0}.risk = {1}.risk AND {0}.date = {1}.date;
-""".format(placetable, risktable)
-	cursor.execute(query)
-	connection.commit()
+
+def create_or_update_cubes(cursor,cmd):
+	time_granularities = [
+		'week', 'month', 'quarter', 'year'
+	]
+	for time in time_granularities:
+		cursor.execute(cmd.format(time=time))
+
 
 if __name__ == '__main__':
-	data = agregate_data()
-	write_csv(data)
 	delete_tables()
 	create_tables()
 	load_data() 
 	aggregate_entries()
-	delete_csv()
+	create_constraints()

@@ -1,20 +1,23 @@
-risk_id,id,title,total,max,min,mean,score,rank,places_count,icon,category,description
-1,openrecursivedns,Open Recursive DNS,3865270,539540,10,18062,49,,214,,,"The Domain Name System (DNS) is pervasive. Collectively, we use it billions of times a day, often without even knowing that it exists. For enterprises, it's their digital identity as well as a critical component of their security architecture. In short: DNS is pervasive and there are many DNS servers on the Internet. Since DNS runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol, it can be used for [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack). 
+id,slug,title,amplification_factor,description
+2,openntp,Open NTP,556.9,"Computers and network devices have a perversely strong need to have good agreement about what constitutes the current time (accurate precision time is critical for authentication related purposes, accurate event logging, and a host of other things). Most computers stay synchronized using Network Time Protocol (NTP). Oversimplifying greatly, NTP sets the local time by checking the time as reported by multiple trusted high-precision network-accessible clocks.
+
+**Impact of open NTP devices**
+
+Open NTP are amongst the most effictivly mis-used DDOS amplifiers.
+Just like DNS, NTP is a UDP-based service, and shares the same weaknesses that DNS does (particularly problems with spoofed traffic, traffic amplification, and unnecessarily promiscuous access to servers). It is thus hardly surprising that NTP is being abused for DDoS attacks..."
+1,open-recursive-dns,Open Recursive DNS,41,"The Domain Name System (DNS) is pervasive. Collectively, we use it billions of times a day, often without even knowing that it exists. For enterprises, it's their digital identity as well as a critical component of their security architecture. In short: DNS is pervasive and there are many DNS servers on the Internet.
+Since DNS runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol, it can be used for [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack).
 
 **Impact of running open recursive DNS servers**
 
-DNS can have an amplification factor of up to 179. In other words: 1 Byte turns into 179 Bytes in DDOS traffic. If only 1000 vulnerable DNS servers in, each with a mere 10 mbit/sec connection participates in a DNS amplification DDOS attack, then the resulting DDOS size will be **1790 GBit/sec**.
-As a side note: the DDOS attack that brought [spamhaus down](https://blog.cloudflare.com/the-ddos-that-knocked-spamhaus-offline-and-ho/) and cloudflare nearly to its knees , was a mere ~ 100 Gbit/sec."
-2,openntp,Open NTP,1574400,329180,10,7461,51,,211,,,"NTP is the [Network Time Protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol), a service on the Internet which keeps computers' clocks in sync to a millisecond precision. For historic reasons, there are many open NTP servers on the Internet.
+DNS can have an amplification factor of up to 179. In other words: 1 Byte turns into 179 Bytes in DDOS traffic. If only 1000 vulnerable DNS servers in, each with a mere 10 mbit/sec connection participates in a DNS amplification DDOS attack, then the resulting DDOS size will be **1790 GBit/sec**. As a side note: the DDOS attack that brought [spamhaus down](https://blog.cloudflare.com/the-ddos-that-knocked-spamhaus-offline-and-ho/) and cloudflare nearly to its knees , was a mere ~ 100 Gbit/sec."
+5,openssdp,Open SSDP,30.8,"[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) - the Simple Service Discovery Protocol is used for advertisement and discovery of network services and presence information. It is often enabled in customer end devices (CPEs) such as modems, WLAN modems.
 
-Since NTP runs over [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol), it is also vulnerable to reflective UDP amplification attacks.
+**Impact of running open SSDP devices**
 
-**Details**
+Since SSDP runs over UDP, again, it can be used for UDP reflection attacks. **Details** SSDP's amplification factor is ~ 30. It is less powerful than NTP."
+4,opensnmp,Open SNMP,6.3,"Simple Network Management Protocol ([SNMP(https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol)]) is an Internet-standard protocol for collecting and organizing information about managed devices on IP networks and for modifying that information to change device behavior. Devices that typically support SNMP include routers, switches, servers, workstations, printers, modem racks and more.
 
-[NTP amplification attacks](https://blog.cloudflare.com/understanding-and-mitigating-ntp-based-ddos-attacks/) have a considerable amplification factor: up to 550.  An attacker with 1 MBit/sec connections can find 10 open ntp servers, each with a GBit/sec connection and thus create a DDOS attack of 500 GBit/sec."
-4,opensnmp,Open SNMP,12790400,2529390,10,61492,49,,208,,,"Number of open SNMP devices (opensnmp)"
-5,openssdp,Open SSDP,12790400,2529390,10,61492,49,,208,,,"[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) - the Simple Service Discovery Protocol is used for advertisement and discovery of network services and presence information. It is often enabled in customer end devices (CPEs) such as modems, WLAN modems. Since SSDP runs over UDP, again, it can be used for UDP reflection attacks.
+**Impact of running open SNMP devices**
 
-**Details**
-
-SSDP's amplification factor is ~ 30. It is less powerful than NTP."
+Again, it runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol and again can be abuse for UDP based [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack). SNMP has an amplification factor of 6.3"
