@@ -2,7 +2,7 @@ var data = graphData;
 var risks = graphRisks;
 
 risks.forEach(function(risk){
-  var test = "datum['"+String(risk.risk_id)+"'] >= 0";
+  var test = "datum['"+String(risk.id)+"'] >= 0";
   var spec = {
     "actions": false,
     "spec":{
@@ -42,7 +42,7 @@ risks.forEach(function(risk){
         "range": "height",
         "nice": true,
         "zero": false,
-        "domain": {"data": "risks", "field": String(risk.risk_id)}
+        "domain": {"data": "risks", "field": String(risk.id)}
       }
       ],
       "axes": [
@@ -56,7 +56,7 @@ risks.forEach(function(risk){
           "properties": {
             "enter": {
               "x": {"scale": "x", "field": "month"},
-              "y": {"scale": "y", "field": String(risk.risk_id)},
+              "y": {"scale": "y", "field": String(risk.id)},
               "stroke": {"value": "green"},
               "strokeWidth": {"value": 2}
             }
@@ -68,7 +68,7 @@ risks.forEach(function(risk){
           "properties": {
             "enter": {
               "x": {"scale": "x", "field": "month"},
-              "y": {"scale": "y", "field": String(risk.risk_id)},
+              "y": {"scale": "y", "field": String(risk.id)},
               "strokeWidth": {"value": 2}
             },
             "update": {
@@ -86,7 +86,7 @@ risks.forEach(function(risk){
           "properties": {
             "update": {
               "x": {"scale": "x", "signal": "tooltip.month", "offset": 15},
-              "y": {"scale": "y", "signal": "tooltip."+String(risk.risk_id), "offset": -10},
+              "y": {"scale": "y", "signal": "tooltip."+String(risk.id), "offset": -10},
               "width": {"value": 120},
               "height": {"value": 30},
               "fill": {"value": "#edf1f7"},
@@ -139,7 +139,7 @@ risks.forEach(function(risk){
                 "update": {
                   "x": {"value": 6},
                   "y": {"value": 27},
-                  "text": {"signal": "tooltip."+String(risk.risk_id)},
+                  "text": {"signal": "tooltip."+String(risk.id)},
                   "fillOpacity": [
                     { "test": "!tooltip._id",
                       "value": 0
