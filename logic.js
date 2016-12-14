@@ -26,7 +26,7 @@ exports.getEntriesByASN= function(asn){
   return sequelize.query(logic, { bind: { asn: asn }});
 };
 
-exports.getScores = function(options){
+exports.getAggregatedEntries = function(options){
   var slug = '',
       risk = '',
       date = '';
@@ -36,8 +36,10 @@ exports.getScores = function(options){
     if (options.date) date = options.date;
   }
 
-  var logic = "SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, risk, dim_risk.slug as risk_slug, dim_risk.title as risk_title, dim_risk.description as risk_description, country as country_id,  dim_country.name as name, dim_country.slug as slug, count, count_amplified FROM agg_risk_country_week JOIN dim_country ON (country = dim_country.id) JOIN dim_risk on (risk=dim_risk.id) WHERE ($date = '' OR date = DATE($date)) AND ($slug = '' OR dim_country.slug = $slug) AND ($risk = '' OR dim_risk.slug = $risk) ";
-  return sequelize.query(logic, { bind: { slug: slug, risk: risk, date: date}});
+  var logic = "SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, risk, dim_risk.slug as risk_slug, dim_risk.title as risk_title, dim_risk.description as risk_description, country as country_id,  dim_country.name as name, dim_country.slug as slug, count, count_amplified FROM agg_risk_country_week JOIN dim_country ON (country = dim_country.id) JOIN dim_risk on (risk=dim_risk.id) WHERE ($date = '' OR date = DATE($date)) AND ($slug = '' OR dim_country.slug = $slug) AND ($risk = '' OR dim_risk.slug = $risk) ORDER BY date ASC";
+  return sequelize.query(logic, { bind: { slug: slug, risk: risk, date: date}}).catch(function(err){
+    return err;
+  });
 };
 
 exports.getRiskCount = function(week){
@@ -99,7 +101,7 @@ exports.getRowCountBYCountry = function(options) {
 };
 
 exports.getAsnCount = function(country, date) {
-  var logic = "SELECT asn, risk, sum(count) as count FROM fact_count WHERE date_trunc('week', date) = $date AND country = $country GROUP BY asn, risk;";
+  var logic = "SELECT asn, risk, SUM(count) as count, SUM(count_amplified) as count_amplified FROM fact_count WHERE date_trunc('week', date) = $date AND country = $country GROUP BY asn, risk;";
 	return sequelize.query(logic, { bind: { country: country, date: date }});
 };
 

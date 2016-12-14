@@ -26,15 +26,15 @@
     <tbody>
       {% for option in options %}
 					
-				<tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-risk="{{ option.id }}">
+				<tr data-rank="{{ option.rank }}" data-score="{{ option.score }}" data-risk="{{ option.slug }}">
 					<td class="risks-risk-col">
-						<a href="/risk/{{ option.id }}/" title="{{ option.title }}">
+						<a href="/risk/{{ option.slug }}/" title="{{ option.title }}">
 							{{ option.title }}
 						</a>
 					</td>
           <td>
 {% markdown %}
-{{ option.description | truncate(400) }} <a href="/risk/{{ option.id }}">Read more</a>
+{{ option.description | truncate(400) }} <a href="/risk/{{ option.slug }}">Read more</a>
 {% endmarkdown %}
 					</td>
 					<td class="total">

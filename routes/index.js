@@ -26,13 +26,13 @@ exports.place = function(req, res) {
   }).catch(function(err) {
     res.json({error: err.message});
   }).then(function (second_week) {
-    logic.getScores({date: second_week.date}).then(function(results) {
+    logic.getAggregatedEntries({date: second_week.date}).then(function(results) {
       var country_options = {};
       results[0].forEach(function(result){
         if (country_options[result.country_id]){
           country_options[result.country_id][result.risk] = {
             count: result.count,
-            af_count: result.count_amplified
+            af_count: Math.round(result.count_amplified)
           };
           country_options[result.country_id].slug = result.slug;
           country_options[result.country_id].name = result.name;
@@ -40,7 +40,7 @@ exports.place = function(req, res) {
           country_options[result.country_id] = {};
           country_options[result.country_id][result.risk] = {
             count: result.count,
-            af_count: result.count_amplified
+            af_count: Math.round(result.count_amplified)
             };
           country_options[result.country_id].slug = result.slug;
           country_options[result.country_id].name = result.name;
@@ -82,7 +82,7 @@ exports.placeID = function(req, res) {
       date: second_week.date,
       country: req.params.id.toLowerCase()
     };
-    logic.getScores(options).then(function(entries) {
+    logic.getAggregatedEntries(options).then(function(entries) {
       if(!entries[0].length) {
         res.render('404.html');
         return;
@@ -95,11 +95,17 @@ exports.placeID = function(req, res) {
         asnCounts[0].forEach(function(result){
           if (asns[result.asn]){
             asns[result.asn].asn = result.asn;
-            asns[result.asn][result.risk] = result.count;
+            asns[result.asn][result.risk] = {
+              count: result.count,
+              af_count: result.count_amplified
+            };
           }else {
             asns[result.asn] = {};
             asns[result.asn].asn = result.asn;
-            asns[result.asn][result.risk] = result.count;
+            asns[result.asn][result.risk] = {
+              count: result.count,
+              af_count: result.count_amplified
+            };
           }
           if (risks[result.risk]){
             risks[result.risk].push({name: result.asn, count: result.count});
@@ -215,7 +221,6 @@ exports.risk = function(req, res) {
   }).then(function (second_week){
     logic.getRiskCount({date: second_week.date}).then(function(results){
       var result = results[0];
-      console.log(result)
       var parameters = {options: result, config: config};
       res.render('risks.html', parameters);
     }).catch(function(err) {
@@ -230,7 +235,7 @@ exports.riskID = function(req, res) {
   }).catch(function(err) {
     res.json({error: err.message});
   }).then(function (second_week){
-    logic.getScores({date: second_week.date, risk: req.params.id}).then(function(results){
+    logic.getAggregatedEntries({date: second_week.date, risk: req.params.id}).then(function(results){
       var result = results[0];
       var map = {
         embed_width: '100%',
@@ -256,7 +261,7 @@ exports.placeRisk = function(req, res) {
   }).catch(function(err) {
     res.json({error: err.message});
   }).then(function (second_week){
-    logic.getScores({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
+    logic.getAggregatedEntries({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
   
       var result = results[0][0];
       var map = {

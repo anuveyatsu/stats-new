@@ -54,7 +54,7 @@
                 <th>Rank</th>
                 <th>Place</th>
                 <th>Devices</th>
-                <th>Score</th>
+                <th>Amplified Count</th>
             </tr>
         </thead>
         <tbody>
@@ -65,13 +65,13 @@
                       {{ option.rank or 'N/A'}}
                   </td>
                   <td>
-                    <a href="/country/{{ option.slug }}/{{ options[0].risk }}/">{{ option.name }}</a>
+                    <a href="/country/{{ option.slug }}/{{ option.risk_slug }}/">{{ option.name }}</a>
                   </td>
                   <td data-score="{{ option.count }}">
                       <span>{{ option.count or N/A}}</span>
                   </td>
-                  <td class="score" data-score="{{ option.score or cgr.na }}">
-                      <span>{{ option.score }}</span>
+                  <td>
+                      <span>{{ option.count_amplified or N/A}}</span>
                   </td>
               </tr>
 
