@@ -150,8 +150,8 @@ exports.placeID = function(req, res) {
             embed_width: '100%',
             embed_height: '360px',
             current_year: riskEntries[0].date,
-            filter_risk: 'opendns',
-            embed_title: 'opendsn' + ' / ' + riskEntries[0].date,
+            filter_risk: 'openntp',
+            embed_title: 'openntp' + ' / ' + riskEntries[0].date,
             panel_tools: true,
             panel_share: false,
             map_place: riskEntries[0].country_id.toLowerCase()

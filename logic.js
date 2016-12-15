@@ -18,7 +18,7 @@ exports.getRisks= function(){
   return sequelize.query("SELECT * FROM dim_risk");
 };
 exports.getCountries= function(){
-  return sequelize.query("SELECT * FROM country");
+  return sequelize.query("SELECT * FROM dim_country");
 };
 
 exports.getEntriesByASN= function(asn){
@@ -87,10 +87,10 @@ exports.getAsnAPI = function(options){
 exports.getCountByCountry = function(options){
   if (options.limit.toLowerCase() === 'none'){
     // for map
-    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, risk ASC;";
+    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) AND date IS NOT NULL ORDER BY date DESC, risk ASC;";
     return sequelize.query(logic, { bind: options});
   }else {
-    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR dim_risk.slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
+    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR dim_risk.slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) AND date IS NOT NULL ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
     return sequelize.query(logic, { bind: options});
   }
 };
