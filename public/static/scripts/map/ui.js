@@ -206,9 +206,9 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
 
         dataStore.risks = data;
         _.each(data, function(value) {
-            context.risk_id = value.id;
+            context.risk_id = value.slug
             context.risk = value.title;
-            if (uiState.filter.risk === value.id) {
+            if (uiState.filter.risk === value.slug) {
                 context.selected = 'selected';
             } else {
                 context.selected = '';
@@ -233,7 +233,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
     function addGeoDataToLayer(geoData) {
         geoLayer.addData(geoData);
         geoLayer.eachLayer(function(layer){
-            geoLayerLookup[layer.feature.properties.iso_a2.toLowerCase()] = layer;
+            geoLayerLookup[layer.feature.properties.iso_a2.toUpperCase()] = layer;
         });
         pubsub.publish(topics.geolayer_ready, geoLayer);
     }
@@ -370,7 +370,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
         if (uiState.filter.risk === 'all' ||
             typeof(uiState.filter.risk) === 'undefined') {
             // get calculated total scores from the place data
-            match = _.find(dataStore.places, {'id': feature.properties.iso_a2.toLowerCase()});
+            match = _.find(dataStore.places, {'id': feature.properties.iso_a2.toUpperCase()});
             if (match || '0.0') {
                 score = parseInt(match[scoreLookup(uiState.filter.year)], 10);
                 if (score) {
@@ -378,7 +378,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                 }
             }
         } else if (uiState.filter.risk === 'improvement') {
-            match = _.find(dataStore.places, {'id': feature.properties.iso_a2.toLowerCase()});
+            match = _.find(dataStore.places, {'id': feature.properties.iso_a2.toUpperCase()});
             if (match) {
                 score = parseInt(match.improvement_scaled, 10);
                 if (score || '0.0') {
@@ -388,12 +388,18 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
         } else {
             // calculate for this risk/year/place from entries data
             match = _.find(dataStore.entries, {
-                'country': feature.properties.iso_a2.toLowerCase(),
+                'country': feature.properties.iso_a2.toUpperCase(),
                 'date': uiState.filter.year,
                 'risk': uiState.filter.risk
             });
-            if (match) {
-                score = parseInt(match.score, 10);
+            max = _.max(_.filter(dataStore.entries, {
+                'date': uiState.filter.year,
+                'risk': uiState.filter.risk
+            }), function(o) {return parseInt(o.count, 10);});
+            if (match) {    
+                count = parseInt(match.count, 10);
+                maxCount = max.count;
+                score = 100*(Math.log(count)/Math.log(maxCount));
                 if (score || '0.0'  ) {
                     fillColor = colorScale(score).hex();
                 }
@@ -424,7 +430,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
     function onEachPlace(feature, layer) {
         var place;
         if (feature && feature.properties && feature.properties.iso_a2) {
-            place = _.find(dataStore.places, {'id': feature.properties.iso_a2.toLowerCase()});
+            place = _.find(dataStore.places, {'id': feature.properties.iso_a2.toUpperCase()});
             if (place) {
                 var tooltip = getPlaceToolTip(place);
                 if (tooltip) {
@@ -601,8 +607,12 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                     'date': uiState.filter.year,
                     'risk': uiState.filter.risk
                 });
+                max = _.max(_.filter(dataStore.entries, {
+                    'date': uiState.filter.year,
+                    'risk': uiState.filter.risk
+                }), function(o) {return parseInt(o.count, 10);});
                 if (match) {
-                    score = match.score;
+                    score = 100*(Math.log(match.count)/ Math.log(max.count));
                     rank = match.rank;
                     count = match.count;
                 }
@@ -631,7 +641,6 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                 rank,
                 count,
                 previousScore;
-
         function makeTitle() {
             var title = place.name;
 
@@ -651,7 +660,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
             if (uiState.filter.risk === 'all' ||
                 typeof(uiState.filter.risk) === 'undefined') {
                 // get calculated total scores from the place data
-                place = _.find(dataStore.places, {'id': properties.iso_a2.toLowerCase()});
+                place = _.find(dataStore.places, {'id': properties.iso_a2.toUpperCase()});
                 if (place) {
                     score = place[scoreLookup(uiState.filter.year)];
                     rank = place[rankLookup(uiState.filter.year)];
@@ -660,25 +669,29 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                     }
                 }
             } else if (uiState.filter.risk === 'improvement') {
-            place = _.find(dataStore.places, {'id': properties.iso_a2.toLowerCase()});
+            place = _.find(dataStore.places, {'id': properties.iso_a2.toUpperCase()});
                 if (place) {
                     score = place.improvement;
                 }
             } else {
                 // calculate for this risk/year/place from entries data
                 match = _.find(dataStore.entries, {
-                    'country': properties.iso_a2.toLowerCase(),
+                    'country': properties.iso_a2.toUpperCase(),
                     'date': uiState.filter.year,
                     'risk': uiState.filter.risk
                 });
                 previousMatch = _.find(dataStore.entries, {
-                    'country': properties.iso_a2.toLowerCase(),
+                    'country': properties.iso_a2.toUpperCase(),
                     'date': (parseInt(uiState.filter.year, 10) - 1).toString(),
                     'risk': uiState.filter.risk
                 });
+                max = _.max(_.filter(dataStore.entries, {
+                    'date': uiState.filter.year,
+                    'risk': uiState.filter.risk
+                }), function(o) {return parseInt(o.count, 10);});
                 if (match) {
                     place = _.find(dataStore.places, {'id': match.country});
-                    score = match.score;
+                    score = 100*(Math.log(match.count)/Math.log(max.count));
                     rank = match.rank;
                     count = match.count;
                     if (previousMatch) {
@@ -686,7 +699,7 @@ define(['leaflet', 'proj4', 'proj4leaflet', 'leaflet_zoommin', 'leaflet_label', 
                     }
                 }
                 else {
-                    place = _.find(dataStore.places, {'id': properties.iso_a2.toLowerCase()})
+                    place = _.find(dataStore.places, {'id': properties.iso_a2.toUpperCase()})
                 }
             }
 
