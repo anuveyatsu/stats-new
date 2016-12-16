@@ -4,63 +4,154 @@ var request = require('supertest');
 
 var app = require('../app.js').app;
 
-describe('Get Scores', function(){
-  it('Works without country and risk parameters', function(done){
-    logic.getScores({date: '2016-07-01'}).then(function(results){
+describe('Get Aggregated entries', function(){
+  it('Works without any parameters', function(done){
+    logic.getAggregatedEntries().then(function(results){
       assert(true, results[0].length > 0);
-      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-08-01'));
       done();
     });
   });
-  it('Works with country parameter', function(done){
-    logic.getScores({date: '2016-07-01', country:'united-kingdom'}).then(function(results){
+  it('Returns all necessary columns', function(done){
+    logic.getAggregatedEntries().then(function(results){
+      assert.equal(true, results[0][0].hasOwnProperty('date'));
+      assert.equal(true, results[0][0].hasOwnProperty('risk'));
+      assert.equal(true, results[0][0].hasOwnProperty('risk_slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('risk_title'));
+      assert.equal(true, results[0][0].hasOwnProperty('risk_description'));
+      assert.equal(true, results[0][0].hasOwnProperty('country_id'));
+      assert.equal(true, results[0][0].hasOwnProperty('name'));
+      assert.equal(true, results[0][0].hasOwnProperty('slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('count'));
+      assert.equal(true, results[0][0].hasOwnProperty('count_amplified'));
+      done();
+    });
+  });
+  it('Works with date parameter only', function(done){
+    logic.getAggregatedEntries({date: '2016-08-01'}).then(function(results){
+      assert(true, results[0].length > 0);
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-08-01'));
+      done();
+    });
+  });
+  it('Works with date and country parameters', function(done){
+    logic.getAggregatedEntries({date: '2016-08-01', country:'united-kingdom'}).then(function(results){
       assert(true, results[0].length > 0);
       assert.equal(results[0][0].country_id, 'GB');
-      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-08-01'));
       done();
     });
   });
-  it('Works with risk parameter', function(done){
-    logic.getScores({date: '2016-07-01', risk:'openntp'}).then(function(results){
+  it('Works with date and risk parameters', function(done){
+    logic.getAggregatedEntries({date: '2016-08-01', risk:'openntp'}).then(function(results){
       assert(true, results[0].length > 0);
-      assert.equal(results[0][0].risk, 'openntp');
-      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
+      assert.equal(results[0][0].risk, 2);
+      assert.equal(results[0][0].risk_slug, 'openntp');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-08-01'));
       done();
     });
   });
-  it('Works with country and risk parameters together', function(done){
-    logic.getScores({date: '2016-07-01', country:'united-kingdom', risk: 'openntp'}).then(function(results){
+  it('Works with all 3 parameters', function(done){
+    logic.getAggregatedEntries({date: '2016-08-01', country:'united-kingdom', risk: 'openntp'})
+      .then(function(results){
       assert(true, results[0].length > 0);
       assert.equal(results[0][0].country_id, 'GB');
-      assert.equal(results[0][0].risk, 'openntp');
-      assert.deepEqual(new Date(results[0][0].date), new Date('2016-07-01'));
+      assert.equal(results[0][0].risk_slug, 'openntp');
+      assert.deepEqual(new Date(results[0][0].date), new Date('2016-08-01'));
       done();
     });
   });
-  it('Fails with wrong parameters', function(done){
-    logic.getScores({country:'country', risk: 'openntp'}).then(function(results){
+  it('Returns no entries if given risk or country does not exsit', function(done){
+    logic.getAggregatedEntries({country:'country', risk: 'openntp'}).then(function(results){
       assert.equal(results[0].length, 0);
     });
-    logic.getScores({country:'united-kingdom', risk: 'unknown'}).then(function(results){
+    logic.getAggregatedEntries({country:'united-kingdom', risk: 'unknown'}).then(function(results){
       assert.equal(results[0].length, 0);
       done();
     });
   });
   it('Handles with SQL injections', function(done){
-    logic.getScores({country:'united-kingdom or 1=1'}).then(function(results){
+    logic.getAggregatedEntries({country:'united-kingdom or 1=1'}).then(function(results){
       assert.equal(results[0].length, 0);
     });
-    logic.getScores({country:" OR country %3D 'LV'%3B --"}).then(function(results){
+    logic.getAggregatedEntries({country:" OR country %3D 'LV'%3B --"}).then(function(results){
       assert.equal(results[0].length, 0);
       done();
     });
   });
 });
 
-describe('Database Functions', function(){
-  it('Works with ASN count', function(done) {
-    logic.getAsnCount('GB', '2016-07-01').then(function(results){
-      assert.equal(results[0].length, 40);
+describe('Database Functions return non empty list and all necessary columns from db', function(){
+  it('getAsnCount works fine', function(done) {
+    logic.getAsnCount('GB', '2016-08-01').then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('asn'));
+      assert.equal(true, results[0][0].hasOwnProperty('risk'));
+      assert.equal(true, results[0][0].hasOwnProperty('count'));
+      assert.equal(true, results[0][0].hasOwnProperty('count_amplified'));
+      done();
+    });
+  });
+  it('getRisks works fine', function(done) {
+    logic.getRisks().then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('id'));
+      assert.equal(true, results[0][0].hasOwnProperty('slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('title'));
+      assert.equal(true, results[0][0].hasOwnProperty('amplification_factor'));
+      assert.equal(true, results[0][0].hasOwnProperty('description'));
+      done();
+    });
+  });
+  it('getCountries works fine', function(done) {
+    logic.getCountries().then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('id'));
+      assert.equal(true, results[0][0].hasOwnProperty('slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('name'));
+      assert.equal(true, results[0][0].hasOwnProperty('region'));
+      assert.equal(true, results[0][0].hasOwnProperty('continent'));
+      done();
+    });
+  });
+  it('getEntriesByASN works fine', function(done) {
+    logic.getEntriesByASN(44444).then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(results[0][0].asn, 44444);
+      assert.equal(true, results[0][0].hasOwnProperty('risk'));
+      assert.equal(true, results[0][0].hasOwnProperty('country'));
+      assert.equal(true, results[0][0].hasOwnProperty('asn'));
+      assert.equal(true, results[0][0].hasOwnProperty('date'));
+      assert.equal(true, results[0][0].hasOwnProperty('count'));
+      done();
+    });
+  });
+  // gets sum of infected devises for all risks on given date 
+  it('getRiskCount works fine', function(done) {
+    logic.getRiskCount({date: '2016-08-01'}).then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('title'));
+      assert.equal(true, results[0][0].hasOwnProperty('description'));
+      assert.equal(true, results[0][0].hasOwnProperty('date'));
+      assert.equal(true, results[0][0].hasOwnProperty('count'));
+      done();
+    });
+  });
+  it('getAsnTotal works fine', function(done) {
+    logic.getAsnTotal().then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('slug'));
+      assert.equal(true, results[0][0].hasOwnProperty('name'));
+      assert.equal(true, results[0][0].hasOwnProperty('country'));
+      assert.equal(true, results[0][0].hasOwnProperty('count'));
+      done();
+    });
+  });
+  it('getDates works fine', function(done) {
+    logic.getDates().then(function(results){
+      assert.equal(results[0].length > 0, true);
+      assert.equal(true, results[0][0].hasOwnProperty('date'));
       done();
     });
   });
@@ -74,13 +165,13 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.results.length, 20);
-        assert.equal(res.body.results[0].country, "ad");
-        assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+        assert.equal(res.body.results[0].country, "AD");
+        assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-29"));
         assert.equal(res.body.status, 'ok');
-        assert.equal(res.body.number_of_data_results, 4500);
+        assert.equal(res.body.number_of_data_results, 4904);
         assert.equal(res.body.page, "/api/v1/count_by_country?page=1&limit=20&");
         assert.equal(res.body.next_page, "/api/v1/count_by_country?page=2&limit=20&");
-        assert.equal(res.body.total_pages, 225);
+        assert.equal(res.body.total_pages, 246);
         assert.equal(res.body.status_code, 200);
       });
     request(app)
@@ -89,9 +180,9 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.results.length, 4);
-        assert.equal(res.body.results[0].country, 'gb');
+        assert.equal(res.body.results[0].country, 'GB');
         assert.equal(res.body.results[0].risk, 'openntp');
-        assert.equal(res.body.results[0].date, '2016-08-15');
+        assert.equal(res.body.results[0].date, '2016-08-22');
       });
     request(app)
       .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15')
@@ -101,18 +192,18 @@ describe('API', function(){
       	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
       });
     request(app)
-      .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15&page=135')
+      .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15&page=140')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-01"));
       });
     request(app)
       .get('/api/v1/count_by_country?start=2016-06-01&end=2016-08-15&page=70')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
+      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-08"));
       });
     request(app)
       .get('/api/v1/count_by_country?country=test OR 1=1')
@@ -124,9 +215,9 @@ describe('API', function(){
     request(app)
       .get('/api/v1/count_by_country?limit=none')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
-        assert.equal(res.body.results.length, 4500);
+        assert.equal(res.body.results.length, 3965);
         done();
       });  
   });
@@ -136,8 +227,8 @@ describe('API', function(){
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
-        assert.equal(res.body.length, 225);
-        assert.equal(res.body[0].id, 'ad');
+        assert.equal(res.body.length, 245);
+        assert.equal(res.body[0].id, 'AD');
         assert.equal(res.body[0].name, 'Andorra');
       });
     request(app)
@@ -146,7 +237,7 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].id, 'ad');
+        assert.equal(res.body[0].id, 'AD');
         assert.equal(res.body[0].name, 'Andorra');
         assert.equal(res.body[0].slug, 'andorra');
         assert.equal(res.body[0].region, 'Europe');
@@ -161,132 +252,132 @@ describe('API', function(){
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 4);
-        assert.equal(res.body[0].id, 'openrecursivedns');
-        assert.equal(res.body[1].id, 'openntp');
+        assert.equal(res.body[0].slug, 'open-recursive-dns');
+        assert.equal(res.body[1].slug, 'openntp');
       });
     request(app)
-      .get('/api/v1/risk?title=Open NTP&risk_id=2&id=openntp')
+      .get('/api/v1/risk?title=Open NTP&id=2&slug=openntp')
       .expect(200)
       .expect('Content-Type', /json/)	
       .end(function(err, res) {
         assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].id, 'openntp');
+        assert.equal(res.body[0].slug, 'openntp');
         done();
       });
   });
-  it('ASNs API', function(done){
-    request(app)
-      .get('/api/v1/asn')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.length, 2250);
-        assert.equal(res.body[0].country, 'ad');
-        assert.equal(res.body[0].date, '2016-01-01');
-        done();
-      });  	
-  });
-  it('count API', function(done){
-    // checks defaults
-    request(app)
-      .get('/api/v1/count')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 20);
-        // cheks sorting country ASC
-        assert.equal(res.body.results[0].country, "AD");
-        // cheks sortin date DESC
-        assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
-        assert.equal(res.body.status, 'ok');
-        assert.equal(res.body.number_of_data_results, 45000);
-        assert.equal(res.body.page, "/api/v1/count?page=1&limit=20&");
-        assert.equal(res.body.next_page, "/api/v1/count?page=2&limit=20&");
-        assert.equal(res.body.total_pages, 2250);
-        assert.equal(res.body.status_code, 200);
-      });
-    // ckecks dinamyc limit and pagination
-    request(app)
-      .get('/api/v1/count?limit=30')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 30);
-        assert.equal(res.body.total_pages, 1500);
-      });
-    // cheks maks limit and pagination
-    request(app)
-      .get('/api/v1/count?limit=3000')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 500);
-        assert.equal(res.body.total_pages, 90);
-      });
-    // cheks error hendling
-    request(app)
-      .get('/api/v1/count?limit=invalidIntiger')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.error, 'invalid input syntax for integer: "invalidIntiger"');
-      });
-    // cheks risk id  
-    request(app)
-      .get('/api/v1/count?risk=1')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 20);
-        assert.equal(res.body.results[0].risk, "1");
-      });
-    // cheks country id
-    request(app)
-      .get('/api/v1/count?country=gb')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 20);
-        assert.equal(res.body.results[0].country, "GB");
-      });
-    // cheks country id Caseinsensitive
-    request(app)
-      .get('/api/v1/count?country=Gb')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 20);
-        assert.equal(res.body.results[0].country, "GB");
-      });
-    // checks ivalid country id
-    request(app)
-      .get('/api/v1/count?country=unknown')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-        assert.equal(res.body.results.length, 0);
-      });
-    request(app)
-      .get('/api/v1/count?start=2016-06-01&end=2016-08-15')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
-      });
-    request(app)
-      .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=1350')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
-      });
-    request(app)
-      .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=700')
-      .expect(200)
-      .expect('Content-Type', /json/)	
-      .end(function(err, res) {
-      	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
-        done();
-      });
-  });
+  //it('ASNs API', function(done){
+  //  request(app)
+  //    .get('/api/v1/asn')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.length, 79679);
+  //      assert.equal(res.body[0].country, 'AD');
+  //      assert.equal(res.body[0].name, '2016-08-01');
+  //      done();
+  //    });
+  //});
+  //it('count API', function(done){
+  //  // checks defaults
+  //  request(app)
+  //    .get('/api/v1/count')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 20);
+  //      // cheks sorting country ASC
+  //      assert.equal(res.body.results[0].country, "AD");
+  //      // cheks sortin date DESC
+  //      assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+  //      assert.equal(res.body.status, 'ok');
+  //      assert.equal(res.body.number_of_data_results, 45000);
+  //      assert.equal(res.body.page, "/api/v1/count?page=1&limit=20&");
+  //      assert.equal(res.body.next_page, "/api/v1/count?page=2&limit=20&");
+  //      assert.equal(res.body.total_pages, 2250);
+  //      assert.equal(res.body.status_code, 200);
+  //    });
+  //  // ckecks dinamyc limit and pagination
+  //  request(app)
+  //    .get('/api/v1/count?limit=30')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 30);
+  //      assert.equal(res.body.total_pages, 1500);
+  //    });
+  //  // cheks maks limit and pagination
+  //  request(app)
+  //    .get('/api/v1/count?limit=3000')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 500);
+  //      assert.equal(res.body.total_pages, 90);
+  //    });
+  //  // cheks error hendling
+  //  request(app)
+  //    .get('/api/v1/count?limit=invalidIntiger')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.error, 'invalid input syntax for integer: "invalidIntiger"');
+  //    });
+  //  // cheks risk id  
+  //  request(app)
+  //    .get('/api/v1/count?risk=1')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 20);
+  //      assert.equal(res.body.results[0].risk, "1");
+  //    });
+  //  // cheks country id
+  //  request(app)
+  //    .get('/api/v1/count?country=GB')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 20);
+  //      assert.equal(res.body.results[0].country, "GB");
+  //    });
+  //  // cheks country id Caseinsensitive
+  //  request(app)
+  //    .get('/api/v1/count?country=Gb')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 20);
+  //      assert.equal(res.body.results[0].country, "GB");
+  //    });
+  //  // checks ivalid country id
+  //  request(app)
+  //    .get('/api/v1/count?country=unknown')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //      assert.equal(res.body.results.length, 0);
+  //    });
+  //  request(app)
+  //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
+  //    });
+  //  request(app)
+  //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=1350')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
+  //    });
+  //  request(app)
+  //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=700')
+  //    .expect(200)
+  //    .expect('Content-Type', /json/)	
+  //    .end(function(err, res) {
+  //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
+  //      done();
+  //    });
+  //});
 });
