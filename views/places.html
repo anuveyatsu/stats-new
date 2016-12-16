@@ -49,11 +49,12 @@ In the table below the number shown is the score for a country. This score is a 
       <tr>
         <th class="sort_place" title="Sort by A-Z">Country</th>
         {% for risk in riskOpt %}
-          {% if risk.title %}
-            <th>
-              {{ risk.title }}
-            </th>
-          {% endif %}
+          <th>
+            {{ risk.title }}
+          </th>
+          <th>
+            {{ risk.title }} AF
+          </th>
         {% endfor %}
       </tr>
     </thead>
@@ -61,13 +62,16 @@ In the table below the number shown is the score for a country. This score is a 
     {% for option in options %}
       <tr data-place="{{ option.name }}">
         <td>  
-          <a href="/country/{{ option.slug }}/" title="{{ option.place }}">
+          <a href="/country/{{ option.slug }}/" title="{{ option.name }}">
             {{ option.name |truncate(28) }}
           </a>
         </td>
         {% for risk in riskOpt %}
-          <td class="score" data-score="{{ option[risk.id] }}">
-            <span>{{ option[risk.id] }}</span>
+          <td>
+            <span>{{ option[risk.id].count or "N/A"}}</span>
+          </td>
+          <td>
+            <span>{{ option[risk.id].af_count or "N/A"}}</span>
           </td>
         {% endfor %}
       </tr>

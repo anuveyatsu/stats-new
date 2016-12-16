@@ -14,72 +14,98 @@ exports.home = function(req, res) {
       panel_tools: true
     };
     res.render('home.html', {map: map, config: config});  
+  }).catch(function(err) {
+    res.json({error: err.message});
   });
 };
 
 // places
 exports.place = function(req, res) {
-  logic.getDates().then(function(dates){
+  logic.getDates().then(function(dates) {
     return dates[0][0];
-  }).then(function (second_week){
-    logic.getScores({date: second_week.date}).then(function(results){
-      var places = {};
+  }).catch(function(err) {
+    res.json({error: err.message});
+  }).then(function (second_week) {
+    logic.getAggregatedEntries({date: second_week.date}).then(function(results) {
+      var country_options = {};
       results[0].forEach(function(result){
-        if (places[result.name]){
-          places[result.name][result.risk] = result.score;
-          places[result.name]['slug'] = result.slug;
-          places[result.name]['date'] = result.date;
+        if (country_options[result.country_id]){
+          country_options[result.country_id][result.risk] = {
+            count: result.count,
+            af_count: Math.round(result.count_amplified)
+          };
+          country_options[result.country_id].slug = result.slug;
+          country_options[result.country_id].name = result.name;
         }else{
-          places[result.name] = {};
-          places[result.name][result.risk] = result.score;
-          places[result.name]['slug'] = result.slug;
-          places[result.name]['date'] = result.date;
+          country_options[result.country_id] = {};
+          country_options[result.country_id][result.risk] = {
+            count: result.count,
+            af_count: Math.round(result.count_amplified)
+            };
+          country_options[result.country_id].slug = result.slug;
+          country_options[result.country_id].name = result.name;
         }
       });
       var result = [];
-      for (var place in places){
-        if (Object.keys(places[place]).length > 3) {
-          var obj = Object.assign({name: place}, places[place]);
-          result.push(obj);
+      for (var country in country_options){
+        if (Object.keys(country_options[country]).length > 3) {
+          result.push(country_options[country]);
         }
       }
       return result;
-    }).then(function (result) {
+    }).catch(function(err) {
+      res.json({error: err.message});
+    }).then(function (country_options) {
       logic.getRisks().then(function (risks) {
         risks = risks[0];
         var parameters = {
-          options: result,
+          options: country_options,
           riskOpt: risks,
           config: config
         };
         res.render('places.html', parameters);
+      }).catch(function(err) {
+        res.json({error: err.message});
       });
     });
-  })
+  });
 };
+
 
 exports.placeID = function(req, res) {
   logic.getDates().then(function(dates){
     return dates[0][0];
-  }).then(function (second_week){
-    logic.getScores({date: second_week.date, country: req.params.id.toLowerCase()}).then(function(results){
-      if(!results[0].length){
+  }).catch(function(err) {
+    res.json({error: err.message});
+  }).then(function (second_week) {
+    var options = {
+      date: second_week.date,
+      country: req.params.id.toLowerCase()
+    };
+    logic.getAggregatedEntries(options).then(function(entries) {
+      if(!entries[0].length) {
         res.render('404.html');
         return;
       }
-      return results[0];
-    }).then(function(result) {
-      var id = result[0].country_id;
-      var date = result[0].date;
-      logic.getAsnCount(id, date).then(function(results) {
+      var id = entries[0][0].country_id;
+      var date = entries[0][0].date;
+      logic.getAsnCount(id, date).then(function(asnCounts) {
         var asns = {};
         var risks = {};
-        results[0].forEach(function(result){
+        asnCounts[0].forEach(function(result){
           if (asns[result.asn]){
-            asns[result.asn][result.risk] = result.count;
+            asns[result.asn].asn = result.asn;
+            asns[result.asn][result.risk] = {
+              count: result.count,
+              af_count: result.count_amplified
+            };
           }else {
             asns[result.asn] = {};
-            asns[result.asn][result.risk] = result.count;
+            asns[result.asn].asn = result.asn;
+            asns[result.asn][result.risk] = {
+              count: result.count,
+              af_count: result.count_amplified
+            };
           }
           if (risks[result.risk]){
             risks[result.risk].push({name: result.asn, count: result.count});
@@ -90,32 +116,32 @@ exports.placeID = function(req, res) {
         });
         var asnList = [];
         for (var asn in asns){
-          var obj = Object.assign({asn: asn}, asns[asn]);
-          asnList.push(obj);
+          asnList.push(asns[asn]);
         }
-        
         var result = {asnList: asnList, riskList: risks};
         return result;
-      }).then(function(asns){
+    }).catch(function(err) {
+      res.json({error: err.message});
+    }).then(function(asns){
         logic.getRisks().then(function (risks) {
           risks = risks[0];
           // adds risk in Table if there is no data For given country
           var isRisk = false;
           var riskMap = {};
           var treeList = [];
+          var riskEntries = entries[0];
           risks.forEach(function(risk){
-            riskMap[risk.risk_id] = risk.id;
-            result.forEach(function(res){
+            riskMap[risk.id] = risk.slug;
+            riskEntries.forEach(function(res){
               if(risk.id === res.risk){
                 isRisk = true;
               }
             });
             if (!isRisk){
-              result.push({risk_title: risk.title, risk: risk.id});
+              riskEntries.push({risk_title: risk.title, risk: risk.slug});
             }
             isRisk = false;
           });
-          //console.log(asns.riskList )
           for (var risk in asns.riskList){
             var obj = Object.assign({name: riskMap[risk]}, {children: asns.riskList[risk]});
             treeList.push(obj);
@@ -123,21 +149,23 @@ exports.placeID = function(req, res) {
           var map = {
             embed_width: '100%',
             embed_height: '360px',
-            current_year: result[0].date,
-            filter_risk: 'opendns',
-            embed_title: 'opendsn' + ' / ' + result[0].date,
+            current_year: riskEntries[0].date,
+            filter_risk: 'openntp',
+            embed_title: 'openntp' + ' / ' + riskEntries[0].date,
             panel_tools: true,
             panel_share: false,
-            map_place: result[0].country_id.toLowerCase()
+            map_place: riskEntries[0].country_id.toLowerCase()
           };
           var parameters = {
-            options: result,
+            options: riskEntries,
             asns: asns.asnList.slice(0, 5000),
             treeAsn: JSON.stringify(treeList),
             riskOpt: risks, map: map,
             config: config
           };
           res.render('place.html', parameters);
+        }).catch(function(err) {
+        res.json({error: err.message});
         });
       });
     });
@@ -150,32 +178,37 @@ exports.placeASN = function(req, res) {
     var dates = {};
     results[0].forEach(function (entry){
       if (dates[entry.date]){
-        dates[entry.date][entry.risk] = entry.count || 'N/A';
+        dates[entry.date][entry.risk] = entry.count;
+        dates[entry.date].month = entry.date;
       } else {
         dates[entry.date] = {};
-        dates[entry.date][entry.risk] = entry.count || 'N/A';
-      }
+        dates[entry.date][entry.risk] = entry.count;
+        dates[entry.date].month = entry.date;
+      } 
     });
-    var result = [];
+    var entriesByDate = [];
     for (var date in dates){
-      var obj = Object.assign({month: date}, dates[date]);
-      result.push(obj);
+      entriesByDate.push(dates[date]);
     }
-    return result;
-    
-  }).then(function(result){
+    return entriesByDate;
+
+  }).catch(function(err) {
+    res.json({error: err.message});
+  }).then(function(entriesByDate){
   	logic.getRisks().then(function (risks) {
 			risks = risks[0];
 			var parameters = {
-				entries: result, 
-				graphData: JSON.stringify(result), 
+				entries: entriesByDate, 
+				graphData: JSON.stringify(entriesByDate), 
 				page: {name: req.params.country, asn: req.params.asn}, 
 				config: config, 
 				risks: risks,
 				graphRisks: JSON.stringify(risks)
 			};
 			res.render('place_asn.html', parameters);
-		});
+		}).catch(function(err) {
+    res.json({error: err.message});
+    });
   });
 };
 
@@ -183,11 +216,15 @@ exports.placeASN = function(req, res) {
 exports.risk = function(req, res) {
 	logic.getDates().then(function(dates){
     return dates[0][0];
+  }).catch(function(err) {
+    res.json({error: err.message});
   }).then(function (second_week){
     logic.getRiskCount({date: second_week.date}).then(function(results){
       var result = results[0];
       var parameters = {options: result, config: config};
       res.render('risks.html', parameters);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   });
 };
@@ -195,8 +232,10 @@ exports.risk = function(req, res) {
 exports.riskID = function(req, res) {
   logic.getDates().then(function(dates){
     return dates[0][0];
+  }).catch(function(err) {
+    res.json({error: err.message});
   }).then(function (second_week){
-    logic.getScores({date: second_week.date, risk: req.params.id}).then(function(results){
+    logic.getAggregatedEntries({date: second_week.date, risk: req.params.id}).then(function(results){
       var result = results[0];
       var map = {
         embed_width: '100%',
@@ -209,8 +248,8 @@ exports.riskID = function(req, res) {
       };
       var parameters = {options: result,  map: map, config: config};
       res.render('risk.html', parameters);
-    }).catch(function() {
-      res.render('404.html');
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   });
 };
@@ -219,8 +258,10 @@ exports.riskID = function(req, res) {
 exports.placeRisk = function(req, res) {
   logic.getDates().then(function(dates){
     return dates[0][0];
+  }).catch(function(err) {
+    res.json({error: err.message});
   }).then(function (second_week){
-    logic.getScores({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
+    logic.getAggregatedEntries({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
   
       var result = results[0][0];
       var map = {
@@ -234,6 +275,8 @@ exports.placeRisk = function(req, res) {
         panel_share: false,
       };
       res.render('place_risk.html', {options: result, map: map, config: config});
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   });
 };
@@ -257,6 +300,8 @@ exports.map = function(req, res) {
       dates.push(date.date);
     });
     res.render('map.embed.html', { config: config, dates: JSON.stringify(dates)});  
+  }).catch(function(err) {
+    res.json({error: err.message});
   });
 };
 
@@ -265,6 +310,8 @@ exports.map = function(req, res) {
 exports.asn = function(req, res) {
   logic.getAsnTotal().then(function(results){
     res.render('asn.html', {asnCount: results[0], config: config});
+  }).catch(function(err) {
+    res.json({error: err.message});
   });
 };
 
@@ -273,10 +320,14 @@ exports.apiRisk = function(req, res) {
 	if (Object.keys(req.params).length) { 
     logic.getRiskAPI(req.params).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   } else {
     logic.getRiskAPI(req.query).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   }
 };
@@ -286,10 +337,14 @@ exports.apiCountry = function(req, res) {
   if (Object.keys(req.params).length) { 
     logic.getCountryAPI(req.params).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   } else {
     logic.getCountryAPI(req.query).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   }
 };
@@ -299,10 +354,14 @@ exports.apiAsn = function(req, res) {
   if (Object.keys(req.params).length) { 
     logic.getAsnAPI(req.params).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   } else {
     logic.getAsnAPI(req.query).then(function(results){
       res.json(results[0]);
+    }).catch(function(err) {
+      res.json({error: err.message});
     });
   }
 };
@@ -317,12 +376,16 @@ exports.apiCountByCountry = function(req, res) {
   req.query.page = queryOptions.page;
   req.query.limit = checkLimit(queryOptions.limit);
   queryOptions.country = queryOptions.country.toLowerCase();
+  
   logic.getRowCountBYCountry(queryOptions).then(function(results) {
     return results[0][0].count;
+  }).catch(function(err) {
+    res.json({error: err.message});
   }).then(function (rows) {
     queryOptions.offset = queryOptions.limit*(queryOptions.page-1);
     var totalPages = Math.ceil(rows / queryOptions.limit);
     var pages = checkCurrentPage(parseInt(queryOptions.page), totalPages, req.route.path, req.query);
+    
     logic.getCountByCountry(queryOptions).then(function(results){
       res.json({
         status: "ok",
@@ -352,12 +415,16 @@ exports.apiCount = function(req, res) {
   queryOptions.country = queryOptions.country.toLowerCase();
   req.query.page = queryOptions.page;
   req.query.limit = checkLimit(queryOptions.limit);
+  
   logic.getRowCount(queryOptions).then(function(results) {
     return results[0][0].count;
+  }).catch(function(err) {
+    res.json({error: err.message});
   }).then(function (rows){
     queryOptions.offset = queryOptions.limit*(queryOptions.page-1);
     var totalPages = Math.ceil(rows / queryOptions.limit);
     var pages = checkCurrentPage(parseInt(queryOptions.page), totalPages, req.route.path, req.query);
+    
     logic.getTotalCount(queryOptions).then(function(results){ 
       res.json({
         status: "ok",

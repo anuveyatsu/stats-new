@@ -41,7 +41,7 @@
             </td>
             {% for risk in risks %}
             <td class="score" >  
-              <span>{{ entry[risk.risk_id] or 'N/A' }}</span>
+              <span>{{ entry[risk.id] or 'N/A' }}</span>
             </td>
             {% endfor %}
           </tr>
