@@ -124,3 +124,38 @@ exports.getDates = function() {
   var logic = "SELECT TO_CHAR(date,'YYYY-MM-DD') as date FROM agg_risk_country_week WHERE date!=(select max(date) FROM agg_risk_country_week) GROUP BY date ORDER BY date DESC LIMIT 3;";
   return sequelize.query(logic);
 };
+
+exports.getCountsForCountry = function(entries) {
+  var country_options = [];
+  entries.forEach(function(result){
+    if (country_options[result.country_id]){
+      country_options[result.country_id][result.risk] = {
+        count: result.count,
+        af_count: Math.round(result.count_amplified)
+      };
+      country_options[result.country_id][0].count += parseInt(result.count);
+      country_options[result.country_id][0].af_count += Math.round(result.count_amplified);
+      country_options[result.country_id].slug = result.slug;
+      country_options[result.country_id].name = result.name;
+    }else{
+      country_options[result.country_id] = {};
+      country_options[result.country_id][result.risk] = {
+        count: result.count,
+        af_count: Math.round(result.count_amplified)
+        };
+      country_options[result.country_id][0] = {
+        count: parseInt(result.count),
+        af_count: Math.round(result.count_amplified)
+      };
+      country_options[result.country_id].slug = result.slug;
+      country_options[result.country_id].name = result.name;
+    }
+  });
+  var result = [];
+  for (var country in country_options){
+    if (Object.keys(country_options[country]).length > 3) {
+      result.push(country_options[country]);
+    }
+  }
+  return result;
+};

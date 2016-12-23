@@ -56,24 +56,29 @@ In the table below the number shown is the score for a country. This score is a 
             {{ risk.title }} AF
           </th>
         {% endfor %}
+        <th class="sort_place" title="Sort by A-Z">Total DDoS</th>
       </tr>
     </thead>
     <tbody>
-    {% for option in options %}
-      <tr data-place="{{ option.name }}">
+    {% for country in countryOpt %}
+      <tr data-place="{{ country.name }}">
         <td>  
-          <a href="/country/{{ option.slug }}/" title="{{ option.name }}">
-            {{ option.name |truncate(28) }}
+          <a href="/country/{{ country.slug }}/" title="{{ country.name }}">
+            {{ country.name |truncate(28) }}
           </a>
         </td>
         {% for risk in riskOpt %}
           <td>
-            <span>{{ option[risk.id].count or "N/A"}}</span>
+            <span>{{ country[risk.id].count or "N/A"}}</span>
           </td>
           <td>
-            <span>{{ option[risk.id].af_count or "N/A"}}</span>
+            <span>{{ country[risk.id].af_count or "N/A"}}</span>
           </td>
         {% endfor %}
+        <td>
+          {# total count hardcoded for now #}
+          <span>{{ country[0].af_count or "N/A" }}</span>
+        </td>
       </tr>
     {% endfor %}
     </tbody>
