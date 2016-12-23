@@ -4,6 +4,59 @@ var request = require('supertest');
 
 var app = require('../app.js').app;
 
+describe('Get Counts and needed info For Each country', function() {
+  var entries = [
+      {
+        date: '1970-01-01', risk: 1, risk_slug: 'test', risk_title: 'test',
+        risk_description: 'test', country_id: 'ZZ', name: 'Test Z',
+        slug: 'test-z', count: '10', count_amplified: 100
+      },
+      {
+        date: '1970-01-01', risk: 2, risk_slug: 'test', risk_title: 'test',
+        risk_description: 'test', country_id: 'ZZ', name: 'Test Z',
+        slug: 'test-z', count: '20', count_amplified: 150
+      },
+      {
+        date: '1970-01-01', risk: 1, risk_slug: 'test', risk_title: 'test',
+        risk_description: 'test', country_id: 'AA', name: 'Test A',
+        slug: 'test-a', count: '20', count_amplified: 150
+      }
+    ];
+  it('Has all necessary keys', function(done) {
+    var result = logic.getCountsForCountry(entries);
+    var exp = [0, 1, 2, 'slug', 'name'];
+    var notExp = [0, 1, 2, 'slug', 'not-name'];
+    assert.deepEqual(Object.keys(result[0]), exp);
+    assert.notDeepEqual(Object.keys(result[0]), notExp);
+    done();
+  });
+  it('Has all countries', function(done) {
+    var result = logic.getCountsForCountry(entries);
+    assert.equal(result[0].slug, 'test-z');
+    assert.equal(result[1].slug, 'test-a');
+    done();
+  });
+  it('Risks have apropriate counts', function(done) {
+    var result = logic.getCountsForCountry(entries);
+    assert.equal(result[0][1].count, 10);
+    assert.equal(result[0][1].af_count, 100);
+    assert.equal(result[0][2].count, 20);
+    assert.equal(result[0][2].af_count, 150);
+    assert.equal(result[1][1].count, 20);
+    assert.equal(result[1][1].af_count, 150);
+    assert.equal(result[1][2], undefined);
+    done();
+  });
+  it('Total counts are summed correctly', function(done) {
+    var result = logic.getCountsForCountry(entries);
+    assert.equal(result[0][0].count, 30);
+    assert.equal(result[0][0].af_count, 250);
+    assert.equal(result[1][0].count, 20);
+    assert.equal(result[1][0].af_count, 150);
+    done();
+  });
+});
+
 describe('Get Aggregated entries', function(){
   it('Works without any parameters', function(done){
     logic.getAggregatedEntries().then(function(results){
