@@ -32,16 +32,25 @@ exports.place = function(req, res) {
     }).catch(function(err) {
       res.json({error: err.message});
     }).then(function (country_options) {
-      logic.getRisks().then(function (risks) {
-        risks = risks[0];
-        var parameters = {
-          countryOpt: country_options,
-          riskOpt: risks,
-          config: config
-        };
-        res.render('places.html', parameters);
-      }).catch(function(err) {
+      logic.getTotalCountsByDate().then(function (countsByDate) {
+        return countsByDate[0];
+      }).catch(function(err){
         res.json({error: err.message});
+      }).then(function (graphOptions) {
+        logic.getRisks().then(function (risks) {
+          risks = risks[0];
+          var parameters = {
+            countryOpt: country_options,
+            riskOpt: risks,
+            config: config,
+            //this is temporary HACK
+            graphData: JSON.stringify(graphOptions), 
+            graphRisks: JSON.stringify([{id: 'count_amplified'}])
+          };
+          res.render('places.html', parameters);
+        }).catch(function(err) {
+          res.json({error: err.message});
+        });
       });
     });
   });

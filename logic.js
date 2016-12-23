@@ -26,6 +26,12 @@ exports.getEntriesByASN= function(asn){
   return sequelize.query(logic, { bind: { asn: asn }});
 };
 
+// gets total af count for each date. This is temporary HACK! needs to be chnaged)
+exports.getTotalCountsByDate = function() {
+  var logic = "SELECT TO_CHAR(date, 'YYYY-MM-DD') as month, ROUND(count_amplified) as count_amplified FROM agg_risk_country_week WHERE date IS NOT NULL AND risk IS NULL and COUNTRY IS NULL ORDER BY date DESC";
+  return sequelize.query(logic);
+};
+
 exports.getAggregatedEntries = function(options){
   var slug = '',
       risk = '',
