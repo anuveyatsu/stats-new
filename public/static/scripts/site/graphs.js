@@ -7,7 +7,7 @@ risks.forEach(function(risk){
     "actions": false,
     "spec":{
       "width": 1080,
-      "height": 100,
+      "height": height,
       "signals": [
         {
           "name": "tooltip",
@@ -47,7 +47,7 @@ risks.forEach(function(risk){
       ],
       "axes": [
         {"type": "x", "scale": "x", "ticks": 12, "grid": true},
-        {"type": "y", "scale": "y", "ticks": 3,"grid": true}
+        {"type": "y", "scale": "y", "ticks": 6,"grid": true}
       ],
       "marks": [
         {
