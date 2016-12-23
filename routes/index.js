@@ -26,40 +26,16 @@ exports.place = function(req, res) {
   }).catch(function(err) {
     res.json({error: err.message});
   }).then(function (second_week) {
-    logic.getAggregatedEntries({date: second_week.date}).then(function(results) {
-      var country_options = {};
-      results[0].forEach(function(result){
-        if (country_options[result.country_id]){
-          country_options[result.country_id][result.risk] = {
-            count: result.count,
-            af_count: Math.round(result.count_amplified)
-          };
-          country_options[result.country_id].slug = result.slug;
-          country_options[result.country_id].name = result.name;
-        }else{
-          country_options[result.country_id] = {};
-          country_options[result.country_id][result.risk] = {
-            count: result.count,
-            af_count: Math.round(result.count_amplified)
-            };
-          country_options[result.country_id].slug = result.slug;
-          country_options[result.country_id].name = result.name;
-        }
-      });
-      var result = [];
-      for (var country in country_options){
-        if (Object.keys(country_options[country]).length > 3) {
-          result.push(country_options[country]);
-        }
-      }
-      return result;
+    logic.getAggregatedEntries({date: second_week.date}).then(function(entries) {
+      countries = logic.getCountsForCountry(entries[0]);
+      return countries;
     }).catch(function(err) {
       res.json({error: err.message});
     }).then(function (country_options) {
       logic.getRisks().then(function (risks) {
         risks = risks[0];
         var parameters = {
-          options: country_options,
+          countryOpt: country_options,
           riskOpt: risks,
           config: config
         };
