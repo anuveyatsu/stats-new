@@ -107,7 +107,7 @@ exports.getRowCountBYCountry = function(options) {
 };
 
 exports.getAsnCount = function(country, date) {
-  var logic = "SELECT asn, risk, SUM(count) as count, SUM(count_amplified) as count_amplified FROM fact_count WHERE date_trunc('week', date) = $date AND country = $country GROUP BY asn, risk;";
+  var logic = "SELECT asn, risk, SUM(count) as count, SUM(count_amplified) as count_amplified FROM fact_count WHERE date=date($date) AND country = $country GROUP BY asn, risk;";
 	return sequelize.query(logic, { bind: { country: country, date: date }});
 };
 
