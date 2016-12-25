@@ -22,7 +22,7 @@ exports.getCountries= function(){
 };
 
 exports.getEntriesByASN= function(asn){
-  logic = "SELECT risk, country, asn, to_char(date, 'YYYY-MM-DD') as date, count FROM fact_count WHERE asn = $asn ORDER BY date ASC";
+  logic = "SELECT risk, country, asn, to_char(week_start, 'YYYY-MM-DD') as date, count FROM fact_count JOIN dim_time ON fact_count.date=dim_time.date WHERE asn = $asn ORDER BY date ASC";
   return sequelize.query(logic, { bind: { asn: asn }});
 };
 
@@ -107,7 +107,7 @@ exports.getRowCountBYCountry = function(options) {
 };
 
 exports.getAsnCount = function(country, date) {
-  var logic = "SELECT asn, risk, SUM(count) as count, SUM(count_amplified) as count_amplified FROM fact_count WHERE date=date($date) AND country = $country GROUP BY asn, risk;";
+  var logic = "SELECT asn, risk, SUM(count) as count, SUM(count_amplified) as count_amplified FROM fact_count JOIN dim_time ON fact_count.date=dim_time.date WHERE week_start=date($date) AND country=$country GROUP BY risk, asn;";
 	return sequelize.query(logic, { bind: { country: country, date: date }});
 };
 

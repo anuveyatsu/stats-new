@@ -163,11 +163,11 @@ exports.placeASN = function(req, res) {
     var dates = {};
     results[0].forEach(function (entry){
       if (dates[entry.date]){
-        dates[entry.date][entry.risk] = entry.count;
+        dates[entry.date][entry.risk] = parseInt(entry.count);
         dates[entry.date].month = entry.date;
       } else {
         dates[entry.date] = {};
-        dates[entry.date][entry.risk] = entry.count;
+        dates[entry.date][entry.risk] = parseInt(entry.count);
         dates[entry.date].month = entry.date;
       } 
     });
