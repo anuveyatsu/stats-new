@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/cybergreen-net/stats-new.svg?branch=master)]
+(https://travis-ci.org/cybergreen-net/stats-new)
+
 CyberGreen stats site prototype.
 
 ## Development
