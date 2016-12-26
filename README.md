@@ -32,28 +32,16 @@ There are two options:
 
 ### Creating a local database
 
-Install postgresql
+We use postgresql 9.5 for local development. Plese follow instalation instructions [here](https://www.postgresql.org/docs/9.5/static/installation.html)
 
-```
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
 ```
 
 Create the user and database
 
 ```
-# Switch to postgres user
-sudo su postgres
+$ psql -U postgres -c "create user test_user password 'secret' createdb;"
+$ psql -U postgres -c "create database testdb owner=test_user;"
 
-# Log in 
-psql -d postgres -U postgres
-
-# Create test role and give it superuser privileges
-
-CREATE USER test_user WITH PASSWORD 'secret';
-ALTER USER test_user WITH SUPERUSER;
-
-CREATE DATABASE testdb;
 ```
 
 Run aggregation script
@@ -75,19 +63,21 @@ tutorial](https://devcenter.heroku.com/articles/getting-started-with-nodejs#intr
 ```
     # replace {app-name} with the name of your app
     heroku create {app-name}
-    git push heroku master
+    git push {remote-name} master 
     # now point at our config
     heroku ps:scale web=1
 ```
+*Note*: If not set, `remote-name` by default, is “heroku”.
+
 ## To deploy (already created):
 
 Push to heroku git repo:
 ```
-    git push heroku master
+    git push {remote-name} master
 ```
-*Note*: if didn't do the create you will need to add the heroku remote:
+*Note*: if didn't do the create you will need to add the remote:
 ```
-    git remote add heroku git@heroku.com:{app-name}.git
+    git remote add {remote-name} git@heroku.com:{app-name}.git
 ```
 ### Adding collaborators:
 ```
@@ -110,4 +100,3 @@ DATABASE_URI=postgres://cg_user:SecetPassword@cg-example.jdutoe634ksdk.cg-region
 ```
 
 Now CNAME your domain to {myapp}.herokuapp.com
-
