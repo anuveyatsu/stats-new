@@ -90,16 +90,16 @@ def load_data():
 	cpath = os.path.abspath('tests/fixtures/country.csv')
 	capath = os.path.abspath('tests/fixtures/asn.csv')
 	
-	eload = "COPY fact_count FROM '%s' DELIMITER ',' CSV HEADER;"%epath
-	rload = "COPY dim_risk FROM '%s' DELIMITER ',' CSV HEADER;"%rpath
-	cload = "COPY dim_country FROM '%s' DELIMITER ',' CSV HEADER;"%cpath
-	caload = "COPY dim_asn FROM '%s' DELIMITER ',' CSV HEADER;"%capath
+	eload = "COPY fact_count FROM STDIN DELIMITER ',' CSV HEADER;"
+	rload = "COPY dim_risk FROM STDIN DELIMITER ',' CSV HEADER;"
+	cload = "COPY dim_country FROM STDIN DELIMITER ',' CSV HEADER;"
+	caload = "COPY dim_asn FROM STDIN DELIMITER ',' CSV HEADER;"
 	
 	cursor = connection.cursor()
-	cursor.execute(eload)
-	cursor.execute(rload)
-	cursor.execute(cload)
-	cursor.execute(caload)
+	cursor.copy_expert(eload, open(epath))
+	cursor.copy_expert(rload, open(rpath))
+	cursor.copy_expert(cload, open(cpath))
+	cursor.copy_expert(caload, open(capath))
 	connection.commit()
 
 
