@@ -34,8 +34,6 @@ There are two options:
 
 We use postgresql 9.5 for local development. Plese follow instalation instructions [here](https://www.postgresql.org/docs/9.5/static/installation.html)
 
-```
-
 Create the user and database
 
 ```
