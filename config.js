@@ -1,6 +1,6 @@
 var config = {
 	AUTHOR: "CyberGreen",
-	SITENAM: "CyberGreen Statistics",
+	SITENAME: "CyberGreen Statistics",
 	CGR: {
 		scheme: "",
 		domain: "",
