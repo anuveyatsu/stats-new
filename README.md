@@ -45,6 +45,7 @@ $ psql -U postgres -c "create database testdb owner=test_user;"
 Run aggregation script
 
 ```
+$ pip install -r tests/requirements.txt
 $ python tests/aggregate.py
 ```
 
