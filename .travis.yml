@@ -26,7 +26,7 @@ before_script:
   - psql -U postgres -c "create database testdb owner=test_user;"
 
 install:
-  - pip install -r tests/requirements.txt
+  - sudo pip install -r tests/requirements.txt
   - npm install
 
 script: mocha tests
