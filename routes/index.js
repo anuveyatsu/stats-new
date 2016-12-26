@@ -13,6 +13,7 @@ exports.home = function(req, res) {
       embed_title: 'openntp'+' / '+ date,
       panel_tools: true
     };
+    config.page = 'Home';
     res.render('home.html', {map: map, config: config});  
   }).catch(function(err) {
     res.json({error: err.message});
@@ -39,6 +40,7 @@ exports.place = function(req, res) {
       }).then(function (graphOptions) {
         logic.getRisks().then(function (risks) {
           risks = risks[0];
+          config.page = 'Countries';
           var parameters = {
             countryOpt: country_options,
             riskOpt: risks,
@@ -141,6 +143,7 @@ exports.placeID = function(req, res) {
             panel_share: false,
             map_place: riskEntries[0].country_id.toLowerCase()
           };
+          config.page = riskEntries[0].country_id;
           var parameters = {
             options: riskEntries,
             asns: asns.asnList.slice(0, 5000),
@@ -182,6 +185,7 @@ exports.placeASN = function(req, res) {
   }).then(function(entriesByDate){
   	logic.getRisks().then(function (risks) {
 			risks = risks[0];
+      config.page = req.params.asn;
 			var parameters = {
 				entries: entriesByDate, 
 				graphData: JSON.stringify(entriesByDate), 
@@ -206,6 +210,7 @@ exports.risk = function(req, res) {
   }).then(function (second_week){
     logic.getRiskCount({date: second_week.date}).then(function(results){
       var result = results[0];
+      config.page = 'Risks';
       var parameters = {options: result, config: config};
       res.render('risks.html', parameters);
     }).catch(function(err) {
@@ -231,6 +236,7 @@ exports.riskID = function(req, res) {
         panel_tools: false,
         panel_share: false,
       };
+      config.page = result[0].risk_title;
       var parameters = {options: result,  map: map, config: config};
       res.render('risk.html', parameters);
     }).catch(function(err) {
@@ -259,6 +265,7 @@ exports.placeRisk = function(req, res) {
         panel_tools: false,
         panel_share: false,
       };
+      config.page = result.country_id + '-' + result.risk_title;
       res.render('place_risk.html', {options: result, map: map, config: config});
     }).catch(function(err) {
       res.json({error: err.message});
@@ -268,11 +275,13 @@ exports.placeRisk = function(req, res) {
 
 // download
 exports.download = function(req, res) {
+  config.page = 'Download & API';
   res.render('download.html', {config: config});
 };
 
 // about
 exports.about = function(req, res) {
+  config.page = 'About';
   res.render('about.html', {config: config});
 };
 
@@ -284,6 +293,7 @@ exports.map = function(req, res) {
     results[0].forEach(function(date){
       dates.push(date.date);
     });
+    config.page = 'Map';
     res.render('map.embed.html', { config: config, dates: JSON.stringify(dates)});  
   }).catch(function(err) {
     res.json({error: err.message});
@@ -294,6 +304,7 @@ exports.map = function(req, res) {
 
 exports.asn = function(req, res) {
   logic.getAsnTotal().then(function(results){
+    config.page = 'ASN';
     res.render('asn.html', {asnCount: results[0], config: config});
   }).catch(function(err) {
     res.json({error: err.message});
