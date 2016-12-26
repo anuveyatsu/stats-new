@@ -24,6 +24,7 @@ addons:
 before_script:
   - psql -U postgres -c "create user test_user password 'secret' createdb;"
   - psql -U postgres -c "create database testdb owner=test_user;"
+  - python tests/aggregate.py
 
 install:
   - sudo pip install -r tests/requirements.txt
