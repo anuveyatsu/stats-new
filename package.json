@@ -1,8 +1,7 @@
 {
   "name": "cybergreen-app",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "dependencies": {
-    "babyparse": "^0.4.6",
     "express": "^4.14.0",
     "marked": "^0.3.6",
     "nunjucks": "^2.4.2",
@@ -12,7 +11,23 @@
     "sequelize": "^3.24.2"
   },
   "devDependencies": {
-    "supertest": "",
-    "mocha": ""
-  }
+    "mocha": "",
+    "nodemon": "",
+    "supertest": ""
+  },
+  "description": "[![Build Status](https://travis-ci.org/cybergreen-net/stats-new.svg?branch=master)] (https://travis-ci.org/cybergreen-net/stats-new)",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cybergreen-net/stats-new.git"
+  },
+  "author": "CyberGreen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cybergreen-net/stats-new/issues"
+  },
+  "homepage": "https://github.com/cybergreen-net/stats-new#readme"
 }
