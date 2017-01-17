@@ -404,7 +404,7 @@ exports.apiCountByCountry = function(req, res) {
 
 exports.apiCount = function(req, res) {
   var queryOptions = {
-    country: req.query.country || "", risk: req.query.risk || "", asn: req.query.asn || "",
+    country: req.query.country || "", risk: parseInt(req.query.risk) || -1, asn: parseInt(req.query.asn) || -1,
     start: req.query.start || "", end: req.query.end || "",
     limit:checkLimit(req.query.limit) || "20", page: req.query.page || 1
   };
