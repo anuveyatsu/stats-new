@@ -28,7 +28,7 @@ exports.getEntriesByASN= function(asn){
 
 // gets total af count for each date. This is temporary HACK! needs to be chnaged)
 exports.getTotalCountsByDate = function() {
-  var logic = "SELECT TO_CHAR(date, 'YYYY-MM-DD') as month, ROUND(count_amplified) as count_amplified FROM agg_risk_country_week WHERE date IS NOT NULL AND risk IS NULL and COUNTRY IS NULL ORDER BY date DESC";
+  var logic = "SELECT TO_CHAR(date, 'YYYY-MM-DD') as month, ROUND(count_amplified) as count_amplified FROM agg_risk_country_week WHERE date IS NOT NULL AND risk=100 and country='T' ORDER BY date DESC";
   return sequelize.query(logic);
 };
 
@@ -91,18 +91,26 @@ exports.getAsnAPI = function(options){
 };
 
 exports.getCountByCountry = function(options){
-  if (options.limit.toLowerCase() === 'none'){
-    // for map
-    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) AND date IS NOT NULL ORDER BY date DESC, risk ASC;";
-    return sequelize.query(logic, { bind: options});
-  }else {
-    logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR dim_risk.slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) AND date IS NOT NULL ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
-    return sequelize.query(logic, { bind: options});
+  var table = this.getTableName(options.granularity);
+  if (!table) {
+    throw new errorHandler('Invalid Time Granunlarity');
   }
+  var select = "SELECT risk, country, to_char(date,'YYYY-MM-DD') as date, count, ROUND(count_amplified) as count_amplified FROM " + table;
+  var where = " WHERE (date IS NOT NULL) AND ($country = '' OR country = $country) AND ($risk = -1 OR risk = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
+  
+  //logic = "SELECT slug as risk, country, to_char(date,'YYYY-MM-DD') as date, count FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR dim_risk.slug = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD')) AND date IS NOT NULL ORDER BY date DESC, country ASC LIMIT $limit OFFSET $offset;";
+  var logic = select + where; 
+  return sequelize.query(logic, { bind: options});
 };
 
 exports.getRowCountBYCountry = function(options) {  
-  var logic = "SELECT COUNT(*) FROM agg_risk_country_week JOIN dim_risk on (agg_risk_country_week.risk=dim_risk.id) WHERE ($country = '' OR lower(country) = $country) AND ($risk = '' OR dim_risk.id::text = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
+  var table = this.getTableName(options.granularity);
+  if (!table) {
+    throw new errorHandler('Invalid Time Granunlarity');
+  }
+  var select = "SELECT COUNT(*) FROM " + table;
+  var where = " WHERE (date IS NOT null) AND ($country = '' OR country = $country) AND ($risk = -1 OR risk = $risk) AND ($start = '' OR date >= to_date($start,'YYYY-MM-DD')) AND ($end = '' OR date <= to_date($end,'YYYY-MM-DD'));";
+  var logic = select + where;
   return sequelize.query(logic, { bind: options});
 };
 
@@ -165,3 +173,26 @@ exports.getCountsForCountry = function(entries) {
   }
   return result;
 };
+
+exports.getTableName = function(granularity) {
+  var tablename;
+  switch(granularity) {
+    case 'week':
+        tablename = 'agg_risk_country_week';
+        break;
+    case 'month':
+        tablename = 'agg_risk_country_month';
+        break;
+    case 'quarter':
+        tablename = 'agg_risk_country_quarter';
+        break;
+    case 'year':
+        tablename = 'agg_risk_country_year';
+        break;
+  }
+  return tablename;
+};
+
+function errorHandler(message) {
+  this.message = message;
+}
