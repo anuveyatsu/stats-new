@@ -21,3 +21,4 @@ Since SSDP runs over UDP, again, it can be used for UDP reflection attacks. **De
 **Impact of running open SNMP devices**
 
 Again, it runs on the [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) protocol and again can be abuse for UDP based [amplification attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack#Reflected_.2F_spoofed_attack). SNMP has an amplification factor of 6.3"
+100,ddos,Global DDOS,1,
