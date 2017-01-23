@@ -8,6 +8,9 @@ CyberGreen stats site prototype.
 To build and view the app:
 
 1. Clone the repo
+    ```
+    git clone --recursive https://github.com/cybergreen-net/stats-new.git
+    ```
 2. Install dependencies
 
     ```
