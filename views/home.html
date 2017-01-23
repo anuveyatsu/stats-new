@@ -4,45 +4,22 @@
 
 <div id="home-about">
   <div class="container">
-    <h1 style="color:#00D49A; font-size:40px; margin-top:40px; margin-bottom:20px;">Tracking the
-		state of global cyber health.</h1>
-    <div class="text-center">We help CSIRTs focus their remediation efforts on the most important
-		risks; to help understand where improvements can be made and how, together, we can achieve a
-		more sustainable, secure, and resilient cyber ecosystem.
-      <br>
-	<p><b>Demo</b>:<i> This platform is primarily intended to be a demo of Version 2 of
-	CyberGreen platform functions. As of now, the site does not provide metrics of cyber health.
-	The data and heat map simply illustrate the number (count) of infections and vulnerable devices,
-	scored then ranked. Cybergreen metrics-based measurement and visualization will be finalized in
-	December 2016.</p></i>
-	  <p><b>Metrics:</b><i> To learn more about the near- to medium-term direction of CyberGreen's
-		metrics, you can access the report authored by Dan Geer <a href="http://www.cybergreen.net/img/medialibrary/CyberGreen Metrics v.2.pdf" target="_blank">here.</a></p></i>
-	   <p><b>Feedback:</b><i> Your feedback is valuable to us. If you have any questions,
-		 comments or suggestions about this demo, please <a href="https://www.cybergreen.net/contact/">let us know</a></i></p>
-      <br>
-      <a class="btn btn-primary-black btn-lg" href="/country/" title="Compare the cyber health of countries.">
-        Compare countries
-      </a>
-			<a class="btn btn-primary-black btn-lg" href="/asn/" title="See ASN performance.">
-        ASNs
-      </a>
-      <a class="btn btn-primary-black btn-lg" href="/risk/" title="An overview of the different risks.">
-        Overview of risks
-      </a>
-
-      <a class="btn btn-primary-black btn-lg" href="/download/" title="Download the data.">
-        Download & API
-      </a>
-    </div>
-  </div>
+		<div id="root"></div>
+		<div>
+			<script type="text/javascript" >
+				var graphData = {{ graphData }}
+			</script>
+			<script type="text/javascript" src="/static/vendor/cg-graphs/index.min.js"></script>
+		</div>
+	</div>
 </div>
 
-<section id="home-visualisation" class="container">
+<!--<section id="home-visualisation" class="container">
   <div class="row map_visualisation">
     <div class="col-md-12 map">
       {% include 'dataviews/embed_map.html' %}
     </div>
   </div>
-</section>
+</section>-->	
 
 {% endblock main %}
