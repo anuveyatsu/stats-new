@@ -3,18 +3,18 @@ var logic = require('../logic');
 
 // home page
 exports.home = function(req, res) {
-  logic.getDates().then(function(results){
-    var date = results[0][0].date;
-    var map = {
-      embed_width: '100%',
-      embed_height: '550px',
-      current_year: date,
-      filter_risk: 'openntp',
-      embed_title: 'openntp'+' / '+ date,
-      panel_tools: true
-    };
+  logic.getRisks().then(function (risks) {
+    var graphData = [];
+    risks[0].forEach(function (risk) {
+      if (risk.id!==100) {
+        graphData.push({
+          url: '/api/v1/count_by_country?country=T&limit=500&page=1&risk=' + risk.id,
+          name: risk.title
+        });
+      }
+    });
     config.page = 'Home';
-    res.render('home.html', {map: map, config: config});  
+    res.render('home.html', {graphData: JSON.stringify(graphData), config: config});  
   }).catch(function(err) {
     res.json({error: err.message});
   });
