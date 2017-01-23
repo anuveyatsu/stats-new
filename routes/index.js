@@ -40,7 +40,7 @@ exports.place = function(req, res) {
       }).then(function (graphOptions) {
         logic.getRisks().then(function (risks) {
           risks = risks[0];
-          config.page = 'Countries';
+          config.page = 'Country Overview';
           var parameters = {
             countryOpt: country_options,
             riskOpt: risks,
@@ -143,7 +143,7 @@ exports.placeID = function(req, res) {
             panel_share: false,
             map_place: riskEntries[0].country_id.toLowerCase()
           };
-          config.page = riskEntries[0].country_id;
+          config.page = riskEntries[0].name;
           var parameters = {
             options: riskEntries,
             asns: asns.asnList.slice(0, 5000),
@@ -185,7 +185,7 @@ exports.placeASN = function(req, res) {
   }).then(function(entriesByDate){
   	logic.getRisks().then(function (risks) {
 			risks = risks[0];
-      config.page = req.params.asn;
+      config.page = 'AS ' + req.params.asn + ' - ' + req.params.country;
 			var parameters = {
 				entries: entriesByDate, 
 				graphData: JSON.stringify(entriesByDate), 
@@ -210,7 +210,7 @@ exports.risk = function(req, res) {
   }).then(function (second_week){
     logic.getRiskCount({date: second_week.date}).then(function(results){
       var result = results[0];
-      config.page = 'Risks';
+      config.page = 'Risk Statistics';
       var parameters = {options: result, config: config};
       res.render('risks.html', parameters);
     }).catch(function(err) {
@@ -236,7 +236,7 @@ exports.riskID = function(req, res) {
         panel_tools: false,
         panel_share: false,
       };
-      config.page = result[0].risk_title;
+      config.page = result[0].risk_title + ' Risk Statistics';
       var parameters = {options: result,  map: map, config: config};
       res.render('risk.html', parameters);
     }).catch(function(err) {
@@ -265,7 +265,7 @@ exports.placeRisk = function(req, res) {
         panel_tools: false,
         panel_share: false,
       };
-      config.page = result.country_id + '-' + result.risk_title;
+      config.page = result.risk_title + ' - ' + result.name;
       res.render('place_risk.html', {options: result, map: map, config: config});
     }).catch(function(err) {
       res.json({error: err.message});
@@ -304,7 +304,7 @@ exports.map = function(req, res) {
 
 exports.asn = function(req, res) {
   logic.getAsnTotal().then(function(results){
-    config.page = 'ASN';
+    config.page = 'AS (Autonomous System) Overview';
     res.render('asn.html', {asnCount: results[0], config: config});
   }).catch(function(err) {
     res.json({error: err.message});
