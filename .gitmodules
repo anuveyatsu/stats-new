@@ -1,0 +1,3 @@
+[submodule "public/static/vendor/cg-graphs"]
+	path = public/static/vendor/cg-graphs
+	url = https://github.com/zelima/cg-graphs
