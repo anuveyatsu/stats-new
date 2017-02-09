@@ -20,14 +20,14 @@ exports.home = function(req, res) {
   }).then(function (graphData) {
     logic.getCountries().then(function (countries) {
       var countriesToSearch = {}
-      Object.values(countries[0]).forEach(function (country) {
+      countries[0].forEach(function (country) {
         countriesToSearch[country.id] = country
       })
       config.page = 'Home';
       res.render('home.html', {
         graphData: JSON.stringify(graphData),
         countries: JSON.stringify(countriesToSearch),
-        config: config });
+        config: config});
     })
   });
 };
