@@ -13,10 +13,22 @@ exports.home = function(req, res) {
         });
       }
     });
-    config.page = 'Home';
-    res.render('home.html', {graphData: JSON.stringify(graphData), config: config});  
+    return graphData
+
   }).catch(function(err) {
     res.json({error: err.message});
+  }).then(function (graphData) {
+    logic.getCountries().then(function (countries) {
+      var countriesToSearch = {}
+      Object.values(countries[0]).forEach(function (country) {
+        countriesToSearch[country.id] = country
+      })
+      config.page = 'Home';
+      res.render('home.html', {
+        graphData: JSON.stringify(graphData),
+        countries: JSON.stringify(countriesToSearch),
+        config: config });
+    })
   });
 };
 
@@ -46,7 +58,7 @@ exports.place = function(req, res) {
             riskOpt: risks,
             config: config,
             //this is temporary HACK
-            graphData: JSON.stringify(graphOptions), 
+            graphData: JSON.stringify(graphOptions),
             graphRisks: JSON.stringify([{id: 'count_amplified'}])
           };
           res.render('places.html', parameters);
@@ -172,7 +184,7 @@ exports.placeASN = function(req, res) {
         dates[entry.date] = {};
         dates[entry.date][entry.risk] = parseInt(entry.count);
         dates[entry.date].month = entry.date;
-      } 
+      }
     });
     var entriesByDate = [];
     for (var date in dates){
@@ -187,10 +199,10 @@ exports.placeASN = function(req, res) {
 			risks = risks[0];
       config.page = 'AS ' + req.params.asn + ' - ' + req.params.country;
 			var parameters = {
-				entries: entriesByDate, 
-				graphData: JSON.stringify(entriesByDate), 
-				page: {name: req.params.country, asn: req.params.asn}, 
-				config: config, 
+				entries: entriesByDate,
+				graphData: JSON.stringify(entriesByDate),
+				page: {name: req.params.country, asn: req.params.asn},
+				config: config,
 				risks: risks,
 				graphRisks: JSON.stringify(risks)
 			};
@@ -253,7 +265,7 @@ exports.placeRisk = function(req, res) {
     res.json({error: err.message});
   }).then(function (second_week){
     logic.getAggregatedEntries({date: second_week.date, risk: req.params.risk, country: req.params.country}).then(function(results){
-  
+
       var result = results[0][0];
       var map = {
         embed_width: '100%',
@@ -294,7 +306,7 @@ exports.map = function(req, res) {
       dates.push(date.date);
     });
     config.page = 'Map';
-    res.render('map.embed.html', { config: config, dates: JSON.stringify(dates)});  
+    res.render('map.embed.html', { config: config, dates: JSON.stringify(dates)});
   }).catch(function(err) {
     res.json({error: err.message});
   });
@@ -313,7 +325,7 @@ exports.asn = function(req, res) {
 
 // api
 exports.apiRisk = function(req, res) {
-	if (Object.keys(req.params).length) { 
+	if (Object.keys(req.params).length) {
     logic.getRiskAPI(req.params).then(function(results){
       res.json(results[0]);
     }).catch(function(err) {
@@ -330,7 +342,7 @@ exports.apiRisk = function(req, res) {
 
 exports.apiCountry = function(req, res) {
   // handles with query and /{id} for REST
-  if (Object.keys(req.params).length) { 
+  if (Object.keys(req.params).length) {
     logic.getCountryAPI(req.params).then(function(results){
       res.json(results[0]);
     }).catch(function(err) {
@@ -347,7 +359,7 @@ exports.apiCountry = function(req, res) {
 
 exports.apiAsn = function(req, res) {
   // handles with query and /{asn} for REST
-  if (Object.keys(req.params).length) { 
+  if (Object.keys(req.params).length) {
     logic.getAsnAPI(req.params).then(function(results){
       res.json(results[0]);
     }).catch(function(err) {
@@ -403,7 +415,7 @@ exports.apiCount = function(req, res) {
   queryOptions.country = queryOptions.country.toLowerCase();
   req.query.page = queryOptions.page;
   req.query.limit = checkLimit(queryOptions.limit);
-  
+
   logic.getRowCount(queryOptions).then(function(results) {
     return results[0][0].count;
   }).catch(function(err) {
@@ -412,8 +424,8 @@ exports.apiCount = function(req, res) {
     queryOptions.offset = queryOptions.limit*(queryOptions.page-1);
     var totalPages = Math.ceil(rows / queryOptions.limit);
     var pages = checkCurrentPage(parseInt(queryOptions.page), totalPages, req.route.path, req.query);
-    
-    logic.getTotalCount(queryOptions).then(function(results){ 
+
+    logic.getTotalCount(queryOptions).then(function(results){
       res.json({
         status: "ok",
         number_of_data_results: rows,
@@ -440,8 +452,8 @@ exports.geo = function(req, res) {
 
 function checkLimit(limit){
     if (parseInt(limit) > 500){
-      return '500'; 
-    } 
+      return '500';
+    }
     return limit;
 }
 
