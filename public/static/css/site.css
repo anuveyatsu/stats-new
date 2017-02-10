@@ -8498,7 +8498,18 @@ textarea {
 #home-about h1 {
   text-align: center;
   font-size: 2.8em;
+  color:#00D49A;
   margin-top: 50px;
+}
+#home-about h2 {
+  text-align: center;
+  font-size: 1.5em;
+  color:#00D49A;
+  margin-top: 50px;
+}
+#home-about #dropdown {
+  width: 60%;
+  margin: auto;
 }
 #home-about a {
   margin-left: 15px;
