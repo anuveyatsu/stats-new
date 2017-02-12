@@ -9135,3 +9135,6 @@ header.navigation {
             padding-left: 1em;
             text-align: left;
             width: 12em; } }
+#root h3 {
+  color: #00D49A;
+}
