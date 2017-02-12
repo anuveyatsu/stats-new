@@ -342,10 +342,14 @@ exports.apiCountByCountry = function(req, res) {
     }).catch(function(err) {
       res.json({error: err.message});
     }).then(function (rows) {
-      logic.getCountByCountry(queryOptions).then(function(results){
+      logic.getCountByCountry(queryOptions).then(function(CountByCountry){
+        var normalized;
+        if (queryOptions.risk !== -1 && queryOptions.country && queryOptions.granularity === 'week') {
+          normalized = normalize(CountByCountry[0], '2017-01-02');
+        }
         res.json({
           total: rows,
-          results: results[0]
+          results: normalized || CountByCountry[0]
         });
       }).catch(function(err) {
         res.json({error: err.message});
@@ -423,4 +427,16 @@ function makeURL(path, args) {
     path += (arg + "=" + args[arg]+"&");
   }
   return path;
+}
+
+function normalize(entries, date) {
+  clone = entries.slice()
+  var normalizer = clone.find(function(entry){
+    return entry.date === date
+  })
+  if (!normalizer){ return }
+  clone.map(function(entry) {
+    return entry.count_normalized = Math.round(entry.count/(normalizer.count/100) *100) /100
+  })
+  return clone
 }
