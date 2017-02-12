@@ -72,104 +72,54 @@ exports.place = function(req, res) {
 
 
 exports.placeID = function(req, res) {
-  logic.getDates().then(function(dates){
-    return dates[0][0];
+  logic.getCountries().then(function(countries) {
+    var country = countries[0].find(function(country) {
+      return country.slug === req.params.id.toLowerCase()
+    })
+    if(!country){res.render('404.html');}
+
+    var countriesToSearch = {}
+    countries[0].forEach(function (country) {
+      countriesToSearch[country.id] = country
+    })
+    return {countriesToSearch: countriesToSearch, country: country}
   }).catch(function(err) {
     res.json({error: err.message});
-  }).then(function (second_week) {
-    var options = {
-      date: second_week.date,
-      country: req.params.id.toLowerCase()
-    };
-    logic.getAggregatedEntries(options).then(function(entries) {
-      if(!entries[0].length) {
-        res.render('404.html');
-        return;
-      }
-      var id = entries[0][0].country_id;
-      var date = entries[0][0].date;
-      logic.getAsnCount(id, date).then(function(asnCounts) {
-        var asns = {};
-        var risks = {};
-        asnCounts[0].forEach(function(result){
-          if (asns[result.asn]){
-            asns[result.asn].asn = result.asn;
-            asns[result.asn][result.risk] = {
-              count: result.count,
-              af_count: result.count_amplified
-            };
-          }else {
-            asns[result.asn] = {};
-            asns[result.asn].asn = result.asn;
-            asns[result.asn][result.risk] = {
-              count: result.count,
-              af_count: result.count_amplified
-            };
-          }
-          if (risks[result.risk]){
-            risks[result.risk].push({name: result.asn, count: result.count});
-          }else{
-            risks[result.risk] = [];
-            risks[result.risk].push({name: result.asn, count: result.count});
-          }
-        });
-        var asnList = [];
-        for (var asn in asns){
-          asnList.push(asns[asn]);
+  }).then(function(countries) {
+    logic.getRisks().then(function(risks) {
+      var countryPerformanceOnRiskViews = {}
+      risks[0].forEach(function(risk) {
+        var countryID = countries.country.id
+        var riskID = risk.id
+        countryPerformanceOnRiskViews[countryID+'/'+riskID] = {
+          id: countryID+'/'+riskID,
+          country: countryID, risk: riskID,
+          type: 'country/performance',
+          isFetched: false,
+          isFetching: false,
+          didFailed: false,
+          measure: "count_normalized",
+          selectorConfig: [
+            {disabled: true, country: countryID},
+            {disabled: true, country: 'T'},
+            {disabled: false, country: undefined},
+            {disabled: false, country: undefined},
+            {disabled: false, country: undefined}
+          ]
         }
-        var result = {asnList: asnList, riskList: risks};
-        return result;
+      })
+      config.page = countries.country.name;
+      var parameters = {
+        countryOptions: countries.country,
+        countryPerformanceOnRiskViews: JSON.stringify(countryPerformanceOnRiskViews),
+        countries: JSON.stringify(countries.countriesToSearch),
+        config: config
+      };
+      res.render('place.html', parameters);
     }).catch(function(err) {
-      res.json({error: err.message});
-    }).then(function(asns){
-        logic.getRisks().then(function (risks) {
-          risks = risks[0];
-          // adds risk in Table if there is no data For given country
-          var isRisk = false;
-          var riskMap = {};
-          var treeList = [];
-          var riskEntries = entries[0];
-          risks.forEach(function(risk){
-            riskMap[risk.id] = risk.slug;
-            riskEntries.forEach(function(res){
-              if(risk.id === res.risk){
-                isRisk = true;
-              }
-            });
-            if (!isRisk){
-              riskEntries.push({risk_title: risk.title, risk: risk.slug});
-            }
-            isRisk = false;
-          });
-          for (var risk in asns.riskList){
-            var obj = Object.assign({name: riskMap[risk]}, {children: asns.riskList[risk]});
-            treeList.push(obj);
-          }
-          var map = {
-            embed_width: '100%',
-            embed_height: '360px',
-            current_year: riskEntries[0].date,
-            filter_risk: 'openntp',
-            embed_title: 'openntp' + ' / ' + riskEntries[0].date,
-            panel_tools: true,
-            panel_share: false,
-            map_place: riskEntries[0].country_id.toLowerCase()
-          };
-          config.page = riskEntries[0].name;
-          var parameters = {
-            options: riskEntries,
-            asns: asns.asnList.slice(0, 5000),
-            treeAsn: JSON.stringify(treeList),
-            riskOpt: risks, map: map,
-            config: config
-          };
-          res.render('place.html', parameters);
-        }).catch(function(err) {
-        res.json({error: err.message});
-        });
-      });
-    });
-  });
+      res.json({error: err.message})
+    })
+  })
 };
 
 exports.placeASN = function(req, res) {
