@@ -1,12 +1,12 @@
 {% extends 'page.html' %}
 {% from 'macros.html' import share %}
-{% set fragment = 'place / {{ options[0].slug }}' %}
+{% set fragment = 'place / {{ countryOptions.slug }}' %}
 
 {% block heading %}{% endblock heading %}
 
 {% block breadcrumbs_inner %}
   <li><a href="/country">Countries</a></li>
-  <li class="active">{{ options[0].name }}</li>
+  <li class="active">{{ countryOptions.name }}</li>
 {% endblock breadcrumbs_inner %}
 
 {% block content %}
