@@ -1,0 +1,337 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: CyberGreen API
+host: localhost:5000
+basePath: /api/v1
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /risk:
+    x-swagger-router-controller: api
+    get:
+      description: Returns aggregated results drilled down to country level
+      operationId: apiRisk
+      parameters:
+        - name: id
+          in: query
+          description: Unic numeric value for risk
+          required: false
+          type: integer
+        - name: slug
+          in: query
+          description: Lowercased URL-friendly expresion for risk
+          required: false
+          type: string
+        - name: title
+          in: query
+          description: Actual name for risk
+          required: false
+          type: string
+        - name: amplification_factor
+          in: query
+          description: Amplfication factor for risk
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/apiRiskResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /country:
+    x-swagger-router-controller: api
+    get:
+      description: Returns aggregated results drilled down to country level
+      operationId: apiCountry
+      parameters:
+        - name: id
+          in: query
+          description: String - ISO 3166-1 alpha-2 code
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Actual name of country
+          required: false
+          type: string
+        - name: slug
+          in: query
+          description: Lowercased URL-friendly expresion for country
+          required: false
+          type: string
+        - name: region
+          in: query
+          description: Region for country
+          required: false
+          type: string
+        - name: continent
+          in: query
+          description: Continent country lies on
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/apiCountryResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asn:
+    x-swagger-router-controller: api
+    get:
+      description: Returns aggregated results drilled down to country level
+      operationId: apiAsn
+      parameters:
+        - name: country
+          in: query
+          description: String - ISO 3166-1 alpha-2 code
+          required: false
+          type: string
+        - name: number
+          in: query
+          description: Autonomius Sistem Number
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/apiAsnResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /count:
+    x-swagger-router-controller: api
+    get:
+      description: Returns aggregated results drilled down to country level
+      operationId: apiCount
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results returned per page. max - 500
+          default: 20
+          required: false
+          type: integer
+        - name: page
+          in: query
+          description: Number of page to be shown
+          default: 1
+          required: false
+          type: integer
+        - name: risk
+          in: query
+          description: Numeric representation of risk
+          default: -1
+          required: false
+          type: integer
+        - name: asn
+          in: query
+          description: Integer - Unic Autonomous System Number (ASN)
+          default: -1
+          required: false
+          type: integer
+        - name: country
+          in: query
+          description: String - ISO 3166-1 alpha-2 code (case insensitive)
+          required: false
+          type: string
+        - name: start
+          in: query
+          description: Exact ISO 8601 formatted date - Start date (inclusive)
+          required: false
+          type: string
+        - name: end
+          in: query
+          description: Exact ISO 8601 formatted date - Start date (inclusive)
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/apiCountResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /count_by_country:
+    x-swagger-router-controller: api
+    get:
+      description: Returns aggregated results drilled down to country level
+      operationId: apiCountByCountry
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results returned per page. max - 500
+          default: 20
+          required: false
+          type: integer
+        - name: page
+          in: query
+          description: Number of page to be shown
+          default: 1
+          required: false
+          type: integer
+        - name: risk
+          in: query
+          description: Numeric representation of risk
+          default: -1
+          required: false
+          type: integer
+        - name: country
+          in: query
+          description: String - ISO 3166-1 alpha-2 code (case insensitive)
+          required: false
+          type: string
+        - name: start
+          in: query
+          description: Exact ISO 8601 formatted date - Start date (inclusive)
+          required: false
+          type: string
+        - name: end
+          in: query
+          description: Exact ISO 8601 formatted date - Start date (inclusive)
+          required: false
+          type: string
+        - name: granularity
+          in: query
+          description: type of time granularity. options -  week, month, quarter, year.
+          default: week
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/apiCountByCountryResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  apiRiskResponse:
+    required:
+      - total
+      - results
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: number
+            slug:
+              type: string
+            title:
+              type: string
+            amplification_factor:
+              type: integer
+            description:
+              type: string
+  apiCountryResponse:
+    required:
+      - total
+      - results
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            slug:
+              type: string
+            region:
+              type: string
+            continent:
+              type: integer
+  apiAsnResponse:
+    required:
+      - total
+      - results
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            country:
+              type: string
+            number:
+              type: integer
+            title:
+              type: string
+  apiCountResponse:
+    required:
+      - total
+      - results
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            risk:
+              type: integer
+            country:
+              type: string
+            asn:
+              type: integer
+            date:
+              type: string
+            count:
+              type: integer
+  apiCountByCountryResponse:
+    required:
+      - total
+      - results
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            risk:
+              type: integer
+            country:
+              type: string
+            date:
+              type: string
+            count:
+              type: integer
+            count_amplified:
+              type: integer
+  ErrorResponse:
+    required:
+      - error
+    properties:
+      error:
+        type: string
