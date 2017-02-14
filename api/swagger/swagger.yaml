@@ -2,7 +2,6 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: CyberGreen API
-host: localhost:5000
 basePath: /api/v1
 schemes:
   - http

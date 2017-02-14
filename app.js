@@ -3,6 +3,7 @@ var nunjucks = require('nunjucks');
 var SwaggerExpress = require('swagger-express-mw');
 var markdown = require('nunjucks-markdown');
 var marked = require('marked');
+YAML = require('yamljs');
 //routes
 var routes = require('./routes');
 
@@ -28,9 +29,14 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
       autoescape: false,
       express: app
   });
+
   // registering markdown
   markdown.register(env, marked);
-
+  // swagger api for api-docs
+  app.get('/api/v1/swagger.json', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(YAML.load('./api/swagger/swagger.yaml'));
+  });
   app.get('/', routes.home);
   app.get('/country', routes.place);
   app.get('/country/:id', routes.placeID);
