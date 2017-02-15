@@ -179,7 +179,7 @@ describe('Database Functions return non empty list and all necessary columns fro
       done();
     });
   });
-  // gets sum of infected devises for all risks on given date 
+  // gets sum of infected devises for all risks on given date
   it('getRiskCount works fine', function(done) {
     logic.getRiskCount({date: '2016-08-01'}).then(function(results){
       assert.equal(results[0].length > 0, true);
@@ -262,7 +262,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.hasOwnProperty('total'). true);
         assert.equal(res.body.hasOwnProperty('results'). true);
@@ -278,7 +278,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results.length, 20);
         done();
@@ -288,21 +288,21 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?limit=1')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results.length, 1);
     });
     request(app)
       .get('/api/v1/count_by_country?limit=453')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results.length, 453);
     });
     request(app)
       .get('/api/v1/count_by_country?limit=1000')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results.length, 500);
         done();
@@ -312,28 +312,28 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?granularity=week')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-08-29'));
     });
     request(app)
       .get('/api/v1/count_by_country?granularity=month')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-08-01'));
     });
     request(app)
       .get('/api/v1/count_by_country?granularity=quarter')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-07-01'));
     });
     request(app)
       .get('/api/v1/count_by_country?granularity=year')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-01-01'));
         done();
@@ -343,7 +343,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?granularity=wrong')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.error, 'Invalid Time Granunlarity');
         done();
@@ -353,7 +353,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?risk=1')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results[0].risk, 1);
         done();
@@ -363,7 +363,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?risk=100')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results[0].risk, 100);
         done();
@@ -373,7 +373,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?risk=10')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(res.body.results, []);
         done();
@@ -383,7 +383,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?country=gb')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results[0].country, 'GB');
         assert.equal(res.body.results[0].country, 'GB');
@@ -394,7 +394,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?country=T')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results[0].country, 'T');
         done();
@@ -404,7 +404,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?country=unknown')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(res.body.results, []);
         done();
@@ -414,7 +414,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?start=2016-08-22&limit=500')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results.pop().date), new Date('2016-08-22'));
         done();
@@ -424,7 +424,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?end=2016-08-22&limit=500')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-08-22'));
         done();
@@ -434,7 +434,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?start=2016-08-22&end=2016-08-22&limit=500')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(new Date(res.body.results[0].date), new Date('2016-08-22'));
         assert.deepEqual(new Date(res.body.results.pop().date), new Date('2016-08-22'));
@@ -445,14 +445,14 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?country=gb or 1=1')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(res.body.results, []);
     });
     request(app)
       .get("/api/v1/count_by_country?country=gb or OR country %3D 'LV'%3B --")
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.deepEqual(res.body.results, []);
         done();
@@ -462,7 +462,7 @@ describe('API - Count By Country', function() {
     request(app)
       .get('/api/v1/count_by_country?risk=2&country=gb&start=2016-08-08&end=2016-08-22&granularity=week&limit=2&page=2')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
         assert.equal(res.body.results.length, 1);
         assert.equal(res.body.results[0].risk, 2);
@@ -478,23 +478,23 @@ describe('API', function(){
     request(app)
       .get('/api/v1/country')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
-        assert.equal(res.body.length, 246);
-        assert.equal(res.body[0].id, 'AD');
-        assert.equal(res.body[0].name, 'Andorra');
+        assert.equal(res.body.results.length, 246);
+        assert.equal(res.body.results[0].id, 'AD');
+        assert.equal(res.body.results[0].name, 'Andorra');
       });
     request(app)
       .get('/api/v1/country?id=ad&name=Andorra&region=europe&continent=europe')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
-        assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].id, 'AD');
-        assert.equal(res.body[0].name, 'Andorra');
-        assert.equal(res.body[0].slug, 'andorra');
-        assert.equal(res.body[0].region, 'Europe');
-        assert.equal(res.body[0].continent, 'Europe');
+        assert.equal(res.body.results.length, 1);
+        assert.equal(res.body.results[0].id, 'AD');
+        assert.equal(res.body.results[0].name, 'Andorra');
+        assert.equal(res.body.results[0].slug, 'andorra');
+        assert.equal(res.body.results[0].region, 'Europe');
+        assert.equal(res.body.results[0].continent, 'Europe');
         done();
       });
   });
@@ -502,19 +502,19 @@ describe('API', function(){
     request(app)
       .get('/api/v1/risk')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
-        assert.equal(res.body.length, 5);
-        assert.equal(res.body[0].slug, 'open-recursive-dns');
-        assert.equal(res.body[1].slug, 'openntp');
+        assert.equal(res.body.results.length, 5);
+        assert.equal(res.body.results[0].slug, 'open-recursive-dns');
+        assert.equal(res.body.results[1].slug, 'openntp');
       });
     request(app)
       .get('/api/v1/risk?title=Open NTP&id=2&slug=openntp')
       .expect(200)
-      .expect('Content-Type', /json/)	
+      .expect('Content-Type', /json/)
       .end(function(err, res) {
-        assert.equal(res.body.length, 1);
-        assert.equal(res.body[0].slug, 'openntp');
+        assert.equal(res.body.results.length, 1);
+        assert.equal(res.body.results[0].slug, 'openntp');
         done();
       });
   });
@@ -522,7 +522,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/asn')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.length, 79679);
   //      assert.equal(res.body[0].country, 'AD');
@@ -535,7 +535,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 20);
   //      // cheks sorting country ASC
@@ -553,7 +553,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?limit=30')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 30);
   //      assert.equal(res.body.total_pages, 1500);
@@ -562,7 +562,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?limit=3000')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 500);
   //      assert.equal(res.body.total_pages, 90);
@@ -571,15 +571,15 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?limit=invalidIntiger')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.error, 'invalid input syntax for integer: "invalidIntiger"');
   //    });
-  //  // cheks risk id  
+  //  // cheks risk id
   //  request(app)
   //    .get('/api/v1/count?risk=1')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 20);
   //      assert.equal(res.body.results[0].risk, "1");
@@ -588,7 +588,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?country=GB')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 20);
   //      assert.equal(res.body.results[0].country, "GB");
@@ -597,7 +597,7 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?country=Gb')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 20);
   //      assert.equal(res.body.results[0].country, "GB");
@@ -606,28 +606,28 @@ describe('API', function(){
   //  request(app)
   //    .get('/api/v1/count?country=unknown')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //      assert.equal(res.body.results.length, 0);
   //    });
   //  request(app)
   //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-08-15"));
   //    });
   //  request(app)
   //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=1350')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-06-01"));
   //    });
   //  request(app)
   //    .get('/api/v1/count?start=2016-06-01&end=2016-08-15&page=700')
   //    .expect(200)
-  //    .expect('Content-Type', /json/)	
+  //    .expect('Content-Type', /json/)
   //    .end(function(err, res) {
   //    	assert.deepEqual(new Date(res.body.results[0].date), new Date("2016-07-01"));
   //      done();
