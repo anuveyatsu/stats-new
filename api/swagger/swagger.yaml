@@ -14,7 +14,7 @@ paths:
   /risk:
     x-swagger-router-controller: api
     get:
-      description: Returns aggregated results drilled down to country level
+      description: Reference data for risks
       operationId: apiRisk
       parameters:
         - name: id
@@ -49,7 +49,7 @@ paths:
   /country:
     x-swagger-router-controller: api
     get:
-      description: Returns aggregated results drilled down to country level
+      description: Reference data for countries
       operationId: apiCountry
       parameters:
         - name: id
@@ -89,7 +89,7 @@ paths:
   /asn:
     x-swagger-router-controller: api
     get:
-      description: Returns aggregated results drilled down to country level
+      description: Reference data for AS
       operationId: apiAsn
       parameters:
         - name: country
@@ -114,7 +114,7 @@ paths:
   /count:
     x-swagger-router-controller: api
     get:
-      description: Returns aggregated results drilled down to country level
+      description: Returns aggregated results drilled down to AS level
       operationId: apiCount
       parameters:
         - name: limit
